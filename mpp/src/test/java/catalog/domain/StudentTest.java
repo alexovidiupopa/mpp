@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import ro.ubb.catalog.domain.Student;
+import Model.Student;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

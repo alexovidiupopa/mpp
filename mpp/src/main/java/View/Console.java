@@ -2,7 +2,7 @@ package View;
 
 import Model.Student;
 import Model.Exceptions.ValidatorException;
-import Controller.StudentService;
+import Controller.StudentController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,9 +10,9 @@ import java.io.InputStreamReader;
 import java.util.Set;
 
 public class Console {
-    private StudentService studentService;
+    private StudentController studentService;
 
-    public Console(StudentService studentService) {
+    public Console(StudentController studentService) {
         this.studentService = studentService;
     }
 

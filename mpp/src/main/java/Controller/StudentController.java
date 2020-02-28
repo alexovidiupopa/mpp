@@ -9,11 +9,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class StudentService {
+public class StudentController {
 
     private RepositoryInterface<Long, Student> repository;
 
-    public StudentService(RepositoryInterface<Long, Student> repository) {
+    public StudentController(RepositoryInterface<Long, Student> repository) {
         this.repository = repository;
     }
 

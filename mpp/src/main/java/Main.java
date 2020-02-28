@@ -4,9 +4,8 @@ import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
 import Repository.MemoryRepository;
 import Repository.RepositoryInterface;
-import Controller.StudentService;
+import Controller.StudentController;
 import View.Console;
-
 
 public class Main {
     public static void main(String args[]) {
@@ -26,7 +25,7 @@ public class Main {
 //        //in file repo
         Validator<Student> studentValidator = new StudentValidator();
         RepositoryInterface<Long, Student> studentRepository = new MemoryRepository<>(studentValidator);
-        StudentService studentService = new StudentService(studentRepository);
+        StudentController studentService = new StudentController(studentRepository);
         Console console = new Console(studentService);
         console.runConsole();
 
