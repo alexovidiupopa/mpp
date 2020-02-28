@@ -17,7 +17,7 @@ public class Console {
     }
 
     public void runConsole() {
-//        addStudents();
+        addStudents();
         printAllStudents();
         filterStudents();
     }

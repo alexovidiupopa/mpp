@@ -9,17 +9,15 @@ import Model.Student;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * @author radu.
- */
 public class StudentTest {
     private static final Long ID = new Long(1);
     private static final Long NEW_ID = new Long(2);
     private static final String SERIAL_NUMBER = "sn01";
     private static final String NEW_SERIAL_NUMBER = "sn02";
     private static final String NAME = "studentName";
+    private static final String NEW_NAME = "studentName2";
     private static final int GROUP = 123;
-
+    private static final int NEW_GROUP = 124;
     private Student student;
 
     @Before
@@ -55,27 +53,26 @@ public class StudentTest {
         assertEquals("Ids should be equal", NEW_ID, student.getId());
     }
 
-    @Ignore
     @Test
     public void testGetName() throws Exception {
-        fail("Not tested yet.");
+        assertEquals("Names should be equal", SERIAL_NUMBER, student.getSerialNumber());
     }
 
-    @Ignore
+
     @Test
     public void testSetName() throws Exception {
-        fail("Not tested yet.");
+        student.setName(NEW_NAME);
+        assertEquals("Names should be equal", NEW_NAME, student.getName());
     }
 
-    @Ignore
     @Test
     public void testGetGroup() throws Exception {
-        fail("Not tested yet.");
+        assertEquals("Groups should be equal", GROUP, student.getGroup());
     }
 
-    @Ignore
     @Test
     public void testSetGroup() throws Exception {
-        fail("Not tested yet.");
+        student.setGroup(NEW_GROUP);
+        assertEquals("Groups should be equal", NEW_GROUP, student.getGroup());
     }
 }

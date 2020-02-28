@@ -15,6 +15,17 @@ public class Student extends BaseEntity<Long>{
         this.group = group;
     }
 
+    public Student(long id,String serialNumber, String name, int group) {
+        super(id);
+        this.serialNumber = serialNumber;
+        this.name = name;
+        this.group = group;
+    }
+
+    /**
+     *
+     * @return int - serialNumber
+     */
     public String getSerialNumber() {
         return serialNumber;
     }
