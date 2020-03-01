@@ -19,7 +19,7 @@ public class StudentController {
 
     /**
      * Adds the given student to the repository.
-     * @param student
+     * @param student - given student
      * @throws ValidatorException if student is not valid
      */
     public void addStudent(Student student) throws ValidatorException {

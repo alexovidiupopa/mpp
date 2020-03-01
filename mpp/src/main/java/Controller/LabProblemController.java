@@ -18,7 +18,7 @@ public class LabProblemController {
 
     /**
      * Adds the given lab problem to the repository.
-     * @param problem
+     * @param problem - given problem
      * @throws ValidatorException if problem is invalid
      * @throws IllegalArgumentException if problem is null.
      */

@@ -7,7 +7,7 @@ public class LabProblemValidator implements Validator<LabProblem> {
     /**
      * Validates a given LabProblem entity.
      * @param entity - non-null
-     * @throws ValidatorException if entity is invalid, meaning it doesn't have: non-negative problem number, non-null description, description length <= 1000 and non-negative score.
+     * @throws ValidatorException if entity is invalid, meaning it doesn't have: non-negative problem number, non-null description, description length less than 1000 and non-negative score.
      */
     @Override
     public void validate(LabProblem entity) throws ValidatorException {

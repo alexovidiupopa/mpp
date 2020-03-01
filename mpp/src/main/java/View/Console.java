@@ -70,6 +70,7 @@ public class Console {
 
     /**
      * Helper method to handle reading a student from keyboard.
+     * @return read student
      */
     private Student readStudent() {
         System.out.println("Read student {id, serialNumber, name, group}");
@@ -124,6 +125,7 @@ public class Console {
 
     /**
      * Helper method to handle reading a lab problem from keyboard.
+     * @return read problem
      */
     private LabProblem readProblem() {
         System.out.println("Read problem {id, number, description, score}");

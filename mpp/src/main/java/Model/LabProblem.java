@@ -34,7 +34,7 @@ public class LabProblem extends BaseEntity<Long> {
 
     /**
      * Gets the number.
-     * @return
+     * @return problem number
      */
     public int getNumber() {
         return number;
@@ -50,7 +50,7 @@ public class LabProblem extends BaseEntity<Long> {
 
     /**
      * Gets the description.
-     * @return
+     * @return problem description
      */
     public String getDescription() {
         return description;
@@ -66,7 +66,7 @@ public class LabProblem extends BaseEntity<Long> {
 
     /**
      * Gets the score.
-     * @return
+     * @return problem score
      */
     public int getScore() {
         return score;
