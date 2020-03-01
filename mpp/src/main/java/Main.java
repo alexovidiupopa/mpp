@@ -1,5 +1,8 @@
 
+import Controller.LabProblemController;
+import Model.LabProblem;
 import Model.Student;
+import Model.Validators.LabProblemValidator;
 import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
 import Repository.MemoryRepository;
@@ -12,8 +15,8 @@ public class Main {
         //in-memory repo
 //         Validator<Student> studentValidator = new StudentValidator();
 //         Repository<Long, Student> studentRepository = new InMemoryRepository<>(studentValidator);
-//         StudentService studentService = new StudentService(studentRepository);
-//         Console console = new Console(studentService);
+//         StudentService studentController = new StudentService(studentRepository);
+//         Console console = new Console(studentController);
 //         console.runConsole();
 
         //file repo
@@ -25,10 +28,11 @@ public class Main {
 //        //in file repo
         Validator<Student> studentValidator = new StudentValidator();
         RepositoryInterface<Long, Student> studentRepository = new MemoryRepository<>(studentValidator);
-        StudentController studentService = new StudentController(studentRepository);
-        Console console = new Console(studentService);
+        StudentController studentController = new StudentController(studentRepository);
+        Validator<LabProblem> labProblemValidator = new LabProblemValidator();
+        RepositoryInterface<Long, LabProblem> labProblemRepository = new MemoryRepository<>(labProblemValidator);
+        LabProblemController labProblemController = new LabProblemController(labProblemRepository);
+        Console console = new Console(studentController, labProblemController);
         console.runConsole();
-
-        System.out.println("Hello World!");
     }
 }
