@@ -25,7 +25,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     }
 
     /**
-     *
+     * Reads the students from the students file into memory.
      */
     private void loadData() {
         Path path = Paths.get(fileName);
@@ -54,12 +54,6 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
         }
     }
 
-    /**
-     *
-     * @param entity
-     * @return
-     * @throws ValidatorException
-     */
     @Override
     public Optional<Student> add(Student entity) throws ValidatorException {
         Optional<Student> optional = super.add(entity);
@@ -71,8 +65,8 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     }
 
     /**
-     *
-     * @param entity
+     * Saves the entity into the file.
+     * @param entity- valid Student object.
      */
     private void saveToFile(Student entity) {
         Path path = Paths.get(fileName);

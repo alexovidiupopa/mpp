@@ -32,26 +32,50 @@ public class LabProblem extends BaseEntity<Long> {
                 '}' + super.toString();
     }
 
+    /**
+     * Gets the number.
+     * @return
+     */
     public int getNumber() {
         return number;
     }
 
+    /**
+     * Sets the object's number to the given parameter value.
+     * @param number - new number
+     */
     public void setNumber(int number) {
         this.number = number;
     }
 
+    /**
+     * Gets the description.
+     * @return
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the object's description to the given parameter value.
+     * @param description - new description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets the score.
+     * @return
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets the object's score to the given parameter value.
+     * @param score - new score
+     */
     public void setScore(int score) {
         this.score = score;
     }

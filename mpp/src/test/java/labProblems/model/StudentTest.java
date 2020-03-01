@@ -1,8 +1,7 @@
-package catalog.domain;
+package labProblems.model;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import Model.Student;
 

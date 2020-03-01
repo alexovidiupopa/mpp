@@ -25,7 +25,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     }
 
     /**
-     *
+     * Reads the lab problems from the lab problems file into memory.
      */
     private void loadData() {
         Path path = Paths.get(fileName);
@@ -53,12 +53,6 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         }
     }
 
-    /**
-     *
-     * @param entity
-     * @return
-     * @throws ValidatorException
-     */
     @Override
     public Optional<LabProblem> add(LabProblem entity) throws ValidatorException {
         Optional<LabProblem> optional = super.add(entity);
@@ -70,8 +64,8 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     }
 
     /**
-     *
-     * @param entity
+     * Saves the given LabProblem into file.
+     * @param entity - valid LabProblem object.
      */
     private void saveToFile(LabProblem entity) {
         Path path = Paths.get(fileName);

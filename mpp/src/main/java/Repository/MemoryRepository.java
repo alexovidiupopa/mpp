@@ -23,7 +23,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     @Override
     public Optional<T> add(T entity) throws ValidatorException {
         if (entity == null) {
-            throw new IllegalArgumentException("id must not be null");
+            throw new IllegalArgumentException("entity must not be null");
         }
         validator.validate(entity);
         return Optional.ofNullable(entities.putIfAbsent(entity.getId(), entity));

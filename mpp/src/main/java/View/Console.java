@@ -22,6 +22,9 @@ public class Console {
         this.labProblemController = problemController;
     }
 
+    /**
+     * Method to run the console.
+     */
     public void runConsole() {
         addStudents();
         printAllStudents();
@@ -31,17 +34,26 @@ public class Console {
         filterProblems();
     }
 
+    /**
+     * Method to handle filtering the students.
+     */
     private void filterStudents() {
         System.out.println("filtered students (name containing 's2'):");
         Set<Student> students = studentController.filterStudentsByName("s2");
         students.stream().forEach(System.out::println);
     }
 
+    /**
+     * Method to handle printing the students.
+     */
     private void printAllStudents() {
         Set<Student> students = studentController.getAllStudents();
         students.stream().forEach(System.out::println);
     }
 
+    /**
+     * Method to handle adding students.
+     */
     private void addStudents() {
         while (true) {
             Student student = readStudent();
@@ -56,6 +68,9 @@ public class Console {
         }
     }
 
+    /**
+     * Helper method to handle reading a student from keyboard.
+     */
     private Student readStudent() {
         System.out.println("Read student {id, serialNumber, name, group}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -73,17 +88,26 @@ public class Console {
         return null;
     }
 
+    /**
+     * Method to handle filtering the lab problems.
+     */
     private void filterProblems() {
         System.out.println("filtered problems (score >= 5):");
         Set<LabProblem> filteredProblems = this.labProblemController.filterProblemsByScore(5);
         filteredProblems.stream().forEach(System.out::println);
     }
 
+    /**
+     * Method to handle printing the lab problems.
+     */
     private void printAllProblems() {
         Set<LabProblem> allProblems = labProblemController.getAllProblems();
         allProblems.stream().forEach(System.out::println);
     }
 
+    /**
+     * Method to handle adding lab problems.
+     */
     private void addProblems() {
         while (true) {
             LabProblem newProblem = readProblem();
@@ -98,6 +122,9 @@ public class Console {
         }
     }
 
+    /**
+     * Helper method to handle reading a lab problem from keyboard.
+     */
     private LabProblem readProblem() {
         System.out.println("Read problem {id, number, description, score}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

@@ -1,4 +1,4 @@
-package catalog.domain;
+package labProblems.model;
 
 import Model.LabProblem;
 import org.junit.After;

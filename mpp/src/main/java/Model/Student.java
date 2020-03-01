@@ -23,29 +23,49 @@ public class Student extends BaseEntity<Long>{
     }
 
     /**
-     *
+     * Gets the serial number.
      * @return int - serialNumber
      */
     public String getSerialNumber() {
         return serialNumber;
     }
 
+    /**
+     * Sets the object's serial number to the given parameter value.
+     * @param serialNumber - new serial number
+     */
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
 
+    /**
+     * Gets the name.
+     * @return String - name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the object's name to the given parameter value.
+     * @param name - new name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the group.
+     * @return int - group
+     */
     public int getGroup() {
         return group;
     }
 
+    /**
+     * Sets the object's group to the given parameter value.
+     * @param group - new group
+     */
     public void setGroup(int group) {
         this.group = group;
     }

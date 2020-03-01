@@ -16,16 +16,31 @@ public class LabProblemController {
         this.repository = repository;
     }
 
+    /**
+     * Adds the given lab problem to the repository.
+     * @param problem
+     * @throws ValidatorException if problem is invalid
+     * @throws IllegalArgumentException if problem is null.
+     */
     public void addLabProblem(LabProblem problem) throws ValidatorException {
         repository.add(problem);
     }
 
+    /**
+     * Returns all lab problems currently in the repository.
+     * @return HashSet containing all lab problems in the repository.
+     */
     public Set<LabProblem> getAllProblems() {
         Iterable<LabProblem> problems = repository.getAll();
         return StreamSupport.stream(problems.spliterator(), false)
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Returns all lab problems whose score is greater than or equal to the given minScore.
+     * @param minScore - integer.
+     * @return Set containing the above lab problems.
+     */
     public Set<LabProblem> filterProblemsByScore(int minScore) {
         Iterable<LabProblem> problems = repository.getAll();
         return StreamSupport.stream(problems.spliterator(), false)
