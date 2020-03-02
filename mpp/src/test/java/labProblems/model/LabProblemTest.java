@@ -10,8 +10,6 @@ import static org.junit.Assert.assertEquals;
 public class LabProblemTest {
     private static final Long ID = 1L;
     private static final Long NEW_ID = 2L;
-    private static final int NUMBER = 10;
-    private static final int NEW_NUMBER = 11;
     private static final String DESCRIPTION = "implement a stack";
     private static final String NEW_DESCRIPTION = "implement a queue";
     private static final int SCORE = 100;
@@ -20,7 +18,7 @@ public class LabProblemTest {
 
     @Before
     public void setUp() throws Exception {
-        problem = new LabProblem(ID,NUMBER,DESCRIPTION,SCORE);
+        problem = new LabProblem(ID,DESCRIPTION,SCORE);
     }
     @After
     public void tearDown() throws Exception {
@@ -36,17 +34,6 @@ public class LabProblemTest {
     public void testSetID() {
         problem.setId(NEW_ID);
         assertEquals("Ids should be equal", NEW_ID, problem.getId());
-    }
-
-    @Test
-    public void testGetNumber() {
-        assertEquals("Numbers should be equal", NUMBER, problem.getNumber());
-    }
-
-    @Test
-    public void testSetNumber() {
-        problem.setNumber(NEW_NUMBER);
-        assertEquals("Numbers should be equal", NEW_NUMBER, problem.getNumber());
     }
 
     @Test

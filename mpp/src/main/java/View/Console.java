@@ -26,10 +26,10 @@ public class Console {
      * Method to run the console.
      */
     public void runConsole() {
-        addStudents();
+        /*addStudents();
         printAllStudents();
         filterStudents();
-        addProblems();
+        */addProblems();
         printAllProblems();
         filterProblems();
     }
@@ -128,16 +128,15 @@ public class Console {
      * @return read problem
      */
     private LabProblem readProblem() {
-        System.out.println("Read problem {id, number, description, score}");
+        System.out.println("Read problem {id, description, score}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = br.readLine();
             Scanner scanner = new Scanner(line);
             Long id = scanner.nextLong();
-            int number = scanner.nextInt();
             String description = scanner.next();
             int score = scanner.nextInt();
-            return new LabProblem(id, number, description, score);
+            return new LabProblem(id, description, score);
         }
         catch (IOException e) {
             e.printStackTrace();

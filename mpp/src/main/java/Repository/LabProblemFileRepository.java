@@ -34,11 +34,10 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
                 List<String> items = Arrays.asList(line.split(","));
 
                 Long id = Long.valueOf(items.get(0));
-                int problemNumber = Integer.parseInt(items.get(1));
-                String description = items.get(2);
-                int score = Integer.parseInt(items.get(3));
+                String description = items.get(1);
+                int score = Integer.parseInt(items.get(2));
 
-                LabProblem problem = new LabProblem(id,problemNumber,description,score);
+                LabProblem problem = new LabProblem(id,description,score);
 
                 try {
                     super.add(problem);
@@ -72,7 +71,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
 
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             bufferedWriter.write(
-                    entity.getId() + "," + entity.getNumber() + "," + entity.getDescription() + "," + entity.getScore());
+                    entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());
             bufferedWriter.newLine();
         }
         catch (IOException e) {

@@ -3,13 +3,11 @@ package Model;
 import java.util.Objects;
 
 public class LabProblem extends BaseEntity<Long> {
-    private int number;
     private String description;
     private int score;
 
-    public LabProblem(Long _id, int number, String description, int score) {
+    public LabProblem(Long _id, String description, int score) {
         super(_id);
-        this.number = number;
         this.description = description;
         this.score = score;
     }
@@ -17,8 +15,7 @@ public class LabProblem extends BaseEntity<Long> {
     public LabProblem() {
     }
 
-    public LabProblem(int number, String description, int score) {
-        this.number = number;
+    public LabProblem(String description, int score) {
         this.description = description;
         this.score = score;
     }
@@ -26,27 +23,11 @@ public class LabProblem extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "LabProblem{" +
-                "number=" + number +
-                ", description='" + description + '\'' +
+                "description='" + description + '\'' +
                 ", score=" + score +
                 '}' + super.toString();
     }
 
-    /**
-     * Gets the number.
-     * @return problem number
-     */
-    public int getNumber() {
-        return number;
-    }
-
-    /**
-     * Sets the object's number to the given parameter value.
-     * @param number - new number
-     */
-    public void setNumber(int number) {
-        this.number = number;
-    }
 
     /**
      * Gets the description.
@@ -85,14 +66,13 @@ public class LabProblem extends BaseEntity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LabProblem that = (LabProblem) o;
-        return number == that.number &&
-                score == that.score &&
+        return score == that.score &&
                 description.equals(that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, description, score);
+        return Objects.hash(description, score);
     }
 
 }
