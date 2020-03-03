@@ -7,16 +7,13 @@ import Repository.MemoryRepository;
 import Repository.RepositoryInterface;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import Model.Exceptions.ValidatorException;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class InMemoryRepositoryTest {
 

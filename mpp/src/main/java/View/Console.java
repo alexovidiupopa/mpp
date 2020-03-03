@@ -26,10 +26,10 @@ public class Console {
      * Method to run the console.
      */
     public void runConsole() {
-        /*addStudents();
+        addStudents();
         printAllStudents();
         filterStudents();
-        */addProblems();
+        addProblems();
         printAllProblems();
         filterProblems();
     }
@@ -116,7 +116,7 @@ public class Console {
                 break;
             }
             try {
-                labProblemController.addLabProblem(newProblem);
+                labProblemController.addProblem(newProblem);
             } catch (ValidatorException e) {
                 e.printStackTrace();
             }

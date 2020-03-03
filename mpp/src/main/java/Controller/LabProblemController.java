@@ -22,7 +22,7 @@ public class LabProblemController {
      * @throws ValidatorException if problem is invalid
      * @throws IllegalArgumentException if problem is null.
      */
-    public void addLabProblem(LabProblem problem) throws ValidatorException {
+    public void addProblem(LabProblem problem) throws ValidatorException {
         repository.add(problem);
     }
 

@@ -12,8 +12,6 @@ public class LabProblem extends BaseEntity<Long> {
         this.score = score;
     }
 
-    public LabProblem() {
-    }
 
     public LabProblem(String description, int score) {
         this.description = description;

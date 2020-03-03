@@ -6,11 +6,10 @@ import org.junit.Test;
 import Model.Student;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class StudentTest {
-    private static final Long ID = new Long(1);
-    private static final Long NEW_ID = new Long(2);
+    private static final Long ID = 1L;
+    private static final Long NEW_ID = 2L;
     private static final String SERIAL_NUMBER = "sn01";
     private static final String NEW_SERIAL_NUMBER = "sn02";
     private static final String NAME = "studentName";
