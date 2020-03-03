@@ -1,7 +1,5 @@
 package Model.Exceptions;
 
-import Model.Exceptions.MyException;
-
 public class ValidatorException extends MyException {
 
     public ValidatorException(String message) {

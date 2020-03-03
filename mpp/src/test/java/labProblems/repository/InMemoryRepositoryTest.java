@@ -19,13 +19,13 @@ public class InMemoryRepositoryTest {
 
     private Validator<Student> testValidator;
     private RepositoryInterface<Long, Student> testStudentRepository;
+
     @Before
     public void setUp() throws Exception {
         testValidator = new StudentValidator();
         testStudentRepository = new MemoryRepository<>(testValidator);
         testStudentRepository.add(new Student(1L,"1234","alex",1));
         testStudentRepository.add(new Student(2L,"9999","vlad",3));
-
     }
 
     @After
@@ -46,7 +46,6 @@ public class InMemoryRepositoryTest {
         assertEquals(allStudents.toArray()[0],new Student(2L,"9999","vlad",3));
     }
 
-
     @Test
     public void testAdd() throws Exception {
         testStudentRepository.add(new Student(3L,"5678","alin",3));
@@ -58,7 +57,6 @@ public class InMemoryRepositoryTest {
     @Test(expected = ValidatorException.class)
     public void testAddException() throws Exception {
         testStudentRepository.add(new Student(2L,"","",-1));
-
     }
 
     @Test
@@ -68,7 +66,6 @@ public class InMemoryRepositoryTest {
         assertEquals(allStudents.size(),1);
         assertEquals(allStudents.toArray()[0],new Student(2L,"9999","vlad",3));
     }
-
 
     @Test
     public void testUpdate() throws Exception {
@@ -80,4 +77,5 @@ public class InMemoryRepositoryTest {
     public void testUpdateException() throws Exception {
         testStudentRepository.update(new Student(5L,"1234","",1));
     }
+
 }

@@ -8,6 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class LabProblemTest {
+
     private static final Long ID = 1L;
     private static final Long NEW_ID = 2L;
     private static final String DESCRIPTION = "implement a stack";
@@ -20,6 +21,7 @@ public class LabProblemTest {
     public void setUp() throws Exception {
         problem = new LabProblem(ID,DESCRIPTION,SCORE);
     }
+
     @After
     public void tearDown() throws Exception {
         problem=null;
@@ -57,4 +59,5 @@ public class LabProblemTest {
         problem.setScore(NEW_SCORE);
         assertEquals("Scores should be equal", NEW_SCORE, problem.getScore());
     }
+
 }

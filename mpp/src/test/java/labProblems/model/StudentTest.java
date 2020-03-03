@@ -8,6 +8,7 @@ import Model.Student;
 import static org.junit.Assert.assertEquals;
 
 public class StudentTest {
+
     private static final Long ID = 1L;
     private static final Long NEW_ID = 2L;
     private static final String SERIAL_NUMBER = "sn01";
@@ -73,4 +74,5 @@ public class StudentTest {
         student.setGroup(NEW_GROUP);
         assertEquals("Groups should be equal", NEW_GROUP, student.getGroup());
     }
+
 }

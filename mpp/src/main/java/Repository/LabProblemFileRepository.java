@@ -2,7 +2,6 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
-import Model.Student;
 import Model.Validators.Validator;
 
 import java.io.BufferedWriter;
@@ -32,13 +31,10 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         try {
             Files.lines(path).forEach(line -> {
                 List<String> items = Arrays.asList(line.split(","));
-
                 Long id = Long.valueOf(items.get(0));
                 String description = items.get(1);
                 int score = Integer.parseInt(items.get(2));
-
                 LabProblem problem = new LabProblem(id,description,score);
-
                 try {
                     super.add(problem);
                 }
@@ -68,7 +64,6 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
      */
     private void saveToFile(LabProblem entity) {
         Path path = Paths.get(fileName);
-
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             bufferedWriter.write(
                     entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());

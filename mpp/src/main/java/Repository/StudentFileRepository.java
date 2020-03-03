@@ -32,15 +32,12 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
         try {
             Files.lines(path).forEach(line -> {
                 List<String> items = Arrays.asList(line.split(","));
-
                 Long id = Long.valueOf(items.get(0));
                 String serialNumber = items.get(1);
                 String name = items.get((2));
                 int group = Integer.parseInt(items.get(3));
-
                 Student student = new Student(serialNumber, name, group);
                 student.setId(id);
-
                 try {
                     super.add(student);
                 }
@@ -70,7 +67,6 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
      */
     private void saveToFile(Student entity) {
         Path path = Paths.get(fileName);
-
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             bufferedWriter.write(
                     entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());

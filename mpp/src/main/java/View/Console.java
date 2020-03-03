@@ -7,7 +7,6 @@ import Model.Exceptions.ValidatorException;
 import Controller.StudentController;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.Set;
@@ -62,8 +61,9 @@ public class Console {
             }
             try {
                 studentController.addStudent(student);
+                System.out.println("Student added successfully");
             } catch (ValidatorException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -77,16 +77,19 @@ public class Console {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = br.readLine();
+            if(line.equals("done")){
+                return null;
+            }
             Scanner scanner = new Scanner(line);
             Long id = scanner.nextLong();// ...
             String serialNumber = scanner.next();
             String name = scanner.next();
             int group = scanner.nextInt();// ...
             return new Student(id, serialNumber, name, group);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Wrong input. Use {id, serialNumber, name, group}");
+            return readStudent();
         }
-        return null;
     }
 
     /**
@@ -117,8 +120,9 @@ public class Console {
             }
             try {
                 labProblemController.addProblem(newProblem);
+                System.out.println("Problem added successfully");
             } catch (ValidatorException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -132,16 +136,19 @@ public class Console {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = br.readLine();
+            if(line.equals("done")){
+                return null;
+            }
             Scanner scanner = new Scanner(line);
             Long id = scanner.nextLong();
             String description = scanner.next();
             int score = scanner.nextInt();
             return new LabProblem(id, description, score);
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (Exception e) {
+            System.out.println("Wrong input. Use {id, serialNumber, name, group}");
+            return readProblem();
         }
-        return null;
     }
 
 }

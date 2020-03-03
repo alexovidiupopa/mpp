@@ -4,6 +4,7 @@ import Model.Exceptions.ValidatorException;
 import Model.Student;
 
 public class StudentValidator implements Validator<Student> {
+
     /**
      * Validates a given student entity.
      * @param entity - non-null.

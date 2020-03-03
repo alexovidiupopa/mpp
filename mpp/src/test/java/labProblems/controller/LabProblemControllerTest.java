@@ -3,7 +3,6 @@ package labProblems.controller;
 import Controller.LabProblemController;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
-import Model.Student;
 import Model.Validators.LabProblemValidator;
 import Repository.MemoryRepository;
 import org.junit.After;
@@ -64,4 +63,5 @@ public class LabProblemControllerTest {
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(11L, "problem1", 100)));
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(44L, "problem4", 200)));
     }
+
 }

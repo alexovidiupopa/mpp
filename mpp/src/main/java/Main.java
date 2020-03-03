@@ -11,21 +11,8 @@ import Controller.StudentController;
 import View.Console;
 
 public class Main {
-    public static void main(String args[]) {
-        //in-memory repo
-//         Validator<Student> studentValidator = new StudentValidator();
-//         Repository<Long, Student> studentRepository = new InMemoryRepository<>(studentValidator);
-//         StudentService studentController = new StudentService(studentRepository);
-//         Console console = new Console(studentController);
-//         console.runConsole();
 
-        //file repo
-//        try {
-//            System.out.println(new File(".").getCanonicalPath());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        //in file repo
+    public static void main(String args[]) {
         Validator<Student> studentValidator = new StudentValidator();
         RepositoryInterface<Long, Student> studentRepository = new MemoryRepository<>(studentValidator);
         StudentController studentController = new StudentController(studentRepository);
@@ -35,4 +22,5 @@ public class Main {
         Console console = new Console(studentController, labProblemController);
         console.runConsole();
     }
+
 }

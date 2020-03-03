@@ -3,6 +3,7 @@ package Model.Validators;
 import Model.Exceptions.ValidatorException;
 
 public interface Validator<T> {
+
     /**
      * Validates a given entity.
      * @param entity - non-null

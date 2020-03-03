@@ -29,7 +29,6 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws IllegalArgumentException
      *             if the given id is null.
      */
-
     Optional<T> delete(ID id);
 
     /**

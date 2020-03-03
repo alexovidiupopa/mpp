@@ -3,6 +3,7 @@ package Model;
 import java.util.Objects;
 
 public class LabProblem extends BaseEntity<Long> {
+
     private String description;
     private int score;
 
@@ -11,7 +12,6 @@ public class LabProblem extends BaseEntity<Long> {
         this.description = description;
         this.score = score;
     }
-
 
     public LabProblem(String description, int score) {
         this.description = description;
@@ -25,7 +25,6 @@ public class LabProblem extends BaseEntity<Long> {
                 ", score=" + score +
                 '}' + super.toString();
     }
-
 
     /**
      * Gets the description.
