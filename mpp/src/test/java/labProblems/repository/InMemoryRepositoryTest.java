@@ -11,9 +11,10 @@ import org.junit.Test;
 import Model.Exceptions.ValidatorException;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class InMemoryRepositoryTest {
 
@@ -43,7 +44,7 @@ public class InMemoryRepositoryTest {
     public void testGetAll() throws Exception {
         Set<Student> allStudents = (HashSet<Student>) testStudentRepository.getAll();
         assertEquals(allStudents.size(),2);
-        assertEquals(allStudents.toArray()[0],new Student(2L,"9999","vlad",3));
+        assertTrue(allStudents.contains(new Student(2L,"9999","vlad",3)));
     }
 
     @Test
@@ -51,7 +52,7 @@ public class InMemoryRepositoryTest {
         testStudentRepository.add(new Student(3L,"5678","alin",3));
         Set<Student> allStudents = (HashSet<Student>) testStudentRepository.getAll();
         assertEquals(allStudents.size(),3);
-        assertEquals(allStudents.toArray()[0],new Student(3L,"5678","alin",3));
+        assertTrue(allStudents.contains(new Student(3L,"5678","alin",3)));
     }
 
     @Test(expected = ValidatorException.class)
@@ -64,12 +65,12 @@ public class InMemoryRepositoryTest {
         testStudentRepository.delete(1L);
         Set<Student> allStudents = (HashSet<Student>) testStudentRepository.getAll();
         assertEquals(allStudents.size(),1);
-        assertEquals(allStudents.toArray()[0],new Student(2L,"9999","vlad",3));
+        assertFalse(allStudents.contains(new Student(1L,"1234","alex",1)));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        testStudentRepository.update(new Student(1L,"1234","popa",1));
+        assertEquals(testStudentRepository.update(new Student(1L,"1234","popa",1)), Optional.empty());
         assertEquals(testStudentRepository.findById(1L).get().getName(),"popa");
     }
 

@@ -42,7 +42,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
             throw new IllegalArgumentException("entity must not be null");
         }
         validator.validate(entity);
-        return Optional.ofNullable(entities.computeIfPresent(entity.getId(), (k, v) -> entity));
+        return Optional.ofNullable(entities.computeIfPresent(entity.getId(), (k, v) -> entity) == null ? entity : null);
     }
 
     @Override

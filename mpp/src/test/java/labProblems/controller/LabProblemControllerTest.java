@@ -3,13 +3,18 @@ package labProblems.controller;
 import Controller.LabProblemController;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Student;
 import Model.Validators.LabProblemValidator;
+import Model.Validators.Validator;
 import Repository.MemoryRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
@@ -50,6 +55,24 @@ public class LabProblemControllerTest {
     }
 
     @Test
+    public void testDeleteProblem() {
+        this.labProblemController.deleteProblem(new LabProblem(33L, "problem3", 10));
+        assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
+    }
+
+    @Test
+    public void testUpdateProblem() throws ValidatorException {
+        this.labProblemController.updateProblem(new LabProblem(33L, "updated", 10));
+        assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
+        assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "updated", 10)));
+    }
+
+    @Test (expected = ValidatorException.class)
+    public void testUpdateProblemException() throws ValidatorException{
+        this.labProblemController.updateProblem(new LabProblem(33L, "expect-exception", -1));
+    }
+
+    @Test
     public void testGetAllProblems(){
         assertEquals(this.labProblemController.getAllProblems().size(), 4);
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(11L, "problem1", 100)));
@@ -64,4 +87,10 @@ public class LabProblemControllerTest {
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(44L, "problem4", 200)));
     }
 
+    @Test
+    public void testSortProblemsDescendingByScore() {
+        List<LabProblem> sortedProblems = this.labProblemController.sortProblemsDescendingByScore();
+        List<LabProblem> expectedProblems =  this.labProblemController.getAllProblems().stream().sorted((o1, o2) -> o2.getScore()-o1.getScore()).collect(Collectors.toList());
+        assertArrayEquals(sortedProblems.toArray(),expectedProblems.toArray());
+    }
 }
