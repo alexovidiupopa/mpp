@@ -4,6 +4,8 @@ import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Repository.RepositoryInterface;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -27,6 +29,21 @@ public class LabProblemController {
     }
 
     /**
+     * Removes the given problem from the repository.
+     * @param problem - given problem
+     */
+    public void deleteProblem(LabProblem problem){
+        repository.delete(problem.getId());
+    }
+    /**
+     * Updates the given problem in the repository.
+     * @param problem - given problem
+     * @throws ValidatorException if the problem is not valid
+     */
+    public void updateProblem(LabProblem problem) throws ValidatorException {
+        repository.update(problem);
+    }
+    /**
      * Returns all lab problems currently in the repository.
      * @return HashSet containing all lab problems in the repository.
      */
@@ -48,4 +65,14 @@ public class LabProblemController {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Returns all lab problems sorted descending by score.
+     * @return List containing said problems.
+     */
+    public List<LabProblem> sortProblemsDescendingByScore(){
+        Iterable<LabProblem> problems = repository.getAll();
+        return StreamSupport.stream(problems.spliterator(),false)
+                .sorted((o1, o2) -> o2.getScore()-o1.getScore())
+                .collect(Collectors.toList());
+    }
 }
