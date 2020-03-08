@@ -26,6 +26,10 @@ public class AssignmentController {
         repository.add(assignment);
     }
 
+    public void addGrade(long studentId, long problemId, double grade) throws ValidatorException {
+        this.repository.update(new Assignment(new Pair<>(studentId, problemId), grade));
+    }
+
     /**
      * Gets all the assignments currently in the repository.
      * @return HashSet containing all assignments in the repository.

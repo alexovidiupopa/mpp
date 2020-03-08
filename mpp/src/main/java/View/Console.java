@@ -36,13 +36,14 @@ public class Console {
         commands.put("exit", () -> System.exit(0));
         commands.put("add students", this::addStudents);
         commands.put("add problems", this::addProblems);
-        commands.put("add assignments", this::addAssignments);
+        commands.put("assign", this::addAssignments);
         commands.put("list students", this::printAllStudents);
         commands.put("list problems", this::printAllProblems);
         commands.put("list assignments", this::printAllAssignments);
         commands.put("filter students", this::filterStudents);
         commands.put("filter problems", this::filterProblems);
         commands.put("filter assignments", this::filterAssignments);
+        commands.put("grade assignments", this::gradeAssignments);
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Menu:");
         System.out.println(
@@ -97,7 +98,7 @@ public class Console {
                     .filter(word -> !word.equals(""))
                     .collect(Collectors.toList());
             if(arguments.size() != 4)
-                throw new MyException("Wrong number of arguments for reading student (" + arguments.size() + " instead of 4");
+                throw new MyException("Wrong number of arguments for reading student: (" + arguments.size() + " instead of 4");
             long id;
             try {
                 id = Long.parseLong(arguments.get(0));
@@ -175,7 +176,7 @@ public class Console {
                     .filter(word -> !word.equals(""))
                     .collect(Collectors.toList());
             if(arguments.size() != 3)
-                throw new MyException("Wrong number of arguments for reading lab problem (" + arguments.size() + " instead of 3");
+                throw new MyException("Wrong number of arguments for reading lab problem: (" + arguments.size() + " instead of 3");
             long id;
             try {
                 id = Long.parseLong(arguments.get(0));
@@ -246,7 +247,7 @@ public class Console {
                     .filter(word -> !word.equals(""))
                     .collect(Collectors.toList());
             if(arguments.size() != 2)
-                throw new MyException("Wrong number of arguments for reading assignment (" + arguments.size() + " instead of 2");
+                throw new MyException("Wrong number of arguments for reading assignment: (" + arguments.size() + " instead of 2");
             long studentId;
             try {
                 studentId = Long.parseLong(arguments.get(0));
@@ -285,5 +286,51 @@ public class Console {
         Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
         filteredAssignments.forEach(System.out::println);
     }
+
+    /**
+     * Method to handle giving grades to assignments.
+     */
+    private void gradeAssignments() {
+        System.out.println("Read grade {studentId, problemId, grade}");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String line = br.readLine();
+            if(line.equals("done")){
+                return;
+            }
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 3)
+                throw new MyException("Wrong number of arguments for reading grade: (" + arguments.size() + " instead of 3");
+            long studentId;
+            try {
+                studentId = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for studentId is not a number");
+            }
+            long problemId;
+            try {
+                problemId = Long.parseLong(arguments.get(1));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for problemId is not a number");
+            }
+            double grade;
+            try {
+                grade = Double.parseDouble(arguments.get(2));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for grade is not a number");
+            }
+            this.assignmentController.addGrade(studentId, problemId, grade);
+        }
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
+            gradeAssignments();
+        }
+    }
+
 
 }

@@ -5,10 +5,9 @@ import Model.Validators.Validator;
 import Model.Exceptions.ValidatorException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MemoryRepository<ID, T extends BaseEntity<ID>> implements RepositoryInterface<ID, T> {
 
@@ -56,8 +55,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
 
     @Override
     public Iterable<T> getAll() {
-        Set<T> allEntities = entities.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
-        return allEntities;
+        return new HashSet<>(entities.values());
     }
 
 }

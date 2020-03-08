@@ -16,7 +16,7 @@ import View.Console;
 
 public class Main {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Validator<Student> studentValidator = new StudentValidator();
         RepositoryInterface<Long, Student> studentRepository = new MemoryRepository<>(studentValidator);
         StudentController studentController = new StudentController(studentRepository);

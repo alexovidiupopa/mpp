@@ -15,10 +15,6 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
         this.grade = grade;
     }
 
-    public void setGrade(double grade){
-        this.grade = grade;
-    }
-
     public Double getGrade(){
         return this.grade;
     }
