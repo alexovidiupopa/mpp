@@ -1,15 +1,17 @@
 package View;
 
 import Controller.LabProblemController;
+import Model.Exceptions.MyException;
 import Model.LabProblem;
 import Model.Student;
 import Model.Exceptions.ValidatorException;
 import Controller.StudentController;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Console {
 
@@ -39,7 +41,7 @@ public class Console {
     private void filterStudents() {
         System.out.println("filtered students (name containing 's2'):");
         Set<Student> students = studentController.filterStudentsByName("s2");
-        students.stream().forEach(System.out::println);
+        students.forEach(System.out::println);
     }
 
     /**
@@ -47,7 +49,7 @@ public class Console {
      */
     private void printAllStudents() {
         Set<Student> students = studentController.getAllStudents();
-        students.stream().forEach(System.out::println);
+        students.forEach(System.out::println);
     }
 
     /**
@@ -80,14 +82,31 @@ public class Console {
             if(line.equals("done")){
                 return null;
             }
-            Scanner scanner = new Scanner(line);
-            Long id = scanner.nextLong();// ...
-            String serialNumber = scanner.next();
-            String name = scanner.next();
-            int group = scanner.nextInt();// ...
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 4)
+                throw new MyException("Wrong number of arguments for reading student (" + arguments.size() + " instead of 4");
+            long id;
+            try {
+                id = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for id is not a number");
+            }
+            String serialNumber = arguments.get(1);
+            String name = arguments.get(2);
+            int group;
+            try {
+                group = Integer.parseInt(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for group is not an integer");
+            }
             return new Student(id, serialNumber, name, group);
-        } catch (Exception e) {
-            System.out.println("Wrong input. Use {id, serialNumber, name, group}");
+        }
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
             return readStudent();
         }
     }
@@ -98,7 +117,7 @@ public class Console {
     private void filterProblems() {
         System.out.println("filtered problems (score >= 5):");
         Set<LabProblem> filteredProblems = this.labProblemController.filterProblemsByScore(5);
-        filteredProblems.stream().forEach(System.out::println);
+        filteredProblems.forEach(System.out::println);
     }
 
     /**
@@ -106,7 +125,7 @@ public class Console {
      */
     private void printAllProblems() {
         Set<LabProblem> allProblems = labProblemController.getAllProblems();
-        allProblems.stream().forEach(System.out::println);
+        allProblems.forEach(System.out::println);
     }
 
     /**
@@ -139,14 +158,24 @@ public class Console {
             if(line.equals("done")){
                 return null;
             }
-            Scanner scanner = new Scanner(line);
-            Long id = scanner.nextLong();
-            String description = scanner.next();
-            int score = scanner.nextInt();
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 3)
+                throw new MyException("Wrong number of arguments for reading lab problem (" + arguments.size() + " instead of 3");
+            long id;
+            try {
+                id = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for id is not a number");
+            }
+            String description = arguments.get(1);
+            int score = Integer.parseInt(arguments.get(2));
             return new LabProblem(id, description, score);
         }
-        catch (Exception e) {
-            System.out.println("Wrong input. Use {id, serialNumber, name, group}");
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
             return readProblem();
         }
     }
