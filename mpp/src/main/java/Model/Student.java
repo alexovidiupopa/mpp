@@ -6,9 +6,6 @@ public class Student extends BaseEntity<Long>{
     private String name;
     private int group;
 
-    public Student() {
-    }
-
     public Student(String serialNumber, String name, int group) {
         this.serialNumber = serialNumber;
         this.name = name;

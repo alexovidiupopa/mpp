@@ -1,54 +1,68 @@
 package View;
 
+import Controller.AssignmentController;
 import Controller.LabProblemController;
+import Model.Assignment;
+import Model.Exceptions.MyException;
 import Model.LabProblem;
 import Model.Student;
 import Model.Exceptions.ValidatorException;
 import Controller.StudentController;
+import Utils.Pair;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Console {
 
     private StudentController studentController;
     private LabProblemController labProblemController;
+    private AssignmentController assignmentController;
 
-    public Console(StudentController studentService, LabProblemController problemController) {
+    public Console(StudentController studentService, LabProblemController problemController, AssignmentController assignmentController) {
         this.studentController = studentService;
         this.labProblemController = problemController;
+        this.assignmentController = assignmentController;
     }
 
     /**
      * Method to run the console.
      */
-    public void runConsole() {
-        addStudents();
-        printAllStudents();
-        filterStudents();
-        addProblems();
-        printAllProblems();
-        filterProblems();
+    public void run(){
+        Map<String, Runnable> commands = new HashMap<>();
+        commands.put("exit", () -> System.exit(0));
+        commands.put("add students", this::addStudents);
+        commands.put("add problems", this::addProblems);
+        commands.put("assign", this::addAssignments);
+        commands.put("list students", this::printAllStudents);
+        commands.put("list problems", this::printAllProblems);
+        commands.put("list assignments", this::printAllAssignments);
+        commands.put("filter students", this::filterStudents);
+        commands.put("filter problems", this::filterProblems);
+        commands.put("filter assignments", this::filterAssignments);
+        commands.put("grade assignments", this::gradeAssignments);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Menu:");
+        System.out.println(
+                commands.keySet()
+                .stream()
+                .reduce("", (s, k) -> s += k + "\n")
+        );
+        while(true){
+            try {
+                System.out.println(">>>");
+                String command = br.readLine();
+                commands.get(command).run();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
-    /**
-     * Method to handle filtering the students.
-     */
-    private void filterStudents() {
-        System.out.println("filtered students (name containing 's2'):");
-        Set<Student> students = studentController.filterStudentsByName("s2");
-        students.stream().forEach(System.out::println);
-    }
 
-    /**
-     * Method to handle printing the students.
-     */
-    private void printAllStudents() {
-        Set<Student> students = studentController.getAllStudents();
-        students.stream().forEach(System.out::println);
-    }
 
     /**
      * Method to handle adding students.
@@ -80,34 +94,53 @@ public class Console {
             if(line.equals("done")){
                 return null;
             }
-            Scanner scanner = new Scanner(line);
-            Long id = scanner.nextLong();// ...
-            String serialNumber = scanner.next();
-            String name = scanner.next();
-            int group = scanner.nextInt();// ...
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 4)
+                throw new MyException("Wrong number of arguments for reading student: (" + arguments.size() + " instead of 4");
+            long id;
+            try {
+                id = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for id is not a number");
+            }
+            String serialNumber = arguments.get(1);
+            String name = arguments.get(2);
+            int group;
+            try {
+                group = Integer.parseInt(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for group is not an integer");
+            }
             return new Student(id, serialNumber, name, group);
-        } catch (Exception e) {
-            System.out.println("Wrong input. Use {id, serialNumber, name, group}");
+        }
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
             return readStudent();
         }
     }
 
     /**
-     * Method to handle filtering the lab problems.
+     * Method to handle printing the students.
      */
-    private void filterProblems() {
-        System.out.println("filtered problems (score >= 5):");
-        Set<LabProblem> filteredProblems = this.labProblemController.filterProblemsByScore(5);
-        filteredProblems.stream().forEach(System.out::println);
+    private void printAllStudents() {
+        Set<Student> students = studentController.getAllStudents();
+        students.forEach(System.out::println);
     }
 
     /**
-     * Method to handle printing the lab problems.
+     * Method to handle filtering the students.
      */
-    private void printAllProblems() {
-        Set<LabProblem> allProblems = labProblemController.getAllProblems();
-        allProblems.stream().forEach(System.out::println);
+    private void filterStudents() {
+        System.out.println("filtered students (name containing 's2'):");
+        Set<Student> students = studentController.filterStudentsByName("s2");
+        students.forEach(System.out::println);
     }
+
+
 
     /**
      * Method to handle adding lab problems.
@@ -139,16 +172,165 @@ public class Console {
             if(line.equals("done")){
                 return null;
             }
-            Scanner scanner = new Scanner(line);
-            Long id = scanner.nextLong();
-            String description = scanner.next();
-            int score = scanner.nextInt();
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 3)
+                throw new MyException("Wrong number of arguments for reading lab problem: (" + arguments.size() + " instead of 3");
+            long id;
+            try {
+                id = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for id is not a number");
+            }
+            String description = arguments.get(1);
+            int score = Integer.parseInt(arguments.get(2));
             return new LabProblem(id, description, score);
         }
-        catch (Exception e) {
-            System.out.println("Wrong input. Use {id, serialNumber, name, group}");
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
             return readProblem();
         }
     }
+
+    /**
+     * Method to handle printing the lab problems.
+     */
+    private void printAllProblems() {
+        Set<LabProblem> allProblems = labProblemController.getAllProblems();
+        allProblems.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle filtering the lab problems.
+     */
+    private void filterProblems() {
+        System.out.println("filtered problems (score >= 5):");
+        Set<LabProblem> filteredProblems = this.labProblemController.filterProblemsByScore(5);
+        filteredProblems.forEach(System.out::println);
+    }
+
+
+
+    /**
+     * Method to handle adding assignment.
+     */
+    private void addAssignments() {
+        while (true) {
+            Assignment assignment = readAssignment();
+            if (assignment == null) {
+                break;
+            }
+            try {
+                this.assignmentController.addAssignment(assignment);
+                System.out.println("Assignment added successfully");
+            } catch (ValidatorException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Helper method to handle reading an assignment from keyboard.
+     * @return read assignment
+     */
+    private Assignment readAssignment() {
+        System.out.println("Read assignment {studentId, ProblemId}");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String line = br.readLine();
+            if(line.equals("done")){
+                return null;
+            }
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 2)
+                throw new MyException("Wrong number of arguments for reading assignment: (" + arguments.size() + " instead of 2");
+            long studentId;
+            try {
+                studentId = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for studentId is not a number");
+            }
+            long problemId;
+            try {
+                problemId = Long.parseLong(arguments.get(1));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for problemId is not a number");
+            }
+            return new Assignment(new Pair<>(studentId, problemId));
+        }
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
+            return readAssignment();
+        }
+    }
+
+    /**
+     * Method to handle printing the assignment.
+     */
+    private void printAllAssignments() {
+        Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
+        allAssignments.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle filtering the assignments.
+     */
+    private void filterAssignments() {
+        System.out.println("filtered assignments (score >= 5):");
+        Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+        filteredAssignments.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle giving grades to assignments.
+     */
+    private void gradeAssignments() {
+        System.out.println("Read grade {studentId, problemId, grade}");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String line = br.readLine();
+            if(line.equals("done")){
+                return;
+            }
+            List<String> arguments = Arrays.stream(line.split(" "))
+                    .filter(word -> !word.equals(""))
+                    .collect(Collectors.toList());
+            if(arguments.size() != 3)
+                throw new MyException("Wrong number of arguments for reading grade: (" + arguments.size() + " instead of 3");
+            long studentId;
+            try {
+                studentId = Long.parseLong(arguments.get(0));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for studentId is not a number");
+            }
+            long problemId;
+            try {
+                problemId = Long.parseLong(arguments.get(1));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for problemId is not a number");
+            }
+            double grade;
+            try {
+                grade = Double.parseDouble(arguments.get(2));
+            }
+            catch (NumberFormatException nfe) {
+                throw new MyException("Argument for grade is not a number");
+            }
+            this.assignmentController.addGrade(studentId, problemId, grade);
+        }
+        catch (MyException | IOException e) {
+            System.out.println(e.getMessage());
+            gradeAssignments();
+        }
+    }
+
 
 }
