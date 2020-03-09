@@ -2,6 +2,7 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Student;
 import Model.Validators.Validator;
 
 import java.io.BufferedWriter;
@@ -21,6 +22,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     public LabProblemFileRepository(Validator<LabProblem> validator, String fileName) {
         super(validator);
         this.fileName = fileName;
+        loadData();
     }
 
     /**
@@ -58,6 +60,46 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         return Optional.empty();
     }
 
+    @Override
+    public Optional<LabProblem> delete(Long id){
+        Optional<LabProblem> optional = super.delete(id);
+        if (!optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<LabProblem> update(LabProblem entity) throws ValidatorException {
+        Optional<LabProblem> optional = super.update(entity);
+        if(optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
+    /**
+     * Saves all the current entities in the repository to the file.
+     */
+    private void saveAllToFile() {
+        Path path = Paths.get(fileName);
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.WRITE)) {
+            super.getAll().forEach(entity->{
+                try {
+                    bufferedWriter.write(
+                            entity.getId() + "," + entity.getDescription() + "," + entity.getScore());
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Saves the given LabProblem into file.
      * @param entity - valid LabProblem object.
@@ -66,7 +108,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         Path path = Paths.get(fileName);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             bufferedWriter.write(
-                    entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());
+                    "\n" + entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());
             bufferedWriter.newLine();
         }
         catch (IOException e) {

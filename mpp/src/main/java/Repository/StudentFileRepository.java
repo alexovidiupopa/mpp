@@ -61,6 +61,46 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Student> delete(Long id){
+        Optional<Student> optional = super.delete(id);
+        if (!optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Student> update(Student entity) throws ValidatorException {
+        Optional<Student> optional = super.update(entity);
+        if(optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
+    /**
+     * Saves all the current entities in the repository to the file.
+     */
+    private void saveAllToFile() {
+        Path path = Paths.get(fileName);
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.WRITE)) {
+            super.getAll().forEach(entity->{
+                try {
+                    bufferedWriter.write(
+                            entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Saves the entity into the file.
      * @param entity- valid Student object.
@@ -69,7 +109,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
         Path path = Paths.get(fileName);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             bufferedWriter.write(
-                    entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
+                    "\n" + entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
             bufferedWriter.newLine();
         }
         catch (IOException e) {
