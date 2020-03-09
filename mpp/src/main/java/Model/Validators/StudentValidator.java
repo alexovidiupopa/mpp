@@ -12,8 +12,15 @@ public class StudentValidator implements Validator<Student> {
      */
     @Override
     public void validate(Student entity) throws ValidatorException {
-        if (entity.getSerialNumber().isEmpty() || entity.getGroup()<=0 || entity.getGroup()>7 || entity.getName().isEmpty())
-            throw new ValidatorException("Student details incorrect.");
+        String exceptionMsg="";
+        if(entity.getSerialNumber().isEmpty())
+            exceptionMsg+="Serial number cannot be empty.";
+        if (entity.getName().isEmpty())
+            exceptionMsg+="Name cannot be empty.";
+        if (entity.getGroup()<=0 || entity.getGroup()>7)
+            exceptionMsg+="Group must be between [1,7].";
+        if(!exceptionMsg.isEmpty())
+            throw new ValidatorException(exceptionMsg);
 
     }
 
