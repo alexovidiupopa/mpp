@@ -31,4 +31,12 @@ public class Pair<T1, T2> {
         return "" + this.first + "," + this.second;
     }
 
+    @Override
+    public boolean equals(Object another){
+        if(!(another instanceof Pair))
+            return false;
+        Pair otherPair = (Pair)another;
+        return otherPair.getFirst() == this.first && otherPair.getSecond() == this.second;
+    }
+
 }

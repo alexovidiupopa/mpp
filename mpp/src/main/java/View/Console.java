@@ -21,29 +21,38 @@ public class Console {
     private StudentController studentController;
     private LabProblemController labProblemController;
     private AssignmentController assignmentController;
+    private Map<String, Runnable> commands;
 
     public Console(StudentController studentService, LabProblemController problemController, AssignmentController assignmentController) {
         this.studentController = studentService;
         this.labProblemController = problemController;
         this.assignmentController = assignmentController;
-    }
-
-    /**
-     * Method to run the console.
-     */
-    public void run(){
-        Map<String, Runnable> commands = new HashMap<>();
+        commands = new HashMap<>();
         commands.put("exit", () -> System.exit(0));
         commands.put("add students", this::addStudents);
         commands.put("add problems", this::addProblems);
-        commands.put("assign", this::addAssignments);
+        commands.put("add assignments", this::addAssignments);
+        commands.put("delete students", this::deleteStudents);
+        commands.put("delete problems", this::deleteProblems);
+        commands.put("delete assignments", this::deleteAssignment);
+        commands.put("update students", this::updateStudent);
+        commands.put("update problems", this::updateProblems);
+        commands.put("update assignments", this::updateAssignment);
         commands.put("list students", this::printAllStudents);
         commands.put("list problems", this::printAllProblems);
         commands.put("list assignments", this::printAllAssignments);
         commands.put("filter students", this::filterStudents);
         commands.put("filter problems", this::filterProblems);
         commands.put("filter assignments", this::filterAssignments);
+        commands.put("sort students", this::sortStudents);
+        commands.put("sort problems", this::sortProblems);
         commands.put("grade assignments", this::gradeAssignments);
+    }
+
+    /**
+     * Method to run the console.
+     */
+    public void run(){
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Menu:");
         System.out.println(
@@ -70,12 +79,38 @@ public class Console {
     private void addStudents() {
         while (true) {
             Student student = readStudent();
-            if (student == null || student.getId() <= 0) {
+            if (student == null) {
                 break;
             }
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
+            } catch (ValidatorException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void deleteStudents(){
+        while (true) {
+            Student student = readStudent();
+            if (student == null) {
+                break;
+            }
+            studentController.deleteStudent(student);
+            System.out.println("Student deleted successfully");
+        }
+    }
+
+    private void updateStudent(){
+        while (true) {
+            Student student = readStudent();
+            if (student == null) {
+                break;
+            }
+            try {
+                studentController.updateStudent(student);
+                System.out.println("Student updated successfully");
             } catch (ValidatorException e) {
                 System.out.println(e.getMessage());
             }
@@ -110,7 +145,7 @@ public class Console {
             String name = arguments.get(2);
             int group;
             try {
-                group = Integer.parseInt(arguments.get(0));
+                group = Integer.parseInt(arguments.get(3));
             }
             catch (NumberFormatException nfe) {
                 throw new MyException("Argument for group is not an integer");
@@ -140,6 +175,12 @@ public class Console {
         students.forEach(System.out::println);
     }
 
+    private void sortStudents() {
+        System.out.println("sorted students (by name):");
+        List<Student> students = studentController.sortStudentsAscendingByName();
+        students.forEach(System.out::println);
+    }
+
 
 
     /**
@@ -154,6 +195,32 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
+            } catch (ValidatorException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void deleteProblems(){
+        while (true) {
+            LabProblem problem = readProblem();
+            if (problem == null) {
+                break;
+            }
+            labProblemController.deleteProblem(problem);
+            System.out.println("Problem deleted successfully");
+        }
+    }
+
+    private void updateProblems(){
+        while (true) {
+            LabProblem problem = readProblem();
+            if (problem == null) {
+                break;
+            }
+            try {
+                labProblemController.updateProblem(problem);
+                System.out.println("Problem updated successfully");
             } catch (ValidatorException e) {
                 System.out.println(e.getMessage());
             }
@@ -211,6 +278,12 @@ public class Console {
         filteredProblems.forEach(System.out::println);
     }
 
+    private void sortProblems() {
+        System.out.println("sorted problems (by score):");
+        List<LabProblem> students = labProblemController.sortProblemsDescendingByScore();
+        students.forEach(System.out::println);
+    }
+
 
 
     /**
@@ -225,6 +298,33 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
+            } catch (ValidatorException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void deleteAssignment(){
+        while (true) {
+            Assignment assignment = readAssignment();
+            if (assignment == null) {
+                break;
+            }
+            assignmentController.deleteAssignment(assignment);
+            System.out.println("Problem deleted successfully");
+        }
+    }
+
+    private void updateAssignment(){
+        while (true) {
+            Assignment assignment = readAssignment();
+            if (assignment == null) {
+                break;
+            }
+            try {
+                assignmentController.updateAssignment(assignment);
+                System.out.println("Problem updated successfully");
+                throw new ValidatorException("");
             } catch (ValidatorException e) {
                 System.out.println(e.getMessage());
             }
@@ -324,7 +424,7 @@ public class Console {
             catch (NumberFormatException nfe) {
                 throw new MyException("Argument for grade is not a number");
             }
-            this.assignmentController.addGrade(studentId, problemId, grade);
+            this.assignmentController.updateAssignment(new Assignment(new Pair<>(studentId, problemId), grade));
         }
         catch (MyException | IOException e) {
             System.out.println(e.getMessage());
