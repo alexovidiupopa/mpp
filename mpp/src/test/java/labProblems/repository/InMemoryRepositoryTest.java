@@ -70,8 +70,8 @@ public class InMemoryRepositoryTest {
 
     @Test
     public void testUpdate() throws Exception {
-        assertEquals(testStudentRepository.update(new Student(1L,"1234","popa",1)), Optional.empty());
-        assertEquals(testStudentRepository.findById(1L).get().getName(),"popa");
+        assertEquals(testStudentRepository.update(new Student(1L,"1234","popa",2)), Optional.empty());
+        assertEquals(testStudentRepository.findById(1L).get().getGroup(),2);
     }
 
     @Test(expected = ValidatorException.class)

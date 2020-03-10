@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Assignment extends BaseEntity<Pair<Long, Long>> {
 
-    Double grade;
+    private Double grade;
 
     public Assignment(Pair<Long, Long> _id) {
         super(_id);

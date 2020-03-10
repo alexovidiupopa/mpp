@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Assignment;
 import Model.Exceptions.ValidatorException;
+import Model.Student;
 import Repository.RepositoryInterface;
 import Utils.Pair;
 
@@ -26,8 +27,21 @@ public class AssignmentController {
         repository.add(assignment);
     }
 
-    public void addGrade(long studentId, long problemId, double grade) throws ValidatorException {
-        this.repository.update(new Assignment(new Pair<>(studentId, problemId), grade));
+    /**
+     * Removes the given assignment from the repository.
+     * @param assignment - given assignment
+     */
+    public void deleteAssignment(Assignment assignment) {
+        repository.delete(assignment.getId());
+    }
+
+    /**
+     * Updates the given assignment in the repository.
+     * @param assignment - given assignment
+     * @throws ValidatorException if the assignment is not valid
+     */
+    public void updateAssignment(Assignment assignment) throws ValidatorException{
+        repository.update(assignment);
     }
 
     /**
