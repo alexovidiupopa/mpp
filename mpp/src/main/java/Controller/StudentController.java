@@ -1,11 +1,14 @@
 package Controller;
 
+import Model.Exceptions.RepositoryException;
+import Model.LabProblem;
 import Model.Student;
 import Model.Exceptions.ValidatorException;
 import Repository.RepositoryInterface;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,16 +26,20 @@ public class StudentController {
      * @param student - given student
      * @throws ValidatorException if student is not valid
      */
-    public void addStudent(Student student) throws ValidatorException {
-        repository.add(student);
+    public void addStudent(Student student) throws ValidatorException, RepositoryException {
+        Optional<Student> optional = repository.add(student);
+        if (optional.isPresent())
+            throw new RepositoryException("Id already exists");
     }
 
     /**
      * Removes the given student from the repository.
      * @param student - given student
      */
-    public void deleteStudent(Student student) {
-        repository.delete(student.getId());
+    public void deleteStudent(Student student) throws RepositoryException {
+        Optional<Student> optional = repository.delete(student.getId());
+        if (!optional.isPresent())
+            throw new RepositoryException("Student doesn't exist");
     }
 
     /**
@@ -40,8 +47,10 @@ public class StudentController {
      * @param student - given student
      * @throws ValidatorException if the student is not valid
      */
-    public void updateStudent(Student student) throws ValidatorException{
-        repository.update(student);
+    public void updateStudent(Student student) throws ValidatorException, RepositoryException {
+        Optional<Student> optional = repository.update(student);
+        if (optional.isPresent())
+            throw new RepositoryException("Student doesn't exist");
     }
     /**
      * Gets all the students currently in the repository.

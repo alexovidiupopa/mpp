@@ -1,6 +1,7 @@
 package labProblems.controller;
 
 import Controller.LabProblemController;
+import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Model.Student;
@@ -38,37 +39,35 @@ public class LabProblemControllerTest {
     }
 
     @Test
-    public void testAddProblem() throws ValidatorException {
+    public void testAddProblem() throws ValidatorException, RepositoryException {
         this.labProblemController.addProblem(new LabProblem(55L, "problem5", 40));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testAddProblemException() throws ValidatorException {
+    public void testAddProblemException() throws ValidatorException, RepositoryException {
         this.labProblemController.addProblem(new LabProblem(55L, "problem5", -100));
     }
 
-    @Test
-    public void testAddProblemUsedId() throws ValidatorException {
+    @Test (expected = RepositoryException.class)
+    public void testAddProblemUsedId() throws ValidatorException, RepositoryException {
         this.labProblemController.addProblem(new LabProblem(33L, "problem5", 100));
-        assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
-        assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem5", 100)));
     }
 
     @Test
-    public void testDeleteProblem() {
+    public void testDeleteProblem() throws RepositoryException {
         this.labProblemController.deleteProblem(new LabProblem(33L, "problem3", 10));
         assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
     }
 
     @Test
-    public void testUpdateProblem() throws ValidatorException {
+    public void testUpdateProblem() throws ValidatorException, RepositoryException {
         this.labProblemController.updateProblem(new LabProblem(33L, "updated", 10));
         assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "updated", 10)));
     }
 
     @Test (expected = ValidatorException.class)
-    public void testUpdateProblemException() throws ValidatorException{
+    public void testUpdateProblemException() throws ValidatorException, RepositoryException {
         this.labProblemController.updateProblem(new LabProblem(33L, "expect-exception", -1));
     }
 

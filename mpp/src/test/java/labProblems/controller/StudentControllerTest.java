@@ -1,6 +1,7 @@
 package labProblems.controller;
 
 import Controller.StudentController;
+import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.Student;
 import Model.Validators.StudentValidator;
@@ -37,39 +38,37 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testAddStudent() throws ValidatorException {
+    public void testAddStudent() throws ValidatorException, RepositoryException {
         this.studentController.addStudent(new Student(4L, "1234", "Michael", 1));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testAddStudentException() throws ValidatorException {
+    public void testAddStudentException() throws ValidatorException, RepositoryException {
         this.studentController.addStudent(new Student(1L, "abcd", "William", -2));
     }
 
     @Test
-    public void testDeleteStudent() {
+    public void testDeleteStudent() throws RepositoryException {
         this.studentController.deleteStudent(new Student(23L, "ab12", "Mary", 1));
         assertEquals(this.studentController.getAllStudents().size(),3);
         assertFalse(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Mary", 1)));
     }
 
     @Test
-    public void testUpdateStudent() throws ValidatorException {
+    public void testUpdateStudent() throws ValidatorException, RepositoryException {
         this.studentController.updateStudent(new Student(23L, "ab12", "Angela", 2));
         assertTrue(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Angela", 2)));
         assertFalse(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Mary", 1)));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testUpdateStudentException() throws ValidatorException {
+    public void testUpdateStudentException() throws ValidatorException, RepositoryException {
         this.studentController.updateStudent(new Student(23L, "", "Angela", 2));
     }
 
-    @Test
-    public void testAddStudentUsedId() throws ValidatorException {
+    @Test(expected = RepositoryException.class)
+    public void testAddStudentUsedId() throws ValidatorException, RepositoryException {
         this.studentController.addStudent(new Student(23L, "abcd", "William", 2));
-        assertTrue(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Mary", 1)));
-        assertFalse(this.studentController.getAllStudents().contains(new Student(23L, "abcd", "William", 2)));
     }
 
     @Test
