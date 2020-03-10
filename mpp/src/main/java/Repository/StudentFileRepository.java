@@ -44,6 +44,9 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
                 catch (ValidatorException e) {
                     e.printStackTrace();
                 }
+                catch (NumberFormatException e){
+                    e.printStackTrace();
+                }
             });
         }
         catch (IOException ex) {
@@ -64,8 +67,9 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     @Override
     public Optional<Student> delete(Long id){
         Optional<Student> optional = super.delete(id);
-        if (!optional.isPresent())
+        if (optional.isPresent()) {
             return optional;
+        }
         saveAllToFile();
         return Optional.empty();
     }
@@ -108,8 +112,9 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     private void saveToFile(Student entity) {
         Path path = Paths.get(fileName);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+
             bufferedWriter.write(
-                    "\n" + entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
+                    entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
             bufferedWriter.newLine();
         }
         catch (IOException e) {

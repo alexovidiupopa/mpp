@@ -24,20 +24,12 @@ public class StudentFileRepositoryTest {
     public void setUp() throws Exception {
         studentValidator = new StudentValidator();
         testRepository = new StudentFileRepository(studentValidator,"./files/test-students.txt");
-        testRepository.delete(3L);
     }
 
     @After
     public void tearDown() throws Exception {
+        testRepository.update(new Student(1,"1","alex",1));
         testRepository=null;
-    }
-
-    @Test
-    public void testSaveAllToFile() {
-        testRepository.delete(3L);
-        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,"./files/test-students.txt");
-        Set<Student> students = (HashSet<Student>) testRepositoryTest.getAll();
-        assertEquals(students.size(),2);
     }
 
     @Test
@@ -46,7 +38,19 @@ public class StudentFileRepositoryTest {
         MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,"./files/test-students.txt");
         Set<Student> students = (HashSet<Student>) testRepositoryTest.getAll();
         assertEquals(students.size(),3);
+        testRepositoryTest.delete(3L);
     }
+
+
+    @Test
+    public void testSaveAllToFile() throws ValidatorException {
+        testRepository.update(new Student(1,"1","alin",2));
+        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,"./files/test-students.txt");
+        Set<Student> students = (HashSet<Student>) testRepositoryTest.getAll();
+        assertEquals(students.size(),2);
+        assertTrue(students.contains(new Student(1,"1","alin",2)));
+    }
+
 
     @Test
     public void testLoadData() {

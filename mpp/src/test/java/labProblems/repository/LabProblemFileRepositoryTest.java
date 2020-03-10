@@ -24,7 +24,6 @@ public class LabProblemFileRepositoryTest {
     public void setUp() throws Exception {
         labProblemValidator = new LabProblemValidator();
         testRepository = new LabProblemFileRepository(labProblemValidator,"./files/test-problems.txt");
-        testRepository.delete(3L);
     }
 
 
