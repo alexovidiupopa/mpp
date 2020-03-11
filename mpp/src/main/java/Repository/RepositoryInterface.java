@@ -3,6 +3,7 @@ package Repository;
 import Model.BaseEntity;
 import Model.Exceptions.ValidatorException;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
@@ -18,7 +19,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws ValidatorException
      *             if the entity is not valid.
      */
-    Optional<T> add(T entity) throws ValidatorException;
+    Optional<T> add(T entity) throws ValidatorException, IOException;
 
     /**
      * Removes the entity with the given id.
@@ -29,7 +30,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws IllegalArgumentException
      *             if the given id is null.
      */
-    Optional<T> delete(ID id);
+    Optional<T> delete(ID id) throws IOException;
 
     /**
      * Updates the given entity.
@@ -43,7 +44,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws ValidatorException
      *             if the entity is not valid.
      */
-    Optional<T> update(T entity) throws ValidatorException;
+    Optional<T> update(T entity) throws ValidatorException, IOException;
 
     /**
      * Find the entity with the given {@code id}.

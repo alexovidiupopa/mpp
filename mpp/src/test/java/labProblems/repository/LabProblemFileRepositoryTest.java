@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,12 +24,13 @@ public class LabProblemFileRepositoryTest {
     @Before
     public void setUp() throws Exception {
         labProblemValidator = new LabProblemValidator();
-        testRepository = new LabProblemFileRepository(labProblemValidator,"./files/test-problems.txt");
+        testRepository = new LabProblemFileRepository(labProblemValidator,".\\files\\test-problems.txt");
     }
 
 
     @After
     public void tearDown() throws Exception {
+        testRepository.update(new LabProblem(1L,"stack",10));
         testRepository=null;
     }
 
@@ -41,20 +43,15 @@ public class LabProblemFileRepositoryTest {
     }
 
     @Test
-    public void testSaveAllToFile() {
-        testRepository.delete(3L);
-        MemoryRepository<Long,LabProblem> testRepositoryTest = new LabProblemFileRepository(labProblemValidator,"./files/test-problems.txt");
+    public void testSaveAllToFile() throws IOException, ValidatorException {
+        testRepository.update(new LabProblem(1L,"heap",120));
+        MemoryRepository<Long,LabProblem> testRepositoryTest = new LabProblemFileRepository(labProblemValidator,".\\files\\test-problems.txt");
         Set<LabProblem> problems = (HashSet<LabProblem>) testRepositoryTest.getAll();
         assertEquals(problems.size(),2);
+        assertTrue(problems.contains(new LabProblem(1L, "heap", 120)));
     }
 
-    @Test
-    public void testSaveToFile() throws ValidatorException {
-        testRepository.add(new LabProblem(3L,"asd",11));
-        MemoryRepository<Long,LabProblem> testRepositoryTest = new LabProblemFileRepository(labProblemValidator,"./files/test-problems.txt");
-        Set<LabProblem> problems = (HashSet<LabProblem>) testRepositoryTest.getAll();
-        assertEquals(problems.size(),3);
-    }
+
 
 
 }

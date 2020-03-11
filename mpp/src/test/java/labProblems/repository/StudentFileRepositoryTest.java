@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class StudentFileRepositoryTest {
     @Before
     public void setUp() throws Exception {
         studentValidator = new StudentValidator();
-        testRepository = new StudentFileRepository(studentValidator,"./files/test-students.txt");
+        testRepository = new StudentFileRepository(studentValidator,".\\files\\test-students.txt");
     }
 
     @After
@@ -32,20 +33,11 @@ public class StudentFileRepositoryTest {
         testRepository=null;
     }
 
-    @Test
-    public void testSaveToFile() throws ValidatorException {
-        testRepository.add(new Student(3L,"3","ana",3));
-        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,"./files/test-students.txt");
-        Set<Student> students = (HashSet<Student>) testRepositoryTest.getAll();
-        assertEquals(students.size(),3);
-        testRepositoryTest.delete(3L);
-    }
-
 
     @Test
-    public void testSaveAllToFile() throws ValidatorException {
+    public void testSaveAllToFile() throws ValidatorException, IOException {
         testRepository.update(new Student(1,"1","alin",2));
-        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,"./files/test-students.txt");
+        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,".\\files\\test-students.txt");
         Set<Student> students = (HashSet<Student>) testRepositoryTest.getAll();
         assertEquals(students.size(),2);
         assertTrue(students.contains(new Student(1,"1","alin",2)));

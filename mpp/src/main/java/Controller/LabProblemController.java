@@ -4,6 +4,7 @@ import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Repository.RepositoryInterface;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class LabProblemController {
      * @throws ValidatorException if problem is invalid
      * @throws IllegalArgumentException if problem is null.
      */
-    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException {
+    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException {
         Optional<LabProblem> optional = repository.add(problem);
         if (optional.isPresent())
             throw new RepositoryException("Id already exists");
@@ -36,7 +37,7 @@ public class LabProblemController {
      * Removes the given problem from the repository.
      * @param problem - given problem
      */
-    public void deleteProblem(LabProblem problem) throws RepositoryException {
+    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException {
         Optional<LabProblem> optional = repository.delete(problem.getId());
         if (!optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");
@@ -46,7 +47,7 @@ public class LabProblemController {
      * @param problem - given problem
      * @throws ValidatorException if the problem is not valid
      */
-    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException {
+    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException {
         Optional<LabProblem> optional = repository.update(problem);
         if (optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");

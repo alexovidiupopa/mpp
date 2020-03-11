@@ -4,6 +4,7 @@ import Controller.AssignmentController;
 import Controller.LabProblemController;
 import Model.Assignment;
 import Model.Exceptions.MyException;
+import Model.Exceptions.RepositoryException;
 import Model.LabProblem;
 import Model.Student;
 import Model.Exceptions.ValidatorException;
@@ -37,7 +38,7 @@ public class Console {
         commands.put("delete assignments", this::deleteAssignment);
         commands.put("update students", this::updateStudent);
         commands.put("update problems", this::updateProblems);
-        commands.put("update assignments", this::updateAssignment);
+        commands.put("grade assignments", this::gradeAssignments);
         commands.put("list students", this::printAllStudents);
         commands.put("list problems", this::printAllProblems);
         commands.put("list assignments", this::printAllAssignments);
@@ -46,7 +47,19 @@ public class Console {
         commands.put("filter assignments", this::filterAssignments);
         commands.put("sort students", this::sortStudents);
         commands.put("sort problems", this::sortProblems);
-        commands.put("grade assignments", this::gradeAssignments);
+        commands.put("sort assignments", this::sortAssignments);
+    }
+
+    /**
+     * Method to print console menu.
+     */
+    public void printMenu(){
+        System.out.println("Menu:");
+        System.out.println(
+                commands.keySet()
+                        .stream()
+                        .reduce("", (s, k) -> s += k + "\n")
+        );
     }
 
     /**
@@ -54,16 +67,13 @@ public class Console {
      */
     public void run(){
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Menu:");
-        System.out.println(
-                commands.keySet()
-                .stream()
-                .reduce("", (s, k) -> s += k + "\n")
-        );
+        this.printMenu();
         while(true){
             try {
                 System.out.println(">>>");
                 String command = br.readLine();
+                if(!commands.containsKey(command))
+                    throw new MyException("Invalid command");
                 commands.get(command).run();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -85,7 +95,7 @@ public class Console {
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -97,8 +107,13 @@ public class Console {
             if (student == null) {
                 break;
             }
-            studentController.deleteStudent(student);
-            System.out.println("Student deleted successfully");
+            try {
+                studentController.deleteStudent(student);
+                System.out.println("Student deleted successfully");
+            } catch (RepositoryException | IOException e) {
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 
@@ -111,7 +126,7 @@ public class Console {
             try {
                 studentController.updateStudent(student);
                 System.out.println("Student updated successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -195,7 +210,7 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -207,8 +222,13 @@ public class Console {
             if (problem == null) {
                 break;
             }
-            labProblemController.deleteProblem(problem);
-            System.out.println("Problem deleted successfully");
+            try {
+                labProblemController.deleteProblem(problem);
+                System.out.println("Problem deleted successfully");
+            } catch (RepositoryException | IOException e) {
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 
@@ -221,7 +241,7 @@ public class Console {
             try {
                 labProblemController.updateProblem(problem);
                 System.out.println("Problem updated successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -298,34 +318,22 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | IOException | RepositoryException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    private void deleteAssignment(){
-        while (true) {
-            Assignment assignment = readAssignment();
-            if (assignment == null) {
-                break;
-            }
-            assignmentController.deleteAssignment(assignment);
-            System.out.println("Problem deleted successfully");
-        }
-    }
-
-    private void updateAssignment(){
+    private void deleteAssignment() {
         while (true) {
             Assignment assignment = readAssignment();
             if (assignment == null) {
                 break;
             }
             try {
-                assignmentController.updateAssignment(assignment);
-                System.out.println("Problem updated successfully");
-                throw new ValidatorException("");
-            } catch (ValidatorException e) {
+                assignmentController.deleteAssignment(assignment);
+                System.out.println("Assignment deleted successfully");
+            } catch (IOException | RepositoryException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -371,23 +379,6 @@ public class Console {
     }
 
     /**
-     * Method to handle printing the assignment.
-     */
-    private void printAllAssignments() {
-        Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
-        allAssignments.forEach(System.out::println);
-    }
-
-    /**
-     * Method to handle filtering the assignments.
-     */
-    private void filterAssignments() {
-        System.out.println("filtered assignments (score >= 5):");
-        Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
-        filteredAssignments.forEach(System.out::println);
-    }
-
-    /**
      * Method to handle giving grades to assignments.
      */
     private void gradeAssignments() {
@@ -430,6 +421,29 @@ public class Console {
             System.out.println(e.getMessage());
             gradeAssignments();
         }
+    }
+
+    /**
+     * Method to handle printing the assignment.
+     */
+    private void printAllAssignments() {
+        Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
+        allAssignments.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle filtering the assignments.
+     */
+    private void filterAssignments() {
+        System.out.println("filtered assignments (grade >= 5):");
+        Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+        filteredAssignments.forEach(System.out::println);
+    }
+
+    private void sortAssignments() {
+        System.out.println("sorted assignments (by student and problem):");
+        List<Assignment> students = assignmentController.sortAssignmentsAscendingById();
+        students.forEach(System.out::println);
     }
 
 

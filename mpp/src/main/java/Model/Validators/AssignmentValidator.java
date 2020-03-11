@@ -4,7 +4,7 @@ package Model.Validators;
 import Model.Assignment;
 import Model.Exceptions.ValidatorException;
 
-public class AssignemtValidator implements Validator<Assignment> {
+public class AssignmentValidator implements Validator<Assignment> {
 
     /**
      * Validates a given student entity.
