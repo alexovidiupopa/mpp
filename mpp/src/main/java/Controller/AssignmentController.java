@@ -6,6 +6,7 @@ import Model.Student;
 import Repository.RepositoryInterface;
 import Utils.Pair;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,7 +24,7 @@ public class AssignmentController {
      * @param assignment - given assignment
      * @throws ValidatorException if assignment is not valid
      */
-    public void addAssignment(Assignment assignment) throws ValidatorException {
+    public void addAssignment(Assignment assignment) throws ValidatorException, IOException {
         repository.add(assignment);
     }
 
@@ -31,7 +32,7 @@ public class AssignmentController {
      * Removes the given assignment from the repository.
      * @param assignment - given assignment
      */
-    public void deleteAssignment(Assignment assignment) {
+    public void deleteAssignment(Assignment assignment) throws IOException {
         repository.delete(assignment.getId());
     }
 
@@ -40,7 +41,7 @@ public class AssignmentController {
      * @param assignment - given assignment
      * @throws ValidatorException if the assignment is not valid
      */
-    public void updateAssignment(Assignment assignment) throws ValidatorException{
+    public void updateAssignment(Assignment assignment) throws ValidatorException, IOException {
         repository.update(assignment);
     }
 
