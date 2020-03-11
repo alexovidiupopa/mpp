@@ -1,5 +1,7 @@
 package Utils;
 
+import java.util.Objects;
+
 public class Pair<T1, T2> {
 
     private T1 first;
@@ -39,4 +41,8 @@ public class Pair<T1, T2> {
         return otherPair.getFirst() == this.first && otherPair.getSecond() == this.second;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
 }

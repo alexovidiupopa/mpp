@@ -332,7 +332,7 @@ public class Console {
             }
             try {
                 assignmentController.deleteAssignment(assignment);
-                System.out.println("Problem deleted successfully");
+                System.out.println("Assignment deleted successfully");
             } catch (IOException | RepositoryException e) {
                 System.out.println(e.getMessage());
             }

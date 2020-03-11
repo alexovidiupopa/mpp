@@ -1,10 +1,9 @@
-
 import Controller.AssignmentController;
 import Controller.LabProblemController;
 import Model.Assignment;
 import Model.LabProblem;
 import Model.Student;
-import Model.Validators.AssignemtValidator;
+import Model.Validators.AssignmentValidator;
 import Model.Validators.LabProblemValidator;
 import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
@@ -25,7 +24,7 @@ public class Main {
         //RepositoryInterface<Long, LabProblem> labProblemRepository = new MemoryRepository<>(labProblemValidator);
         RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemFileRepository(labProblemValidator, ".\\files\\problems.txt");
         LabProblemController labProblemController = new LabProblemController(labProblemRepository);
-        Validator<Assignment> assignmentValidator = new AssignemtValidator();
+        Validator<Assignment> assignmentValidator = new AssignmentValidator();
         //RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new MemoryRepository<>(assignmentValidator);
         RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentFileRepository(assignmentValidator, ".\\files\\assignments.txt");
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
@@ -36,7 +35,8 @@ public class Main {
 }
 
 // TODO
-// Delete stud/probl -- doesnt exist
-// Update probl -- deletes problem
-// Add assignments -- doesnt throw error
-// Delete assignments
+// Delete stud/probl -- doesnt exist - fixed
+// Update probl -- deletes problem - fixed
+// Add assignments -- doesnt throw error - fixed
+// Delete assignments - fixed
+

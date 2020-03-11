@@ -67,6 +67,14 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Assignment> delete(Pair<Long,Long> id) throws IOException {
+        Optional<Assignment> optional = super.delete(id);
+        if (!optional.isPresent())
+            return Optional.empty();
+        saveAllToFile();
+        return optional;
+    }
     /**
      * Saves the given LabProblem into file.
      * @param entity - valid LabProblem object.
@@ -101,3 +109,5 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
     }
 
 }
+
+

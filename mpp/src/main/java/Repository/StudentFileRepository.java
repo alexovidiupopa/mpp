@@ -72,11 +72,11 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     @Override
     public Optional<Student> delete(Long id) throws IOException {
         Optional<Student> optional = super.delete(id);
-        if (optional.isPresent()) {
-            return optional;
+        if (!optional.isPresent()) {
+            return Optional.empty();
         }
         saveAllToFile();
-        return Optional.empty();
+        return optional;
     }
 
     @Override

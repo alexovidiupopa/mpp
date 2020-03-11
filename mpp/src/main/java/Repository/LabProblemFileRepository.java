@@ -68,9 +68,9 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     public Optional<LabProblem> delete(Long id) throws IOException {
         Optional<LabProblem> optional = super.delete(id);
         if (!optional.isPresent())
-            return optional;
+            return Optional.empty();
         saveAllToFile();
-        return Optional.empty();
+        return optional;
     }
 
     @Override

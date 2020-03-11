@@ -31,7 +31,7 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Assignment assignment = (Assignment) o;
-        return  (this.grade == assignment.grade);
+        return (super.getId().equals(assignment.getId()) && this.grade == assignment.grade);
     }
 
     @Override
