@@ -4,11 +4,11 @@ import Model.BaseEntity;
 import Model.Validators.Validator;
 import Model.Exceptions.ValidatorException;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MemoryRepository<ID, T extends BaseEntity<ID>> implements RepositoryInterface<ID, T> {
 
@@ -21,7 +21,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     }
 
     @Override
-    public Optional<T> add(T entity) throws ValidatorException {
+    public Optional<T> add(T entity) throws ValidatorException, IOException {
         if (entity == null) {
             throw new IllegalArgumentException("entity must not be null");
         }
@@ -30,7 +30,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     }
 
     @Override
-    public Optional<T> delete(ID id) {
+    public Optional<T> delete(ID id) throws IOException {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -38,12 +38,12 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     }
 
     @Override
-    public Optional<T> update(T entity) throws ValidatorException {
+    public Optional<T> update(T entity) throws ValidatorException, IOException {
         if (entity == null) {
             throw new IllegalArgumentException("entity must not be null");
         }
         validator.validate(entity);
-        return Optional.ofNullable(entities.computeIfPresent(entity.getId(), (k, v) -> entity));
+        return Optional.ofNullable(entities.computeIfPresent(entity.getId(), (k, v) -> entity) == null ? entity : null);
     }
 
     @Override
@@ -56,8 +56,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
 
     @Override
     public Iterable<T> getAll() {
-        Set<T> allEntities = entities.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
-        return allEntities;
+        return new HashSet<>(entities.values());
     }
 
 }

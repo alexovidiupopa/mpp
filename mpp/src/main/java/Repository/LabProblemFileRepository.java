@@ -2,9 +2,12 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Student;
 import Model.Validators.Validator;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +16,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem> {
 
@@ -21,6 +26,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     public LabProblemFileRepository(Validator<LabProblem> validator, String fileName) {
         super(validator);
         this.fileName = fileName;
+        loadData();
     }
 
     /**
@@ -38,7 +44,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
                 try {
                     super.add(problem);
                 }
-                catch (ValidatorException e) {
+                catch (ValidatorException | IOException e) {
                     e.printStackTrace();
                 }
             });
@@ -49,13 +55,43 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     }
 
     @Override
-    public Optional<LabProblem> add(LabProblem entity) throws ValidatorException {
+    public Optional<LabProblem> add(LabProblem entity) throws ValidatorException, IOException {
         Optional<LabProblem> optional = super.add(entity);
         if (optional.isPresent()) {
             return optional;
         }
-        saveToFile(entity);
+        saveAllToFile();
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<LabProblem> delete(Long id) throws IOException {
+        Optional<LabProblem> optional = super.delete(id);
+        if (!optional.isPresent())
+            return Optional.empty();
+        saveAllToFile();
+        return optional;
+    }
+
+    @Override
+    public Optional<LabProblem> update(LabProblem entity) throws ValidatorException, IOException {
+        Optional<LabProblem> optional = super.update(entity);
+        if(optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
+    /**
+     * Saves all the current entities in the repository to the file.
+     */
+    private void saveAllToFile() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
+        String content = StreamSupport.stream(super.getAll().spliterator(), false)
+                .map(e -> Long.toString(e.getId()) + "," + e.getDescription() + "," + Integer.toString(e.getScore()) + "\n")
+                .reduce("", (s, e) -> s+e);
+        bw.write(content);
+        bw.close();
     }
 
     /**
@@ -66,7 +102,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         Path path = Paths.get(fileName);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             bufferedWriter.write(
-                    entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());
+                    "\n" + entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());
             bufferedWriter.newLine();
         }
         catch (IOException e) {

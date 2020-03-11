@@ -12,8 +12,15 @@ public class LabProblemValidator implements Validator<LabProblem> {
      */
     @Override
     public void validate(LabProblem entity) throws ValidatorException {
-        if(entity.getDescription().isEmpty() || entity.getDescription().length()>1000 || entity.getScore()<=0)
-            throw new ValidatorException("Lab problem details incorrect correct.");
+        String exceptionMsg = "";
+        if (entity.getDescription().isEmpty())
+            exceptionMsg+="Empty description.";
+        if(entity.getDescription().length()>1000)
+            exceptionMsg+="Description length too large.";
+        if(entity.getScore()<=0)
+            exceptionMsg+="Cannot have a negative score.";
+        if (!exceptionMsg.isEmpty())
+            throw new ValidatorException(exceptionMsg);
     }
 
 }

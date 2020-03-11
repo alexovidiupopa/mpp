@@ -5,6 +5,8 @@ import Model.Validators.Validator;
 import Model.Exceptions.ValidatorException;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +15,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 public class StudentFileRepository extends MemoryRepository<Long, Student> {
 
@@ -44,6 +47,11 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
                 catch (ValidatorException e) {
                     e.printStackTrace();
                 }
+                catch (NumberFormatException e){
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
         }
         catch (IOException ex) {
@@ -52,13 +60,44 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     }
 
     @Override
-    public Optional<Student> add(Student entity) throws ValidatorException {
+    public Optional<Student> add(Student entity) throws ValidatorException, IOException {
         Optional<Student> optional = super.add(entity);
         if (optional.isPresent()) {
             return optional;
         }
-        saveToFile(entity);
+        saveAllToFile();
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Student> delete(Long id) throws IOException {
+        Optional<Student> optional = super.delete(id);
+        if (!optional.isPresent()) {
+            return Optional.empty();
+        }
+        saveAllToFile();
+        return optional;
+    }
+
+    @Override
+    public Optional<Student> update(Student entity) throws ValidatorException, IOException {
+        Optional<Student> optional = super.update(entity);
+        if(optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
+    /**
+     * Saves all the current entities in the repository to the file.
+     */
+    private void saveAllToFile() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
+        String content = StreamSupport.stream(super.getAll().spliterator(), false)
+                .map(e -> Long.toString(e.getId()) + "," + e.getSerialNumber() + "," + e.getName() + "," + Integer.toString(e.getGroup()) + "\n")
+                .reduce("", (s, e) -> s+e);
+        bw.write(content);
+        bw.close();
     }
 
     /**
@@ -68,6 +107,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     private void saveToFile(Student entity) {
         Path path = Paths.get(fileName);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+
             bufferedWriter.write(
                     entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
             bufferedWriter.newLine();
