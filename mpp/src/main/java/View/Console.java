@@ -10,10 +10,7 @@ import Model.Student;
 import Model.Exceptions.ValidatorException;
 import Controller.StudentController;
 import Utils.Pair;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,7 +38,7 @@ public class Console {
         commands.put("delete assignments", this::deleteAssignment);
         commands.put("update students", this::updateStudent);
         commands.put("update problems", this::updateProblems);
-        commands.put("grade assignments", this::gradeAssignments);
+        commands.put("update assignments", this::updateAssignment);
         commands.put("list students", this::printAllStudents);
         commands.put("list problems", this::printAllProblems);
         commands.put("list assignments", this::printAllAssignments);
@@ -50,19 +47,7 @@ public class Console {
         commands.put("filter assignments", this::filterAssignments);
         commands.put("sort students", this::sortStudents);
         commands.put("sort problems", this::sortProblems);
-        commands.put("sort assignments", this::sortAssignments);
-    }
-
-    /**
-     * Method to print console menu.
-     */
-    public void printMenu(){
-        System.out.println("Menu:");
-        System.out.println(
-                commands.keySet()
-                        .stream()
-                        .reduce("", (s, k) -> s += k + "\n")
-        );
+        commands.put("grade assignments", this::gradeAssignments);
     }
 
     /**
@@ -70,13 +55,16 @@ public class Console {
      */
     public void run(){
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        this.printMenu();
+        System.out.println("Menu:");
+        System.out.println(
+                commands.keySet()
+                .stream()
+                .reduce("", (s, k) -> s += k + "\n")
+        );
         while(true){
             try {
                 System.out.println(">>>");
                 String command = br.readLine();
-                if(!commands.containsKey(command))
-                    throw new MyException("Invalid command");
                 commands.get(command).run();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -98,15 +86,12 @@ public class Console {
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
-            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    /**
-     * Method to handle deleting students.
-     */
     private void deleteStudents(){
         while (true) {
             Student student = readStudent();
@@ -116,16 +101,13 @@ public class Console {
             try {
                 studentController.deleteStudent(student);
                 System.out.println("Student deleted successfully");
-            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
 
         }
     }
 
-    /**
-     * Method to handle updating students.
-     */
     private void updateStudent(){
         while (true) {
             Student student = readStudent();
@@ -135,7 +117,7 @@ public class Console {
             try {
                 studentController.updateStudent(student);
                 System.out.println("Student updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -199,9 +181,6 @@ public class Console {
         students.forEach(System.out::println);
     }
 
-    /**
-     * Method to handle sorting the students.
-     */
     private void sortStudents() {
         System.out.println("sorted students (by name):");
         List<Student> students = studentController.sortStudentsAscendingByName();
@@ -222,15 +201,12 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
-            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    /**
-     * Method to handle deleting lab problems.
-     */
     private void deleteProblems(){
         while (true) {
             LabProblem problem = readProblem();
@@ -240,16 +216,13 @@ public class Console {
             try {
                 labProblemController.deleteProblem(problem);
                 System.out.println("Problem deleted successfully");
-            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
 
         }
     }
 
-    /**
-     * Method to handle updating lab problems.
-     */
     private void updateProblems(){
         while (true) {
             LabProblem problem = readProblem();
@@ -259,7 +232,7 @@ public class Console {
             try {
                 labProblemController.updateProblem(problem);
                 System.out.println("Problem updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -316,9 +289,6 @@ public class Console {
         filteredProblems.forEach(System.out::println);
     }
 
-    /**
-     * Method to handle sorting the lab problems.
-     */
     private void sortProblems() {
         System.out.println("sorted problems (by score):");
         List<LabProblem> students = labProblemController.sortProblemsDescendingByScore();
@@ -339,15 +309,12 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
-            } catch (ValidatorException | IOException | RepositoryException | ParserConfigurationException | TransformerException | SAXException e) {
+            } catch (ValidatorException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    /**
-     * Method to handle deleting assignment.
-     */
     private void deleteAssignment() {
         while (true) {
             Assignment assignment = readAssignment();
@@ -356,8 +323,24 @@ public class Console {
             }
             try {
                 assignmentController.deleteAssignment(assignment);
-                System.out.println("Assignment deleted successfully");
-            } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
+                System.out.println("Problem deleted successfully");
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void updateAssignment(){
+        while (true) {
+            Assignment assignment = readAssignment();
+            if (assignment == null) {
+                break;
+            }
+            try {
+                assignmentController.updateAssignment(assignment);
+                System.out.println("Problem updated successfully");
+                throw new ValidatorException("");
+            } catch (ValidatorException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -403,33 +386,32 @@ public class Console {
     }
 
     /**
-     * Method to handle grading assignment.
+     * Method to handle printing the assignment.
      */
-    private void gradeAssignments(){
-        while (true) {
-            Assignment assignment = gradeAssignment();
-            if (assignment == null) {
-                break;
-            }
-            try {
-                assignmentController.updateAssignment(assignment);
-                System.out.println("Assignment updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private void printAllAssignments() {
+        Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
+        allAssignments.forEach(System.out::println);
     }
 
     /**
-     * Method to handle giving a grade to one assignment.
+     * Method to handle filtering the assignments.
      */
-    private Assignment gradeAssignment() {
+    private void filterAssignments() {
+        System.out.println("filtered assignments (score >= 5):");
+        Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+        filteredAssignments.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle giving grades to assignments.
+     */
+    private void gradeAssignments() {
         System.out.println("Read grade {studentId, problemId, grade}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = br.readLine();
             if(line.equals("done")){
-                return null;
+                return;
             }
             List<String> arguments = Arrays.stream(line.split(" "))
                     .filter(word -> !word.equals(""))
@@ -457,38 +439,12 @@ public class Console {
             catch (NumberFormatException nfe) {
                 throw new MyException("Argument for grade is not a number");
             }
-            return new Assignment(new Pair<>(studentId, problemId), grade);
+            this.assignmentController.updateAssignment(new Assignment(new Pair<>(studentId, problemId), grade));
         }
-        catch (MyException | IOException | TransformerException | ParserConfigurationException e) {
+        catch (MyException | IOException e) {
             System.out.println(e.getMessage());
-            return gradeAssignment();
+            gradeAssignments();
         }
-    }
-
-    /**
-     * Method to handle printing the assignment.
-     */
-    private void printAllAssignments() {
-        Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
-        allAssignments.forEach(System.out::println);
-    }
-
-    /**
-     * Method to handle filtering the assignments.
-     */
-    private void filterAssignments() {
-        System.out.println("filtered assignments (grade >= 5):");
-        Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
-        filteredAssignments.forEach(System.out::println);
-    }
-
-    /**
-     * Method to handle sorting the assignments.
-     */
-    private void sortAssignments() {
-        System.out.println("sorted assignments (by student and problem):");
-        List<Assignment> students = assignmentController.sortAssignmentsAscendingById();
-        students.forEach(System.out::println);
     }
 
 

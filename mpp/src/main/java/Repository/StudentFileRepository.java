@@ -3,11 +3,7 @@ package Repository;
 import Model.Student;
 import Model.Validators.Validator;
 import Model.Exceptions.ValidatorException;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,26 +19,18 @@ import java.util.stream.StreamSupport;
 
 public class StudentFileRepository extends MemoryRepository<Long, Student> {
 
-    protected String fileName;
+    private String fileName;
 
     public StudentFileRepository(Validator<Student> validator, String fileName) {
         super(validator);
         this.fileName = fileName;
-        try {
-            loadData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+        loadData();
     }
 
     /**
      * Reads the students from the students file into memory.
      */
-    protected void loadData() throws IOException, SAXException, ParserConfigurationException {
+    private void loadData() {
         Path path = Paths.get(fileName);
         try {
             Files.lines(path).forEach(line -> {
@@ -55,8 +43,13 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
                 student.setId(id);
                 try {
                     super.add(student);
-            }
-                catch (ValidatorException | NumberFormatException | IOException | TransformerException | SAXException | ParserConfigurationException e) {
+                }
+                catch (ValidatorException e) {
+                    e.printStackTrace();
+                }
+                catch (NumberFormatException e){
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
@@ -67,7 +60,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     }
 
     @Override
-    public Optional<Student> add(Student entity) throws ValidatorException, IOException, ParserConfigurationException, TransformerException, SAXException {
+    public Optional<Student> add(Student entity) throws ValidatorException, IOException {
         Optional<Student> optional = super.add(entity);
         if (optional.isPresent()) {
             return optional;
@@ -77,17 +70,17 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     }
 
     @Override
-    public Optional<Student> delete(Long id) throws IOException, TransformerException, ParserConfigurationException {
+    public Optional<Student> delete(Long id) throws IOException {
         Optional<Student> optional = super.delete(id);
-        if (!optional.isPresent()) {
-            return Optional.empty();
+        if (optional.isPresent()) {
+            return optional;
         }
         saveAllToFile();
-        return optional;
+        return Optional.empty();
     }
 
     @Override
-    public Optional<Student> update(Student entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
+    public Optional<Student> update(Student entity) throws ValidatorException, IOException {
         Optional<Student> optional = super.update(entity);
         if(optional.isPresent())
             return optional;
@@ -98,13 +91,30 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     /**
      * Saves all the current entities in the repository to the file.
      */
-    protected void saveAllToFile() throws IOException, ParserConfigurationException, TransformerException {
+    private void saveAllToFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
-                .map(e -> e.getId() + "," + e.getSerialNumber() + "," + e.getName() + "," + e.getGroup() + "\n")
+                .map(e -> Long.toString(e.getId()) + "," + e.getSerialNumber() + "," + e.getName() + "," + Integer.toString(e.getGroup()) + "\n")
                 .reduce("", (s, e) -> s+e);
         bw.write(content);
         bw.close();
+    }
+
+    /**
+     * Saves the entity into the file.
+     * @param entity- valid Student object.
+     */
+    private void saveToFile(Student entity) {
+        Path path = Paths.get(fileName);
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+
+            bufferedWriter.write(
+                    entity.getId() + "," + entity.getSerialNumber() + "," + entity.getName() + "," + entity.getGroup());
+            bufferedWriter.newLine();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
