@@ -39,7 +39,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
                 long studentId = Long.parseLong(items.get(0));
                 long problemId = Long.parseLong(items.get(1));
                 double grade = Double.parseDouble(items.get(2));
-                Assignment assignment = null;
+                Assignment assignment;
                 if(grade == -1)
                     assignment = new Assignment(new Pair<>(studentId, problemId));
                 else
@@ -75,6 +75,16 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
         saveAllToFile();
         return optional;
     }
+
+    @Override
+    public Optional<Assignment> update(Assignment entity) throws ValidatorException, IOException {
+        Optional<Assignment> optional = super.update(entity);
+        if(optional.isPresent())
+            return optional;
+        saveAllToFile();
+        return Optional.empty();
+    }
+
     /**
      * Saves the given LabProblem into file.
      * @param entity - valid LabProblem object.
@@ -99,9 +109,9 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
                 .map(e -> {
                     if(e.getGrade() != null)
-                        return Long.toString(e.getId().getFirst()) + "," + Long.toString(e.getId().getSecond()) + "," + Double.toString(e.getGrade()) + "\n";
+                        return e.getId().getFirst() + "," + e.getId().getSecond() + "," + e.getGrade() + "\n";
                     else
-                        return Long.toString(e.getId().getFirst()) + "," + Long.toString(e.getId().getSecond()) + "," + "-1\n";
+                        return e.getId().getFirst() + "," + e.getId().getSecond() + "," + "-1\n";
                 })
                 .reduce("", (s, e) -> s+e);
         bw.write(content);
