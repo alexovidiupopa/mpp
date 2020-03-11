@@ -44,12 +44,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
                 try {
                     super.add(student);
                 }
-                catch (ValidatorException e) {
-                    e.printStackTrace();
-                }
-                catch (NumberFormatException e){
-                    e.printStackTrace();
-                } catch (IOException e) {
+                catch (ValidatorException | NumberFormatException | IOException e) {
                     e.printStackTrace();
                 }
             });
@@ -94,7 +89,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     private void saveAllToFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
-                .map(e -> Long.toString(e.getId()) + "," + e.getSerialNumber() + "," + e.getName() + "," + Integer.toString(e.getGroup()) + "\n")
+                .map(e -> e.getId() + "," + e.getSerialNumber() + "," + e.getName() + "," + e.getGroup() + "\n")
                 .reduce("", (s, e) -> s+e);
         bw.write(content);
         bw.close();

@@ -33,10 +33,3 @@ public class Main {
     }
 
 }
-
-// TODO
-// Delete stud/probl -- doesnt exist - fixed
-// Update probl -- deletes problem - fixed
-// Add assignments -- doesnt throw error - fixed
-// Delete assignments - fixed
-
