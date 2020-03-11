@@ -101,6 +101,9 @@ public class Console {
         }
     }
 
+    /**
+     * Method to handle deleting students.
+     */
     private void deleteStudents(){
         while (true) {
             Student student = readStudent();
@@ -117,6 +120,9 @@ public class Console {
         }
     }
 
+    /**
+     * Method to handle updating students.
+     */
     private void updateStudent(){
         while (true) {
             Student student = readStudent();
@@ -190,6 +196,9 @@ public class Console {
         students.forEach(System.out::println);
     }
 
+    /**
+     * Method to handle sorting the students.
+     */
     private void sortStudents() {
         System.out.println("sorted students (by name):");
         List<Student> students = studentController.sortStudentsAscendingByName();
@@ -216,6 +225,9 @@ public class Console {
         }
     }
 
+    /**
+     * Method to handle deleting lab problems.
+     */
     private void deleteProblems(){
         while (true) {
             LabProblem problem = readProblem();
@@ -232,6 +244,9 @@ public class Console {
         }
     }
 
+    /**
+     * Method to handle updating lab problems.
+     */
     private void updateProblems(){
         while (true) {
             LabProblem problem = readProblem();
@@ -298,6 +313,9 @@ public class Console {
         filteredProblems.forEach(System.out::println);
     }
 
+    /**
+     * Method to handle sorting the lab problems.
+     */
     private void sortProblems() {
         System.out.println("sorted problems (by score):");
         List<LabProblem> students = labProblemController.sortProblemsDescendingByScore();
@@ -324,6 +342,9 @@ public class Console {
         }
     }
 
+    /**
+     * Method to handle deleting assignment.
+     */
     private void deleteAssignment() {
         while (true) {
             Assignment assignment = readAssignment();
@@ -379,15 +400,33 @@ public class Console {
     }
 
     /**
-     * Method to handle giving grades to assignments.
+     * Method to handle grading assignment.
      */
-    private void gradeAssignments() {
+    private void gradeAssignments(){
+        while (true) {
+            Assignment assignment = gradeAssignment();
+            if (assignment == null) {
+                break;
+            }
+            try {
+                assignmentController.updateAssignment(assignment);
+                System.out.println("Assignment updated successfully");
+            } catch (ValidatorException | RepositoryException | IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Method to handle giving a grade to one assignment.
+     */
+    private Assignment gradeAssignment() {
         System.out.println("Read grade {studentId, problemId, grade}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
             String line = br.readLine();
             if(line.equals("done")){
-                return;
+                return null;
             }
             List<String> arguments = Arrays.stream(line.split(" "))
                     .filter(word -> !word.equals(""))
@@ -415,11 +454,11 @@ public class Console {
             catch (NumberFormatException nfe) {
                 throw new MyException("Argument for grade is not a number");
             }
-            this.assignmentController.updateAssignment(new Assignment(new Pair<>(studentId, problemId), grade));
+            return new Assignment(new Pair<>(studentId, problemId), grade);
         }
         catch (MyException | IOException e) {
             System.out.println(e.getMessage());
-            gradeAssignments();
+            return gradeAssignment();
         }
     }
 
@@ -440,6 +479,9 @@ public class Console {
         filteredAssignments.forEach(System.out::println);
     }
 
+    /**
+     * Method to handle sorting the assignments.
+     */
     private void sortAssignments() {
         System.out.println("sorted assignments (by student and problem):");
         List<Assignment> students = assignmentController.sortAssignmentsAscendingById();
