@@ -36,6 +36,8 @@ public class AssignmentFileRepositoryTest {
     public void testLoadData() {
         Set<Assignment> assignments = (HashSet<Assignment>) testRepository.getAll();
         assertEquals(assignments.size(),2);
+        assertTrue(assignments.contains(new Assignment(new Pair<>(1L,1L),3.0)));
+        assertTrue(assignments.contains(new Assignment(new Pair<>(2L,1L),4.0)));
     }
 
     @Test
