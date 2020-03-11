@@ -2,7 +2,6 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
-import Model.Student;
 import Model.Validators.Validator;
 
 import java.io.BufferedWriter;
@@ -16,7 +15,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem> {
@@ -88,7 +86,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     private void saveAllToFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
-                .map(e -> Long.toString(e.getId()) + "," + e.getDescription() + "," + Integer.toString(e.getScore()) + "\n")
+                .map(e -> e.getId() + "," + e.getDescription() + "," + e.getScore() + "\n")
                 .reduce("", (s, e) -> s+e);
         bw.write(content);
         bw.close();
