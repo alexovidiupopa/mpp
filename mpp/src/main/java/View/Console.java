@@ -4,6 +4,7 @@ import Controller.AssignmentController;
 import Controller.LabProblemController;
 import Model.Assignment;
 import Model.Exceptions.MyException;
+import Model.Exceptions.RepositoryException;
 import Model.LabProblem;
 import Model.Student;
 import Model.Exceptions.ValidatorException;
@@ -85,7 +86,7 @@ public class Console {
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -97,8 +98,13 @@ public class Console {
             if (student == null) {
                 break;
             }
-            studentController.deleteStudent(student);
-            System.out.println("Student deleted successfully");
+            try {
+                studentController.deleteStudent(student);
+                System.out.println("Student deleted successfully");
+            } catch (RepositoryException | IOException e) {
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 
@@ -111,7 +117,7 @@ public class Console {
             try {
                 studentController.updateStudent(student);
                 System.out.println("Student updated successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -195,7 +201,7 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -207,8 +213,13 @@ public class Console {
             if (problem == null) {
                 break;
             }
-            labProblemController.deleteProblem(problem);
-            System.out.println("Problem deleted successfully");
+            try {
+                labProblemController.deleteProblem(problem);
+                System.out.println("Problem deleted successfully");
+            } catch (RepositoryException | IOException e) {
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 
@@ -221,7 +232,7 @@ public class Console {
             try {
                 labProblemController.updateProblem(problem);
                 System.out.println("Problem updated successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | RepositoryException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -298,20 +309,24 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    private void deleteAssignment(){
+    private void deleteAssignment() {
         while (true) {
             Assignment assignment = readAssignment();
             if (assignment == null) {
                 break;
             }
-            assignmentController.deleteAssignment(assignment);
-            System.out.println("Problem deleted successfully");
+            try {
+                assignmentController.deleteAssignment(assignment);
+                System.out.println("Problem deleted successfully");
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -325,7 +340,7 @@ public class Console {
                 assignmentController.updateAssignment(assignment);
                 System.out.println("Problem updated successfully");
                 throw new ValidatorException("");
-            } catch (ValidatorException e) {
+            } catch (ValidatorException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
