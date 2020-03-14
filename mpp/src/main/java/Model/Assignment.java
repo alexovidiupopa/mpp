@@ -17,6 +17,10 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
         this.grade = grade;
     }
 
+    public Assignment() {
+
+    }
+
     public void setGrade(Double grade) {
         this.grade = grade;
     }
@@ -31,7 +35,7 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Assignment assignment = (Assignment) o;
-        return (super.getId().equals(assignment.getId()) && this.grade == assignment.grade);
+        return (super.getId().equals(assignment.getId()) && this.grade.equals(assignment.grade));
     }
 
     @Override

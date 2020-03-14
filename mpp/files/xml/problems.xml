@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<problems>
+    <problem id="2">
+        <description>queue</description>
+        <score>20</score>
+    </problem>
+    <problem id="1">
+        <description>heap</description>
+        <score>130</score>
+    </problem>
+</problems>

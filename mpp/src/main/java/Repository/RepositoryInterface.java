@@ -2,7 +2,10 @@ package Repository;
 
 import Model.BaseEntity;
 import Model.Exceptions.ValidatorException;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -19,7 +22,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws ValidatorException
      *             if the entity is not valid.
      */
-    Optional<T> add(T entity) throws ValidatorException, IOException;
+    Optional<T> add(T entity) throws ValidatorException, IOException, TransformerException, SAXException, ParserConfigurationException;
 
     /**
      * Removes the entity with the given id.
@@ -30,7 +33,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws IllegalArgumentException
      *             if the given id is null.
      */
-    Optional<T> delete(ID id) throws IOException;
+    Optional<T> delete(ID id) throws IOException, TransformerException, ParserConfigurationException;
 
     /**
      * Updates the given entity.
@@ -44,7 +47,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws ValidatorException
      *             if the entity is not valid.
      */
-    Optional<T> update(T entity) throws ValidatorException, IOException;
+    Optional<T> update(T entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException;
 
     /**
      * Find the entity with the given {@code id}.

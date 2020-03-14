@@ -3,7 +3,10 @@ import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Repository.RepositoryInterface;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -26,7 +29,7 @@ public class LabProblemController {
      * @throws ValidatorException if problem is invalid
      * @throws IllegalArgumentException if problem is null.
      */
-    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException {
+    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, ParserConfigurationException, TransformerException, SAXException {
         Optional<LabProblem> optional = repository.add(problem);
         if (optional.isPresent())
             throw new RepositoryException("Id already exists");
@@ -37,7 +40,7 @@ public class LabProblemController {
      * Removes the given problem from the repository.
      * @param problem - given problem
      */
-    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException {
+    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
         Optional<LabProblem> optional = repository.delete(problem.getId());
         if (!optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");
@@ -47,7 +50,7 @@ public class LabProblemController {
      * @param problem - given problem
      * @throws ValidatorException if the problem is not valid
      */
-    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException {
+    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
         Optional<LabProblem> optional = repository.update(problem);
         if (optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");
