@@ -4,7 +4,10 @@ import Model.Exceptions.ValidatorException;
 import Model.Assignment;
 import Model.Validators.Validator;
 import Utils.Pair;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,18 +23,22 @@ import java.util.stream.StreamSupport;
 
 public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>, Assignment> {
 
-    private String fileName;
+    protected String fileName;
 
     public AssignmentFileRepository(Validator<Assignment> validator, String fileName) {
         super(validator);
         this.fileName = fileName;
-        this.loadData();
+        try {
+            this.loadData();
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Reads the assignments from the assignments file into memory.
      */
-    private void loadData() {
+    protected void loadData() throws IOException, SAXException, ParserConfigurationException {
         Path path = Paths.get(fileName);
         try {
             Files.lines(path).forEach(line -> {
@@ -47,7 +54,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
                 try {
                     super.add(assignment);
                 }
-                catch (ValidatorException | IOException e) {
+                catch (ValidatorException | IOException | TransformerException | SAXException | ParserConfigurationException e) {
                     e.printStackTrace();
                 }
             });
@@ -58,7 +65,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
     }
 
     @Override
-    public Optional<Assignment> add(Assignment entity) throws ValidatorException, IOException {
+    public Optional<Assignment> add(Assignment entity) throws ValidatorException, IOException, ParserConfigurationException, TransformerException, SAXException {
         Optional<Assignment> optional = super.add(entity);
         if (optional.isPresent()) {
             return optional;
@@ -68,7 +75,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
     }
 
     @Override
-    public Optional<Assignment> delete(Pair<Long,Long> id) throws IOException {
+    public Optional<Assignment> delete(Pair<Long,Long> id) throws IOException, TransformerException, ParserConfigurationException {
         Optional<Assignment> optional = super.delete(id);
         if (!optional.isPresent())
             return Optional.empty();
@@ -85,26 +92,11 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
         return Optional.empty();
     }
 
-    /**
-     * Saves the given LabProblem into file.
-     * @param entity - valid LabProblem object.
-     */
-    private void saveToFile(Assignment entity) {
-        Path path = Paths.get(fileName);
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
-            bufferedWriter.write(
-                    entity.getId() + ","  + entity.getGrade());
-            bufferedWriter.newLine();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Saves all the current entities in the repository to the file.
      */
-    private void saveAllToFile() throws IOException {
+    protected void saveAllToFile() throws IOException, ParserConfigurationException, TransformerException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
                 .map(e -> {

@@ -4,7 +4,10 @@ import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Model.Student;
 import Repository.RepositoryInterface;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +35,7 @@ public class LabProblemController {
      * @throws ValidatorException if problem is invalid
      * @throws IllegalArgumentException if problem is null.
      */
-    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException {
+    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, ParserConfigurationException, TransformerException, SAXException {
         Optional<LabProblem> optional = repository.add(problem);
         if (optional.isPresent())
             throw new RepositoryException("Id already exists");
@@ -43,7 +46,7 @@ public class LabProblemController {
      * Removes the given problem from the repository.
      * @param problem - given problem
      */
-    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException {
+    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
         this.assignmentController
                 .getAllAssignments()
                 .stream()
@@ -51,7 +54,7 @@ public class LabProblemController {
                 .forEach(a -> {
                     try {
                         this.assignmentController.deleteAssignment(a);
-                    } catch (IOException | RepositoryException e) {
+                    } catch (IOException | RepositoryException | TransformerException | SAXException | ParserConfigurationException e) {
                         e.printStackTrace();
                     }
                 });
@@ -64,7 +67,7 @@ public class LabProblemController {
      * @param problem - given problem
      * @throws ValidatorException if the problem is not valid
      */
-    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException {
+    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
         Optional<LabProblem> optional = repository.update(problem);
         if (optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");

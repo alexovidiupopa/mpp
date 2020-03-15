@@ -6,7 +6,10 @@ import Model.Exceptions.ValidatorException;
 import Model.Student;
 import Repository.RepositoryInterface;
 import Utils.Pair;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +40,7 @@ public class AssignmentController {
      * @param assignment - given assignment
      * @throws ValidatorException if assignment is not valid
      */
-    public void addAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException {
+    public void addAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException, ParserConfigurationException, TransformerException, SAXException {
         if(this.studentController.getStudentById(assignment.getId().getFirst()) == null)
             throw new RepositoryException("Student id does not exist");
         if(this.problemController.getProblemById(assignment.getId().getSecond()) == null)
@@ -51,7 +54,7 @@ public class AssignmentController {
      * Removes the given assignment from the repository.
      * @param assignment - given assignment
      */
-    public void deleteAssignment(Assignment assignment) throws IOException, RepositoryException {
+    public void deleteAssignment(Assignment assignment) throws IOException, RepositoryException, TransformerException, ParserConfigurationException {
         Optional<Assignment> optional = repository.delete(assignment.getId());
         if (!optional.isPresent())
             throw new RepositoryException("Assignments doesn't exist");
@@ -62,7 +65,7 @@ public class AssignmentController {
      * @param assignment - given assignment
      * @throws ValidatorException if the assignment is not valid
      */
-    public void updateAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException {
+    public void updateAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException, TransformerException, ParserConfigurationException {
         Optional<Assignment> optional = repository.update(assignment);
         if (optional.isPresent())
             throw new RepositoryException("Assignments doesn't exist");

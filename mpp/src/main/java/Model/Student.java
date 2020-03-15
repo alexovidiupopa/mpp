@@ -19,6 +19,10 @@ public class Student extends BaseEntity<Long>{
         this.group = group;
     }
 
+    public Student() {
+
+    }
+
     /**
      * Gets the serial number.
      * @return int - serialNumber

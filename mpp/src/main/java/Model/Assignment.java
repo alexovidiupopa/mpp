@@ -17,10 +17,15 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
         this.grade = grade;
     }
 
+    public Assignment() {
+
+    }
+
     /**
      * Sets the object's grade to the given parameter value.
      * @param grade - new grade
      */
+
     public void setGrade(Double grade) {
         this.grade = grade;
     }

@@ -10,7 +10,10 @@ import Model.Student;
 import Model.Exceptions.ValidatorException;
 import Controller.StudentController;
 import Utils.Pair;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -95,7 +98,7 @@ public class Console {
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -113,7 +116,7 @@ public class Console {
             try {
                 studentController.deleteStudent(student);
                 System.out.println("Student deleted successfully");
-            } catch (RepositoryException | IOException e) {
+            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -132,7 +135,7 @@ public class Console {
             try {
                 studentController.updateStudent(student);
                 System.out.println("Student updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -219,7 +222,7 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -237,7 +240,7 @@ public class Console {
             try {
                 labProblemController.deleteProblem(problem);
                 System.out.println("Problem deleted successfully");
-            } catch (RepositoryException | IOException e) {
+            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -256,7 +259,7 @@ public class Console {
             try {
                 labProblemController.updateProblem(problem);
                 System.out.println("Problem updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -336,7 +339,7 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
-            } catch (ValidatorException | IOException | RepositoryException e) {
+            } catch (ValidatorException | IOException | RepositoryException | ParserConfigurationException | TransformerException | SAXException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -354,7 +357,7 @@ public class Console {
             try {
                 assignmentController.deleteAssignment(assignment);
                 System.out.println("Assignment deleted successfully");
-            } catch (IOException | RepositoryException e) {
+            } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -456,7 +459,7 @@ public class Console {
             }
             return new Assignment(new Pair<>(studentId, problemId), grade);
         }
-        catch (MyException | IOException e) {
+        catch (MyException | IOException | TransformerException | ParserConfigurationException e) {
             System.out.println(e.getMessage());
             return gradeAssignment();
         }
