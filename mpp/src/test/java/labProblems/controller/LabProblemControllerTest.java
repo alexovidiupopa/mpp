@@ -9,7 +9,10 @@ import Repository.MemoryRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -37,35 +40,35 @@ public class LabProblemControllerTest {
     }
 
     @Test
-    public void testAddProblem() throws ValidatorException, RepositoryException, IOException {
+    public void testAddProblem() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
         this.labProblemController.addProblem(new LabProblem(55L, "problem5", 40));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testAddProblemException() throws ValidatorException, RepositoryException, IOException {
+    public void testAddProblemException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
         this.labProblemController.addProblem(new LabProblem(55L, "problem5", -100));
     }
 
     @Test (expected = RepositoryException.class)
-    public void testAddProblemUsedId() throws ValidatorException, RepositoryException, IOException {
+    public void testAddProblemUsedId() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
         this.labProblemController.addProblem(new LabProblem(33L, "problem5", 100));
     }
 
     @Test
-    public void testDeleteProblem() throws RepositoryException, IOException {
+    public void testDeleteProblem() throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
         this.labProblemController.deleteProblem(new LabProblem(33L, "problem3", 10));
         assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
     }
 
     @Test
-    public void testUpdateProblem() throws ValidatorException, RepositoryException, IOException {
+    public void testUpdateProblem() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
         this.labProblemController.updateProblem(new LabProblem(33L, "updated", 10));
         assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "updated", 10)));
     }
 
     @Test (expected = ValidatorException.class)
-    public void testUpdateProblemException() throws ValidatorException, RepositoryException, IOException {
+    public void testUpdateProblemException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
         this.labProblemController.updateProblem(new LabProblem(33L, "expect-exception", -1));
     }
 

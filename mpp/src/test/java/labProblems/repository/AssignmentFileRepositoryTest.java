@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +25,7 @@ public class AssignmentFileRepositoryTest {
     @Before
     public void setUp() throws Exception {
         assignmentValidator=new AssignmentValidator();
-        testRepository = new AssignmentFileRepository(assignmentValidator,".\\files\\test-assignments.txt");
+        testRepository = new AssignmentFileRepository(assignmentValidator,".\\files\\txt\\test-assignments.txt");
     }
 
     @After
@@ -41,11 +43,11 @@ public class AssignmentFileRepositoryTest {
     }
 
     @Test
-    public void testSaveAllToFile() throws IOException {
+    public void testSaveAllToFile() throws IOException, TransformerException, ParserConfigurationException {
         Set<Assignment> assignments = (HashSet<Assignment>) testRepository.getAll();
         assertEquals(assignments.size(),2);
         testRepository.delete(new Pair<>(1L,1L));
-        RepositoryInterface<Pair<Long,Long>, Assignment> testRepositorySave = new AssignmentFileRepository(assignmentValidator,".\\files\\test-assignments.txt");
+        RepositoryInterface<Pair<Long,Long>, Assignment> testRepositorySave = new AssignmentFileRepository(assignmentValidator,".\\files\\txt\\test-assignments.txt");
         Set<Assignment> assignmentsNew = (HashSet<Assignment>) testRepositorySave.getAll();
         assertEquals(assignmentsNew.size(),1);
     }

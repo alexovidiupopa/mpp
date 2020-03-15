@@ -84,7 +84,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
     }
 
     @Override
-    public Optional<Assignment> update(Assignment entity) throws ValidatorException, IOException {
+    public Optional<Assignment> update(Assignment entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
         Optional<Assignment> optional = super.update(entity);
         if(optional.isPresent())
             return optional;

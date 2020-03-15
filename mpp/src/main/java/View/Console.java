@@ -414,7 +414,7 @@ public class Console {
             try {
                 assignmentController.updateAssignment(assignment);
                 System.out.println("Assignment updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -459,7 +459,7 @@ public class Console {
             }
             return new Assignment(new Pair<>(studentId, problemId), grade);
         }
-        catch (MyException | IOException | TransformerException | ParserConfigurationException e) {
+        catch (MyException | IOException e) {
             System.out.println(e.getMessage());
             return gradeAssignment();
         }
