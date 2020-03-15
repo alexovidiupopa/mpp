@@ -1,10 +1,12 @@
 package Controller;
 
+import Model.Assignment;
 import Model.Exceptions.RepositoryException;
 import Model.LabProblem;
 import Model.Student;
 import Model.Exceptions.ValidatorException;
 import Repository.RepositoryInterface;
+import Utils.Pair;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -17,9 +19,14 @@ import java.util.stream.StreamSupport;
 public class StudentController {
 
     private RepositoryInterface<Long, Student> repository;
+    private AssignmentController assignmentController;
 
     public StudentController(RepositoryInterface<Long, Student> repository) {
         this.repository = repository;
+    }
+
+    public void setAssignmentController(AssignmentController assignmentController) {
+        this.assignmentController = assignmentController;
     }
 
     /**
@@ -38,6 +45,17 @@ public class StudentController {
      * @param student - given student
      */
     public void deleteStudent(Student student) throws RepositoryException, IOException {
+        this.assignmentController
+                .getAllAssignments()
+                .stream()
+                .filter(assignment -> assignment.getId().getFirst().equals(student.getId()))
+                .forEach(a -> {
+                    try {
+                        this.assignmentController.deleteAssignment(a);
+                    } catch (IOException | RepositoryException e) {
+                        e.printStackTrace();
+                    }
+                });
         Optional<Student> optional = repository.delete(student.getId());
         if (!optional.isPresent())
             throw new RepositoryException("Student doesn't exist");
@@ -53,6 +71,17 @@ public class StudentController {
         if (optional.isPresent())
             throw new RepositoryException("Student doesn't exist");
     }
+
+    /**
+     * Gets the student which has a given id.
+     * @param id - given student id
+     * @return Student in the repository with the given id.
+     */
+    public Student getStudentById(long id) {
+        Optional<Student> optional = this.repository.findById(id);
+        return optional.orElse(null);
+    }
+
     /**
      * Gets all the students currently in the repository.
      * @return HashSet containing all students in the repository.

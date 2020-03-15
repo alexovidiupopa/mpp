@@ -3,6 +3,7 @@ package Controller;
 import Model.Assignment;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
+import Model.Student;
 import Repository.RepositoryInterface;
 import Utils.Pair;
 
@@ -16,9 +17,19 @@ import java.util.stream.StreamSupport;
 public class AssignmentController {
 
     private RepositoryInterface<Pair<Long, Long>, Assignment> repository;
+    private StudentController studentController;
+    private LabProblemController problemController;
 
     public AssignmentController(RepositoryInterface<Pair<Long, Long>, Assignment> repository) {
         this.repository = repository;
+    }
+
+    public void setStudentController(StudentController studentController) {
+        this.studentController = studentController;
+    }
+
+    public void setProblemController(LabProblemController problemController) {
+        this.problemController = problemController;
     }
 
     /**
@@ -27,6 +38,10 @@ public class AssignmentController {
      * @throws ValidatorException if assignment is not valid
      */
     public void addAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException {
+        if(this.studentController.getStudentById(assignment.getId().getFirst()) == null)
+            throw new RepositoryException("Student id does not exist");
+        if(this.problemController.getProblemById(assignment.getId().getSecond()) == null)
+            throw new RepositoryException("Problem id does not exist");
         Optional<Assignment> optional = repository.add(assignment);
         if (optional.isPresent())
             throw new RepositoryException("Id already exists");
