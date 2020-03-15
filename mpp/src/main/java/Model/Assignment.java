@@ -21,14 +21,22 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
 
     }
 
+    /**
+     * Sets the object's grade to the given parameter value.
+     * @param grade - new grade
+     */
+
     public void setGrade(Double grade) {
         this.grade = grade;
     }
 
+    /**
+     * Gets the grade.
+     * @return Double - grade
+     */
     public Double getGrade(){
         return this.grade;
     }
-
 
     @Override
     public boolean equals(Object o) {

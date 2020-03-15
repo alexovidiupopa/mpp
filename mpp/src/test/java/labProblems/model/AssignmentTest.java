@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class AssignmentTest {
     private static final Long STUD_ID = 1L;
     private static final Long ASIG_ID = 2L;

@@ -2,13 +2,13 @@ package Controller;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Student;
 import Repository.RepositoryInterface;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +18,12 @@ import java.util.stream.StreamSupport;
 public class LabProblemController {
 
     private RepositoryInterface<Long, LabProblem> repository;
+
+    private AssignmentController assignmentController;
+
+    public void setAssignmentController(AssignmentController assignmentController) {
+        this.assignmentController = assignmentController;
+    }
 
     public LabProblemController(RepositoryInterface<Long, LabProblem> repository) {
         this.repository = repository;
@@ -41,6 +47,17 @@ public class LabProblemController {
      * @param problem - given problem
      */
     public void deleteProblem(LabProblem problem) throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
+        this.assignmentController
+                .getAllAssignments()
+                .stream()
+                .filter(assignment -> assignment.getId().getSecond().equals(problem.getId()))
+                .forEach(a -> {
+                    try {
+                        this.assignmentController.deleteAssignment(a);
+                    } catch (IOException | RepositoryException | TransformerException | SAXException | ParserConfigurationException e) {
+                        e.printStackTrace();
+                    }
+                });
         Optional<LabProblem> optional = repository.delete(problem.getId());
         if (!optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");
@@ -55,6 +72,17 @@ public class LabProblemController {
         if (optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");
     }
+
+    /**
+     * Gets the problem which has a given id.
+     * @param id - given problem id
+     * @return Problem in the repository with the given id.
+     */
+    public LabProblem getProblemById(long id) {
+        Optional<LabProblem> optional = this.repository.findById(id);
+        return optional.orElse(null);
+    }
+
     /**
      * Returns all lab problems currently in the repository.
      * @return HashSet containing all lab problems in the repository.

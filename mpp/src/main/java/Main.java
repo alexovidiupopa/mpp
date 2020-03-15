@@ -33,11 +33,13 @@ public class Main {
         RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentXMLRepository(assignmentValidator, ".\\files\\xml\\assignments.xml");
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
 
+        studentController.setAssignmentController(assignmentController);
+        labProblemController.setAssignmentController(assignmentController);
+        assignmentController.setStudentController(studentController);
+        assignmentController.setProblemController(labProblemController);
 
         Console console = new Console(studentController, labProblemController, assignmentController);
         console.run();
     }
 
 }
-
-
