@@ -3,7 +3,6 @@ package Controller;
 import Model.Assignment;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
-import Model.Student;
 import Repository.RepositoryInterface;
 import Utils.Pair;
 import org.xml.sax.SAXException;
@@ -81,7 +80,7 @@ public class AssignmentController {
     }
 
     /**
-     * Returns all assignments which were given a grade grater or equal than the given grade.
+     * Returns all assignments which were given a grade greater or equal to the given grade.
      * * @param g - the given grade
      * @return HashSet containing the above assignments.
      */
@@ -106,4 +105,5 @@ public class AssignmentController {
     }
 
 }
+
 

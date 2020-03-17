@@ -1,5 +1,6 @@
 import Controller.AssignmentController;
 import Controller.LabProblemController;
+import Controller.StudentController;
 import Model.Assignment;
 import Model.LabProblem;
 import Model.Student;
@@ -7,10 +8,11 @@ import Model.Validators.AssignmentValidator;
 import Model.Validators.LabProblemValidator;
 import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
-import Repository.*;
-import Controller.StudentController;
+import Repository.AssignmentXMLRepository;
+import Repository.LabProblemXMLRepository;
+import Repository.RepositoryInterface;
+import Repository.StudentXMLRepository;
 import Utils.Pair;
-
 import View.Console;
 
 public class Main {

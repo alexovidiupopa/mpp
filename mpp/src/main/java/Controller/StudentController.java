@@ -2,20 +2,15 @@ package Controller;
 
 import Model.Assignment;
 import Model.Exceptions.RepositoryException;
-import Model.LabProblem;
-import Model.Student;
 import Model.Exceptions.ValidatorException;
+import Model.Student;
 import Repository.RepositoryInterface;
 import org.xml.sax.SAXException;
-import Utils.Pair;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -115,6 +110,35 @@ public class StudentController {
         return StreamSupport.stream(students.spliterator(),false)
                 .sorted(Comparator.comparing(Student::getName))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Determine which are the students who passed at least one assignment.
+     * @return a Set containing all the students respecting fore-mentioned property.
+     */
+    public Set<Student> getStudentsWhoPassed(){
+        Set<Assignment> assignments = assignmentController.getAllAssignments();
+        return assignments.stream()
+                .filter(assignment -> assignment.getGrade()!=null && assignment.getGrade()>=5.0)
+                .map(assignment -> this.getStudentById(assignment.getId().getFirst()))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Find the student which has been assigned the most problems.
+     * @return a Student respecting the fore-mentioned property.
+     */
+    public Student getStudentsWithMostProblems(){
+        Set<Assignment> assignments = assignmentController.getAllAssignments();
+        Map<Long, Long> countForId = assignments.stream()
+                .collect(Collectors.groupingBy(assignment -> assignment.getId().getFirst(), Collectors.counting()));
+        Map<Long, Long> sortedByValue = countForId.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Optional<Map.Entry<Long, Long>> student = sortedByValue.entrySet().stream().findFirst();
+        return this.getStudentById(student.get().getKey());
     }
 
 }

@@ -1,8 +1,8 @@
 package Repository;
 
 import Model.BaseEntity;
-import Model.Validators.Validator;
 import Model.Exceptions.ValidatorException;
+import Model.Validators.Validator;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

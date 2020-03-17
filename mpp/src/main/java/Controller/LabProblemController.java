@@ -1,17 +1,16 @@
 package Controller;
+
+import Model.Assignment;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
-import Model.Student;
 import Repository.RepositoryInterface;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -114,5 +113,21 @@ public class LabProblemController {
         return StreamSupport.stream(problems.spliterator(),false)
                 .sorted((o1, o2) -> o2.getScore()-o1.getScore())
                 .collect(Collectors.toList());
+    }
+    /**
+     * Get the problem which has been assigned the most times.
+     * @return a LabProblem respecting fore-mentioned property.
+     */
+    public LabProblem getProblemAssignedMostTimes() {
+        Set<Assignment> assignments = assignmentController.getAllAssignments();
+        Map<Long, Long> countForId = assignments.stream()
+                .collect(Collectors.groupingBy(assignment -> assignment.getId().getSecond(), Collectors.counting()));
+        Map<Long, Long> sortedByValue = countForId.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Optional<Map.Entry<Long, Long>> problem = sortedByValue.entrySet().stream().findFirst();
+        return this.getProblemById(problem.get().getKey());
     }
 }

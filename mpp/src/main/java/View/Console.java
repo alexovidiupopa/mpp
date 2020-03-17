@@ -2,13 +2,13 @@ package View;
 
 import Controller.AssignmentController;
 import Controller.LabProblemController;
+import Controller.StudentController;
 import Model.Assignment;
 import Model.Exceptions.MyException;
 import Model.Exceptions.RepositoryException;
+import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Model.Student;
-import Model.Exceptions.ValidatorException;
-import Controller.StudentController;
 import Utils.Pair;
 import org.xml.sax.SAXException;
 
@@ -51,6 +51,9 @@ public class Console {
         commands.put("sort students", this::sortStudents);
         commands.put("sort problems", this::sortProblems);
         commands.put("sort assignments", this::sortAssignments);
+        commands.put("most assigned problem", this::mostAssignedProblem);
+        commands.put("students who passed", this::passingStudents);
+        commands.put("student most problems", this::studentMostAssignedProblems);
     }
 
     /**
@@ -492,4 +495,28 @@ public class Console {
     }
 
 
+    /**
+     * Method to handle printing the passing students.
+     */
+    private void passingStudents() {
+        System.out.println("students currently passing at least one assignment:");
+        Set<Student> students=studentController.getStudentsWhoPassed();
+        students.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle getting the problem assigned the most times.
+     */
+    private void mostAssignedProblem() {
+        System.out.println("problem assigned the most times:");
+        System.out.println(labProblemController.getProblemAssignedMostTimes());
+    }
+
+    /**
+     * Method to handle getting the student with the most assigned problems.
+     */
+    private void studentMostAssignedProblems(){
+        System.out.println("student with the most assigned problems:");
+        System.out.println(studentController.getStudentsWithMostProblems());
+    }
 }

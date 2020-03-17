@@ -1,12 +1,11 @@
 package Repository;
 
+import Model.Exceptions.ValidatorException;
 import Model.Student;
 import Model.Validators.Validator;
-import Model.Exceptions.ValidatorException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
