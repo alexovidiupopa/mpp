@@ -20,11 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class StudentFileRepositoryTest {
+
     private  Validator<Student> studentValidator;
     private MemoryRepository<Long,Student> testRepository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         studentValidator = new StudentValidator();
         testRepository = new StudentFileRepository(studentValidator,".\\files\\txt\\test-students.txt");
     }
@@ -35,7 +36,6 @@ public class StudentFileRepositoryTest {
         testRepository=null;
     }
 
-
     @Test
     public void testSaveAllToFile() throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
         testRepository.update(new Student(1,"1","alin",2));
@@ -45,11 +45,11 @@ public class StudentFileRepositoryTest {
         assertTrue(students.contains(new Student(1,"1","alin",2)));
     }
 
-
     @Test
     public void testLoadData() {
         Set<Student> students = (HashSet<Student>) testRepository.getAll();
         assertTrue(students.contains(new Student(1L,"1","alex",1)));
         assertTrue(students.contains(new Student(2L,"2","vlad",2)));
     }
+
 }
