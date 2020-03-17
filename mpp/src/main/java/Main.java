@@ -1,3 +1,4 @@
+
 import Controller.AssignmentController;
 import Controller.LabProblemController;
 import Controller.StudentController;
@@ -21,8 +22,6 @@ public class Main {
         Validator<Student> studentValidator = new StudentValidator();
         RepositoryInterface<Long, Student> studentRepository = new StudentXMLRepository(studentValidator, ".\\files\\xml\\students.xml");
         StudentController studentController = new StudentController(studentRepository);
-
-
         Validator<LabProblem> labProblemValidator = new LabProblemValidator();
         RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemXMLRepository(labProblemValidator, ".\\files\\xml\\problems.xml");
         LabProblemController labProblemController = new LabProblemController(labProblemRepository);
@@ -44,3 +43,7 @@ public class Main {
     }
 
 }
+
+// TODO
+// Delete stud/probl -- doesnt exist
+// Update probl -- deletes problem

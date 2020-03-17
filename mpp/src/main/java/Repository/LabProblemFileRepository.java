@@ -2,6 +2,7 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Student;
 import Model.Validators.Validator;
 import org.xml.sax.SAXException;
 
@@ -14,9 +15,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem> {
@@ -28,7 +31,11 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         this.fileName = fileName;
         try {
             loadData();
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
@@ -72,9 +79,9 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     public Optional<LabProblem> delete(Long id) throws IOException, TransformerException, ParserConfigurationException {
         Optional<LabProblem> optional = super.delete(id);
         if (!optional.isPresent())
-            return Optional.empty();
+            return optional;
         saveAllToFile();
-        return optional;
+        return Optional.empty();
     }
 
     @Override
@@ -92,10 +99,26 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     protected void saveAllToFile() throws IOException, ParserConfigurationException, TransformerException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
-                .map(e -> e.getId() + "," + e.getDescription() + "," + e.getScore() + "\n")
+                .map(e -> Long.toString(e.getId()) + "," + e.getDescription() + "," + Integer.toString(e.getScore()) + "\n")
                 .reduce("", (s, e) -> s+e);
         bw.write(content);
         bw.close();
+    }
+
+    /**
+     * Saves the given LabProblem into file.
+     * @param entity - valid LabProblem object.
+     */
+    private void saveToFile(LabProblem entity) {
+        Path path = Paths.get(fileName);
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+            bufferedWriter.write(
+                    "\n" + entity.getId() + ","  + entity.getDescription() + "," + entity.getScore());
+            bufferedWriter.newLine();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
