@@ -54,7 +54,7 @@ public class LabProblemController {
                 .forEach(a -> {
                     try {
                         this.assignmentController.deleteAssignment(a);
-                    } catch (IOException | RepositoryException | TransformerException | SAXException | ParserConfigurationException e) {
+                    } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
                         e.printStackTrace();
                     }
                 });

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +83,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
     }
 
     @Override
-    public Optional<Assignment> update(Assignment entity) throws ValidatorException, IOException {
+    public Optional<Assignment> update(Assignment entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
         Optional<Assignment> optional = super.update(entity);
         if(optional.isPresent())
             return optional;
