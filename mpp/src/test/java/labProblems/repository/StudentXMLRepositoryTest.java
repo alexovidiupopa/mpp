@@ -36,7 +36,6 @@ public class StudentXMLRepositoryTest {
         testRepository=null;
     }
 
-
     @Test
     public void testSaveAllToFile() throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
         testRepository.update(new Student(1L,"100","s11",4));
@@ -47,7 +46,6 @@ public class StudentXMLRepositoryTest {
         assertTrue(students.contains(new Student(2L,"20","s2",2)));
         assertTrue(students.contains(new Student(3L,"30","s3",3)));
     }
-
 
     @Test
     public void testLoadData() {
