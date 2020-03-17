@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +26,7 @@ public class StudentFileRepositoryTest {
     @Before
     public void setUp() throws Exception {
         studentValidator = new StudentValidator();
-        testRepository = new StudentFileRepository(studentValidator,".\\files\\test-students.txt");
+        testRepository = new StudentFileRepository(studentValidator,".\\files\\txt\\test-students.txt");
     }
 
     @After
@@ -35,9 +37,9 @@ public class StudentFileRepositoryTest {
 
 
     @Test
-    public void testSaveAllToFile() throws ValidatorException, IOException {
+    public void testSaveAllToFile() throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
         testRepository.update(new Student(1,"1","alin",2));
-        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,".\\files\\test-students.txt");
+        MemoryRepository<Long,Student> testRepositoryTest = new StudentFileRepository(studentValidator,".\\files\\txt\\test-students.txt");
         Set<Student> students = (HashSet<Student>) testRepositoryTest.getAll();
         assertEquals(students.size(),2);
         assertTrue(students.contains(new Student(1,"1","alin",2)));

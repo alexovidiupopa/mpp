@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +26,7 @@ public class LabProblemFileRepositoryTest {
     @Before
     public void setUp() throws Exception {
         labProblemValidator = new LabProblemValidator();
-        testRepository = new LabProblemFileRepository(labProblemValidator,".\\files\\test-problems.txt");
+        testRepository = new LabProblemFileRepository(labProblemValidator,".\\files\\txt\\test-problems.txt");
     }
 
 
@@ -43,9 +45,9 @@ public class LabProblemFileRepositoryTest {
     }
 
     @Test
-    public void testSaveAllToFile() throws IOException, ValidatorException {
+    public void testSaveAllToFile() throws IOException, ValidatorException, TransformerException, ParserConfigurationException {
         testRepository.update(new LabProblem(1L,"heap",120));
-        MemoryRepository<Long,LabProblem> testRepositoryTest = new LabProblemFileRepository(labProblemValidator,".\\files\\test-problems.txt");
+        MemoryRepository<Long,LabProblem> testRepositoryTest = new LabProblemFileRepository(labProblemValidator,".\\files\\txt\\test-problems.txt");
         Set<LabProblem> problems = (HashSet<LabProblem>) testRepositoryTest.getAll();
         assertEquals(problems.size(),2);
         assertTrue(problems.contains(new LabProblem(1L, "heap", 120)));

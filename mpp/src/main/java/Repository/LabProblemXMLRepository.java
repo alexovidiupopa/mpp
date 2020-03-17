@@ -2,7 +2,6 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
-import Model.Student;
 import Model.Validators.Validator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,12 +11,14 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
