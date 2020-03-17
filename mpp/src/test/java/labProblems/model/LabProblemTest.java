@@ -18,12 +18,12 @@ public class LabProblemTest {
     private LabProblem problem;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         problem = new LabProblem(ID,DESCRIPTION,SCORE);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         problem=null;
     }
 

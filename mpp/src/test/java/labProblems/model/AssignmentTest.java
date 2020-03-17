@@ -7,9 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class AssignmentTest {
+
     private static final Long STUD_ID = 1L;
     private static final Long ASIG_ID = 2L;
     private static final Double OLD_GRADE = 2.3;
@@ -17,12 +16,12 @@ public class AssignmentTest {
     private Assignment assignment;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         assignment = new Assignment(new Pair<>(STUD_ID, ASIG_ID),OLD_GRADE);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         assignment=null;
     }
 
@@ -36,4 +35,5 @@ public class AssignmentTest {
         assignment.setGrade(NEW_GRADE);
         Assert.assertEquals(NEW_GRADE,assignment.getGrade());
     }
+
 }

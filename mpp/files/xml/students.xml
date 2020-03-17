@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<students>
+    <student id="1">
+        <serialNo>10</serialNo>
+        <name>marian</name>
+        <group>3</group>
+    </student>
+    <student id="3">
+        <serialNo>3</serialNo>
+        <name>stefan</name>
+        <group>2</group>
+    </student>
+    <student id="2">
+        <serialNo>2</serialNo>
+        <name>vlad</name>
+        <group>3</group>
+    </student>
+</students>
