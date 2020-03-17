@@ -20,22 +20,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LabProblemFileRepositoryTest {
+
     private Validator<LabProblem> labProblemValidator;
     private MemoryRepository<Long, LabProblem> testRepository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         labProblemValidator = new LabProblemValidator();
         testRepository = new LabProblemFileRepository(labProblemValidator,".\\files\\test-problems.txt");
     }
-
 
     @After
     public void tearDown() throws Exception {
         testRepository.update(new LabProblem(1L,"stack",10));
         testRepository=null;
     }
-
 
     @Test
     public void testLoadData() {
@@ -52,8 +51,5 @@ public class LabProblemFileRepositoryTest {
         assertEquals(problems.size(),2);
         assertTrue(problems.contains(new LabProblem(1L, "heap", 120)));
     }
-
-
-
 
 }

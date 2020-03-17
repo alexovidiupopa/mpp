@@ -16,7 +16,6 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
@@ -35,7 +34,7 @@ public class LabProblemControllerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.labProblemController = null;
     }
 
@@ -90,7 +89,7 @@ public class LabProblemControllerTest {
     @Test
     public void testSortProblemsDescendingByScore() {
         List<LabProblem> sortedProblems = this.labProblemController.sortProblemsDescendingByScore();
-        List<LabProblem> expectedProblems =  this.labProblemController.getAllProblems().stream().sorted((o1, o2) -> o2.getScore()-o1.getScore()).collect(Collectors.toList());
-        assertArrayEquals(sortedProblems.toArray(),expectedProblems.toArray());
+        assertArrayEquals(sortedProblems.toArray(), this.labProblemController.getAllProblems().stream().sorted((o1, o2) -> o2.getScore() - o1.getScore()).toArray());
     }
+
 }

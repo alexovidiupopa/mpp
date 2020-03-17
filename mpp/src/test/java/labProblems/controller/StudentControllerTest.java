@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +34,7 @@ public class StudentControllerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.studentController = null;
     }
 
@@ -91,7 +90,7 @@ public class StudentControllerTest {
     @Test
     public void testSortStudentsAscendingByName() {
         List<Student> sortedStudents = this.studentController.sortStudentsAscendingByName();
-        List<Student> expectedStudents =  this.studentController.getAllStudents().stream().sorted(Comparator.comparing(Student::getName)).collect(Collectors.toList());
-        assertArrayEquals(sortedStudents.toArray(),expectedStudents.toArray());
+        assertArrayEquals(sortedStudents.toArray(), this.studentController.getAllStudents().stream().sorted(Comparator.comparing(Student::getName)).toArray());
     }
+
 }

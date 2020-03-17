@@ -25,7 +25,7 @@ public class AssignmentFileRepositoryTest {
     private RepositoryInterface<Pair<Long,Long>, Assignment> testRepository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         assignmentValidator=new AssignmentValidator();
         testRepository = new AssignmentFileRepository(assignmentValidator,".\\files\\test-assignments.txt");
     }
