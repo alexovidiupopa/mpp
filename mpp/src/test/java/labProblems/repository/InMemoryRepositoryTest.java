@@ -30,18 +30,20 @@ public class InMemoryRepositoryTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         testValidator=null;
         testStudentRepository=null;
     }
 
     @Test
-    public void testFindById() throws Exception {
+    public void testFindById() {
+        if(!testStudentRepository.findById(1L).isPresent())
+            fail();
         assertEquals(testStudentRepository.findById(1L).get(), new Student(1L,"1234","alex",1));
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void testGetAll() {
         Set<Student> allStudents = (HashSet<Student>) testStudentRepository.getAll();
         assertEquals(allStudents.size(),2);
         assertTrue(allStudents.contains(new Student(2L,"9999","vlad",3)));
@@ -71,6 +73,8 @@ public class InMemoryRepositoryTest {
     @Test
     public void testUpdate() throws Exception {
         assertEquals(testStudentRepository.update(new Student(1L,"1234","popa",2)), Optional.empty());
+        if(!testStudentRepository.findById(1L).isPresent())
+            fail();
         assertEquals(testStudentRepository.findById(1L).get().getGroup(),2);
     }
 

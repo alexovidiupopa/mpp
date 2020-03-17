@@ -43,7 +43,3 @@ public class Main {
     }
 
 }
-
-// TODO
-// Delete stud/probl -- doesnt exist
-// Update probl -- deletes problem
