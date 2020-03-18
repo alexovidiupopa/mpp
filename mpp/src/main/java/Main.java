@@ -25,25 +25,17 @@ public class Main {
         Validator<LabProblem> labProblemValidator = new LabProblemValidator();
         RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemXMLRepository(labProblemValidator, ".\\files\\xml\\problems.xml");
         LabProblemController labProblemController = new LabProblemController(labProblemRepository);
-
-
         Validator<Assignment> assignmentValidator = new AssignmentValidator();
         RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentXMLRepository(assignmentValidator, ".\\files\\xml\\assignments.xml");
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
-
 
         studentController.setAssignmentController(assignmentController);
         labProblemController.setAssignmentController(assignmentController);
         assignmentController.setStudentController(studentController);
         assignmentController.setProblemController(labProblemController);
 
-
         Console console = new Console(studentController, labProblemController, assignmentController);
         console.run();
     }
 
 }
-
-// TODO
-// Delete stud/probl -- doesnt exist
-// Update probl -- deletes problem

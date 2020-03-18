@@ -28,11 +28,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
         this.fileName = fileName;
         try {
             loadData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }

@@ -495,6 +495,7 @@ public class Console {
     }
 
 
+
     /**
      * Method to handle printing the passing students.
      */
@@ -509,7 +510,11 @@ public class Console {
      */
     private void mostAssignedProblem() {
         System.out.println("problem assigned the most times:");
-        System.out.println(labProblemController.getProblemAssignedMostTimes());
+        try {
+            System.out.println(labProblemController.getProblemAssignedMostTimes());
+        } catch (MyException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -517,6 +522,11 @@ public class Console {
      */
     private void studentMostAssignedProblems(){
         System.out.println("student with the most assigned problems:");
-        System.out.println(studentController.getStudentsWithMostProblems());
+        try {
+            System.out.println(studentController.getStudentsWithMostProblems());
+        } catch (MyException e) {
+            System.out.println(e.getMessage());
+        }
     }
+
 }

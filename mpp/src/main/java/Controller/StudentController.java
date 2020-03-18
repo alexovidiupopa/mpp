@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Assignment;
+import Model.Exceptions.MyException;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.Student;
@@ -128,7 +129,7 @@ public class StudentController {
      * Find the student which has been assigned the most problems.
      * @return a Student respecting the fore-mentioned property.
      */
-    public Student getStudentsWithMostProblems(){
+    public Student getStudentsWithMostProblems() throws MyException {
         Set<Assignment> assignments = assignmentController.getAllAssignments();
         Map<Long, Long> countForId = assignments.stream()
                 .collect(Collectors.groupingBy(assignment -> assignment.getId().getFirst(), Collectors.counting()));
@@ -138,6 +139,8 @@ public class StudentController {
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Optional<Map.Entry<Long, Long>> student = sortedByValue.entrySet().stream().findFirst();
+        if(!student.isPresent())
+            throw new MyException("No student found");
         return this.getStudentById(student.get().getKey());
     }
 
