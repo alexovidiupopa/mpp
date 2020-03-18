@@ -2,15 +2,18 @@ package View;
 
 import Controller.AssignmentController;
 import Controller.LabProblemController;
+import Controller.StudentController;
 import Model.Assignment;
 import Model.Exceptions.MyException;
 import Model.Exceptions.RepositoryException;
+import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Model.Student;
-import Model.Exceptions.ValidatorException;
-import Controller.StudentController;
 import Utils.Pair;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,6 +51,9 @@ public class Console {
         commands.put("sort students", this::sortStudents);
         commands.put("sort problems", this::sortProblems);
         commands.put("sort assignments", this::sortAssignments);
+        commands.put("most assigned problem", this::mostAssignedProblem);
+        commands.put("students who passed", this::passingStudents);
+        commands.put("student most problems", this::studentMostAssignedProblems);
     }
 
     /**
@@ -95,7 +101,7 @@ public class Console {
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -113,7 +119,7 @@ public class Console {
             try {
                 studentController.deleteStudent(student);
                 System.out.println("Student deleted successfully");
-            } catch (RepositoryException | IOException e) {
+            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -132,7 +138,7 @@ public class Console {
             try {
                 studentController.updateStudent(student);
                 System.out.println("Student updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -219,7 +225,7 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -237,7 +243,7 @@ public class Console {
             try {
                 labProblemController.deleteProblem(problem);
                 System.out.println("Problem deleted successfully");
-            } catch (RepositoryException | IOException e) {
+            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -256,7 +262,7 @@ public class Console {
             try {
                 labProblemController.updateProblem(problem);
                 System.out.println("Problem updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -336,7 +342,7 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
-            } catch (ValidatorException | IOException | RepositoryException e) {
+            } catch (ValidatorException | IOException | RepositoryException | ParserConfigurationException | TransformerException | SAXException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -354,7 +360,7 @@ public class Console {
             try {
                 assignmentController.deleteAssignment(assignment);
                 System.out.println("Assignment deleted successfully");
-            } catch (IOException | RepositoryException e) {
+            } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -411,7 +417,7 @@ public class Console {
             try {
                 assignmentController.updateAssignment(assignment);
                 System.out.println("Assignment updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -489,4 +495,28 @@ public class Console {
     }
 
 
+    /**
+     * Method to handle printing the passing students.
+     */
+    private void passingStudents() {
+        System.out.println("students currently passing at least one assignment:");
+        Set<Student> students=studentController.getStudentsWhoPassed();
+        students.forEach(System.out::println);
+    }
+
+    /**
+     * Method to handle getting the problem assigned the most times.
+     */
+    private void mostAssignedProblem() {
+        System.out.println("problem assigned the most times:");
+        System.out.println(labProblemController.getProblemAssignedMostTimes());
+    }
+
+    /**
+     * Method to handle getting the student with the most assigned problems.
+     */
+    private void studentMostAssignedProblems(){
+        System.out.println("student with the most assigned problems:");
+        System.out.println(studentController.getStudentsWithMostProblems());
+    }
 }

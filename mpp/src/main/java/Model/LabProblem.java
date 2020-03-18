@@ -18,6 +18,10 @@ public class LabProblem extends BaseEntity<Long> {
         this.score = score;
     }
 
+    public LabProblem() {
+
+    }
+
     @Override
     public String toString() {
         return "LabProblem{" +

@@ -1,7 +1,5 @@
 package Model.Exceptions;
 
-import java.util.function.Supplier;
-
 public class RepositoryException extends MyException {
     public RepositoryException(String message) {
         super(message);
