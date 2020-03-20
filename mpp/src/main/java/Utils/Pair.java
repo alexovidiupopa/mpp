@@ -1,8 +1,9 @@
 package Utils;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Pair<T1, T2> {
+public class Pair<T1, T2> implements Serializable {
 
     private T1 first;
     private T2 second;
