@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -34,7 +35,7 @@ public class LabProblemController {
      * @throws ValidatorException if problem is invalid
      * @throws IllegalArgumentException if problem is null.
      */
-    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, ParserConfigurationException, TransformerException, SAXException {
+    public void addProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, ParserConfigurationException, TransformerException, SAXException, SQLException {
         Optional<LabProblem> optional = repository.add(problem);
         if (optional.isPresent())
             throw new RepositoryException("Id already exists");
@@ -45,7 +46,7 @@ public class LabProblemController {
      * Removes the given problem from the repository.
      * @param problem - given problem
      */
-    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void deleteProblem(LabProblem problem) throws RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.assignmentController
                 .getAllAssignments()
                 .stream()
@@ -53,7 +54,7 @@ public class LabProblemController {
                 .forEach(a -> {
                     try {
                         this.assignmentController.deleteAssignment(a);
-                    } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
+                    } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException | SQLException e) {
                         e.printStackTrace();
                     }
                 });
@@ -66,7 +67,7 @@ public class LabProblemController {
      * @param problem - given problem
      * @throws ValidatorException if the problem is not valid
      */
-    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void updateProblem(LabProblem problem) throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         Optional<LabProblem> optional = repository.update(problem);
         if (optional.isPresent())
             throw new RepositoryException("Problem doesn't exist");
@@ -77,7 +78,7 @@ public class LabProblemController {
      * @param id - given problem id
      * @return Problem in the repository with the given id.
      */
-    public LabProblem getProblemById(long id) {
+    public LabProblem getProblemById(long id) throws SQLException {
         Optional<LabProblem> optional = this.repository.findById(id);
         return optional.orElse(null);
     }
@@ -86,7 +87,7 @@ public class LabProblemController {
      * Returns all lab problems currently in the repository.
      * @return HashSet containing all lab problems in the repository.
      */
-    public Set<LabProblem> getAllProblems() {
+    public Set<LabProblem> getAllProblems() throws SQLException {
         Iterable<LabProblem> problems = repository.getAll();
         return StreamSupport.stream(problems.spliterator(), false)
                 .collect(Collectors.toSet());
@@ -97,7 +98,7 @@ public class LabProblemController {
      * @param minScore - integer.
      * @return Set containing the above lab problems.
      */
-    public Set<LabProblem> filterProblemsByScore(int minScore) {
+    public Set<LabProblem> filterProblemsByScore(int minScore) throws SQLException {
         Iterable<LabProblem> problems = repository.getAll();
         return StreamSupport.stream(problems.spliterator(), false)
                 .filter(lp -> lp.getScore() >= minScore)
@@ -108,7 +109,7 @@ public class LabProblemController {
      * Returns all lab problems sorted descending by score.
      * @return List containing said problems.
      */
-    public List<LabProblem> sortProblemsDescendingByScore(){
+    public List<LabProblem> sortProblemsDescendingByScore() throws SQLException {
         Iterable<LabProblem> problems = repository.getAll();
         return StreamSupport.stream(problems.spliterator(),false)
                 .sorted((o1, o2) -> o2.getScore()-o1.getScore())
@@ -118,7 +119,7 @@ public class LabProblemController {
      * Get the problem which has been assigned the most times.
      * @return a LabProblem respecting fore-mentioned property.
      */
-    public LabProblem getProblemAssignedMostTimes() {
+    public LabProblem getProblemAssignedMostTimes() throws SQLException {
         Set<Assignment> assignments = assignmentController.getAllAssignments();
         Map<Long, Long> countForId = assignments.stream()
                 .collect(Collectors.groupingBy(assignment -> assignment.getId().getSecond(), Collectors.counting()));

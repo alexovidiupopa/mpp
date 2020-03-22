@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -101,7 +102,7 @@ public class Console {
             try {
                 studentController.addStudent(student);
                 System.out.println("Student added successfully");
-            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
+            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -119,7 +120,7 @@ public class Console {
             try {
                 studentController.deleteStudent(student);
                 System.out.println("Student deleted successfully");
-            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException | SQLException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -138,7 +139,7 @@ public class Console {
             try {
                 studentController.updateStudent(student);
                 System.out.println("Student updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -189,7 +190,12 @@ public class Console {
      * Method to handle printing the students.
      */
     private void printAllStudents() {
-        Set<Student> students = studentController.getAllStudents();
+        Set<Student> students = null;
+        try {
+            students = studentController.getAllStudents();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         students.forEach(System.out::println);
     }
 
@@ -198,7 +204,12 @@ public class Console {
      */
     private void filterStudents() {
         System.out.println("filtered students (name containing 's2'):");
-        Set<Student> students = studentController.filterStudentsByName("s2");
+        Set<Student> students = null;
+        try {
+            students = studentController.filterStudentsByName("s2");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         students.forEach(System.out::println);
     }
 
@@ -207,7 +218,12 @@ public class Console {
      */
     private void sortStudents() {
         System.out.println("sorted students (by name):");
-        List<Student> students = studentController.sortStudentsAscendingByName();
+        List<Student> students = null;
+        try {
+            students = studentController.sortStudentsAscendingByName();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         students.forEach(System.out::println);
     }
 
@@ -225,7 +241,7 @@ public class Console {
             try {
                 labProblemController.addProblem(newProblem);
                 System.out.println("Problem added successfully");
-            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException e) {
+            } catch (ValidatorException | RepositoryException | IOException | ParserConfigurationException | TransformerException | SAXException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -243,7 +259,7 @@ public class Console {
             try {
                 labProblemController.deleteProblem(problem);
                 System.out.println("Problem deleted successfully");
-            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (RepositoryException | IOException | TransformerException | ParserConfigurationException | SQLException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -262,7 +278,7 @@ public class Console {
             try {
                 labProblemController.updateProblem(problem);
                 System.out.println("Problem updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -306,7 +322,12 @@ public class Console {
      * Method to handle printing the lab problems.
      */
     private void printAllProblems() {
-        Set<LabProblem> allProblems = labProblemController.getAllProblems();
+        Set<LabProblem> allProblems = null;
+        try {
+            allProblems = labProblemController.getAllProblems();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         allProblems.forEach(System.out::println);
     }
 
@@ -315,7 +336,12 @@ public class Console {
      */
     private void filterProblems() {
         System.out.println("filtered problems (score >= 5):");
-        Set<LabProblem> filteredProblems = this.labProblemController.filterProblemsByScore(5);
+        Set<LabProblem> filteredProblems = null;
+        try {
+            filteredProblems = this.labProblemController.filterProblemsByScore(5);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         filteredProblems.forEach(System.out::println);
     }
 
@@ -324,7 +350,12 @@ public class Console {
      */
     private void sortProblems() {
         System.out.println("sorted problems (by score):");
-        List<LabProblem> students = labProblemController.sortProblemsDescendingByScore();
+        List<LabProblem> students = null;
+        try {
+            students = labProblemController.sortProblemsDescendingByScore();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         students.forEach(System.out::println);
     }
 
@@ -342,7 +373,7 @@ public class Console {
             try {
                 this.assignmentController.addAssignment(assignment);
                 System.out.println("Assignment added successfully");
-            } catch (ValidatorException | IOException | RepositoryException | ParserConfigurationException | TransformerException | SAXException e) {
+            } catch (ValidatorException | IOException | RepositoryException | ParserConfigurationException | TransformerException | SAXException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -360,7 +391,7 @@ public class Console {
             try {
                 assignmentController.deleteAssignment(assignment);
                 System.out.println("Assignment deleted successfully");
-            } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
+            } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -417,7 +448,7 @@ public class Console {
             try {
                 assignmentController.updateAssignment(assignment);
                 System.out.println("Assignment updated successfully");
-            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException e) {
+            } catch (ValidatorException | RepositoryException | IOException | TransformerException | ParserConfigurationException | SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -472,7 +503,12 @@ public class Console {
      * Method to handle printing the assignment.
      */
     private void printAllAssignments() {
-        Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
+        Set<Assignment> allAssignments = null;
+        try {
+            allAssignments = this.assignmentController.getAllAssignments();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         allAssignments.forEach(System.out::println);
     }
 
@@ -481,7 +517,12 @@ public class Console {
      */
     private void filterAssignments() {
         System.out.println("filtered assignments (grade >= 5):");
-        Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+        Set<Assignment> filteredAssignments = null;
+        try {
+            filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         filteredAssignments.forEach(System.out::println);
     }
 
@@ -490,7 +531,12 @@ public class Console {
      */
     private void sortAssignments() {
         System.out.println("sorted assignments (by student and problem):");
-        List<Assignment> students = assignmentController.sortAssignmentsAscendingById();
+        List<Assignment> students = null;
+        try {
+            students = assignmentController.sortAssignmentsAscendingById();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         students.forEach(System.out::println);
     }
 
@@ -500,7 +546,12 @@ public class Console {
      */
     private void passingStudents() {
         System.out.println("students currently passing at least one assignment:");
-        Set<Student> students=studentController.getStudentsWhoPassed();
+        Set<Student> students= null;
+        try {
+            students = studentController.getStudentsWhoPassed();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         students.forEach(System.out::println);
     }
 
@@ -509,7 +560,11 @@ public class Console {
      */
     private void mostAssignedProblem() {
         System.out.println("problem assigned the most times:");
-        System.out.println(labProblemController.getProblemAssignedMostTimes());
+        try {
+            System.out.println(labProblemController.getProblemAssignedMostTimes());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -517,6 +572,10 @@ public class Console {
      */
     private void studentMostAssignedProblems(){
         System.out.println("student with the most assigned problems:");
-        System.out.println(studentController.getStudentsWithMostProblems());
+        try {
+            System.out.println(studentController.getStudentsWithMostProblems());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

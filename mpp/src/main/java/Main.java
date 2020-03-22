@@ -9,10 +9,7 @@ import Model.Validators.AssignmentValidator;
 import Model.Validators.LabProblemValidator;
 import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
-import Repository.AssignmentXMLRepository;
-import Repository.LabProblemXMLRepository;
-import Repository.RepositoryInterface;
-import Repository.StudentXMLRepository;
+import Repository.*;
 import Utils.Pair;
 import View.Console;
 
@@ -23,7 +20,8 @@ public class Main {
         RepositoryInterface<Long, Student> studentRepository = new StudentXMLRepository(studentValidator, ".\\files\\xml\\students.xml");
         StudentController studentController = new StudentController(studentRepository);
         Validator<LabProblem> labProblemValidator = new LabProblemValidator();
-        RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemXMLRepository(labProblemValidator, ".\\files\\xml\\problems.xml");
+        //RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemXMLRepository(labProblemValidator, ".\\files\\xml\\problems.xml");
+        RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemJDBCRepository(labProblemValidator,".\\files\\credentials\\alex.txt");
         LabProblemController labProblemController = new LabProblemController(labProblemRepository);
 
 

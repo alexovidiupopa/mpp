@@ -2,6 +2,7 @@ package Repository;
 
 
 import Model.BaseEntity;
+import Model.Validators.Validator;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -22,11 +23,16 @@ public abstract class DatabaseRepository<ID extends Serializable, T extends Base
     private String dbName;
     private String dbUser;
     private String dbPassword;
-
-    public DatabaseRepository(String dbCredentialsFilename) {
+    protected Validator<T> validator;
+    public DatabaseRepository(Validator<T> validator, String dbCredentialsFilename) {
+        this.validator = validator;
         loadDBConfiguration(dbCredentialsFilename);
     }
 
+    /**
+     * Method to load the db configuration details.
+     * @param dbCredentialsFilename - file containing the credentials.
+     */
     private void loadDBConfiguration(String dbCredentialsFilename) {
         Path path = Paths.get(dbCredentialsFilename);
         List<String> inputData = new ArrayList<>();
@@ -43,6 +49,9 @@ public abstract class DatabaseRepository<ID extends Serializable, T extends Base
         dbPassword = inputData.get(5);
     }
 
+    /**
+     * Method that handles loading the driver from the gradle build file.
+     */
     private void loadDriver() {
         try {
             Class.forName("org.postgresql.Driver");
@@ -51,6 +60,10 @@ public abstract class DatabaseRepository<ID extends Serializable, T extends Base
         }
     }
 
+    /**
+     * Method that handles creating the database connection having previously loaded the credentials.
+     * @return a Connection object representing the established connection.
+     */
     protected Connection dbConnection() {
 
         loadDriver();
@@ -75,7 +88,6 @@ public abstract class DatabaseRepository<ID extends Serializable, T extends Base
         } catch (SQLException e) {
             System.err.println("Cannot connect to the database: " + e.getMessage());
         }
-
         return null;
     }
 }

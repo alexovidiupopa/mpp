@@ -2,6 +2,7 @@ package Repository;
 
 import Model.Assignment;
 import Model.Exceptions.ValidatorException;
+import Model.Validators.Validator;
 import Utils.Sort;
 import Utils.Pair;
 import org.xml.sax.SAXException;
@@ -12,8 +13,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long>, Assignment> {
-    public AssignmentsJDBCRepository(String dbCredentialsFilename) {
-        super(dbCredentialsFilename);
+    public AssignmentsJDBCRepository(Validator<Assignment> validator, String dbCredentialsFilename) {
+        super(validator, dbCredentialsFilename);
     }
 
     @Override
