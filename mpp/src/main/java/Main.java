@@ -23,11 +23,11 @@ public class Main {
 
         Validator<LabProblem> labProblemValidator = new LabProblemValidator();
         //RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemXMLRepository(labProblemValidator, ".\\files\\xml\\problems.xml");
-        RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemJDBCRepository(labProblemValidator,".\\files\\credentials\\alex.txt");
+        RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemJDBCRepository(labProblemValidator,".\\files\\credentials\\vlad.txt");
         LabProblemController labProblemController = new LabProblemController(labProblemRepository);
         Validator<Assignment> assignmentValidator = new AssignmentValidator();
         //RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentXMLRepository(assignmentValidator, ".\\files\\xml\\assignments.xml");
-        RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentsJDBCRepository(assignmentValidator, ".\\files\\credentials\\alex.txt");
+        RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentsJDBCRepository(assignmentValidator, ".\\files\\credentials\\vlad.txt");
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
 
         studentController.setAssignmentController(assignmentController);
