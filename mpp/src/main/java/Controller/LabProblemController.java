@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Assignment;
+import Model.Exceptions.MyException;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
@@ -119,7 +120,7 @@ public class LabProblemController {
      * Get the problem which has been assigned the most times.
      * @return a LabProblem respecting fore-mentioned property.
      */
-    public LabProblem getProblemAssignedMostTimes() throws SQLException {
+    public LabProblem getProblemAssignedMostTimes() throws MyException, SQLException {
         Set<Assignment> assignments = assignmentController.getAllAssignments();
         Map<Long, Long> countForId = assignments.stream()
                 .collect(Collectors.groupingBy(assignment -> assignment.getId().getSecond(), Collectors.counting()));
@@ -129,6 +130,8 @@ public class LabProblemController {
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Optional<Map.Entry<Long, Long>> problem = sortedByValue.entrySet().stream().findFirst();
+        if(!problem.isPresent())
+            throw new MyException("No problem found");
         return this.getProblemById(problem.get().getKey());
     }
 }

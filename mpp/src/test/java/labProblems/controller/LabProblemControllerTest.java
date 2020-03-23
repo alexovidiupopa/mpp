@@ -1,9 +1,11 @@
 package labProblems.controller;
 
+import Controller.AssignmentController;
 import Controller.LabProblemController;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Validators.AssignmentValidator;
 import Model.Validators.LabProblemValidator;
 import Repository.MemoryRepository;
 import org.junit.After;
@@ -27,6 +29,7 @@ public class LabProblemControllerTest {
     @Before
     public void setUp() throws Exception {
         this.labProblemController = new LabProblemController(new MemoryRepository<>(new LabProblemValidator()));
+        this.labProblemController.setAssignmentController(new AssignmentController(new MemoryRepository<>(new AssignmentValidator())));
         this.labProblemController.addProblem(new LabProblem(11L, "problem1", 100));
         this.labProblemController.addProblem(new LabProblem(22L, "problem2", 50));
         this.labProblemController.addProblem(new LabProblem(33L, "problem3", 10));

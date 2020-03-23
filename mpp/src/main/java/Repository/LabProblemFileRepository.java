@@ -2,7 +2,6 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
-import Model.Student;
 import Model.Validators.Validator;
 import org.xml.sax.SAXException;
 
@@ -19,7 +18,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem> {
@@ -31,11 +29,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         this.fileName = fileName;
         try {
             loadData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
@@ -79,9 +73,9 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     public Optional<LabProblem> delete(Long id) throws IOException, TransformerException, ParserConfigurationException {
         Optional<LabProblem> optional = super.delete(id);
         if (!optional.isPresent())
-            return optional;
+            return Optional.empty();
         saveAllToFile();
-        return Optional.empty();
+        return optional;
     }
 
     @Override
@@ -99,7 +93,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     protected void saveAllToFile() throws IOException, ParserConfigurationException, TransformerException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.fileName)));
         String content = StreamSupport.stream(super.getAll().spliterator(), false)
-                .map(e -> Long.toString(e.getId()) + "," + e.getDescription() + "," + Integer.toString(e.getScore()) + "\n")
+                .map(e -> e.getId() + "," + e.getDescription() + "," + e.getScore() + "\n")
                 .reduce("", (s, e) -> s+e);
         bw.write(content);
         bw.close();

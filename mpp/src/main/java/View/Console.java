@@ -190,41 +190,38 @@ public class Console {
      * Method to handle printing the students.
      */
     private void printAllStudents() {
-        Set<Student> students = null;
         try {
-            students = studentController.getAllStudents();
+            Set<Student> students = studentController.getAllStudents();
+            students.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        students.forEach(System.out::println);
     }
 
     /**
      * Method to handle filtering the students.
      */
     private void filterStudents() {
-        System.out.println("filtered students (name containing 's2'):");
-        Set<Student> students = null;
         try {
-            students = studentController.filterStudentsByName("s2");
+            System.out.println("filtered students (name containing 's2'):");
+            Set<Student> students = studentController.filterStudentsByName("s2");
+            students.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        students.forEach(System.out::println);
     }
 
     /**
      * Method to handle sorting the students.
      */
     private void sortStudents() {
-        System.out.println("sorted students (by name):");
-        List<Student> students = null;
         try {
-            students = studentController.sortStudentsAscendingByName();
+            System.out.println("sorted students (by name):");
+            List<Student> students = studentController.sortStudentsAscendingByName();
+            students.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        students.forEach(System.out::println);
     }
 
 
@@ -322,41 +319,38 @@ public class Console {
      * Method to handle printing the lab problems.
      */
     private void printAllProblems() {
-        Set<LabProblem> allProblems = null;
         try {
-            allProblems = labProblemController.getAllProblems();
+            Set<LabProblem> allProblems = labProblemController.getAllProblems();
+            allProblems.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        allProblems.forEach(System.out::println);
     }
 
     /**
      * Method to handle filtering the lab problems.
      */
     private void filterProblems() {
-        System.out.println("filtered problems (score >= 5):");
-        Set<LabProblem> filteredProblems = null;
         try {
-            filteredProblems = this.labProblemController.filterProblemsByScore(5);
+            System.out.println("filtered problems (score >= 5):");
+            Set<LabProblem> filteredProblems = this.labProblemController.filterProblemsByScore(5);
+            filteredProblems.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        filteredProblems.forEach(System.out::println);
     }
 
     /**
      * Method to handle sorting the lab problems.
      */
     private void sortProblems() {
-        System.out.println("sorted problems (by score):");
-        List<LabProblem> students = null;
         try {
-            students = labProblemController.sortProblemsDescendingByScore();
+            System.out.println("sorted problems (by score):");
+            List<LabProblem> students = labProblemController.sortProblemsDescendingByScore();
+            students.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        students.forEach(System.out::println);
     }
 
 
@@ -503,56 +497,53 @@ public class Console {
      * Method to handle printing the assignment.
      */
     private void printAllAssignments() {
-        Set<Assignment> allAssignments = null;
         try {
-            allAssignments = this.assignmentController.getAllAssignments();
+            Set<Assignment> allAssignments = this.assignmentController.getAllAssignments();
+            allAssignments.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        allAssignments.forEach(System.out::println);
     }
 
     /**
      * Method to handle filtering the assignments.
      */
     private void filterAssignments() {
-        System.out.println("filtered assignments (grade >= 5):");
-        Set<Assignment> filteredAssignments = null;
         try {
-            filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+            System.out.println("filtered assignments (grade >= 5):");
+            Set<Assignment> filteredAssignments = this.assignmentController.filterAssignmentsByGrade(5);
+            filteredAssignments.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        filteredAssignments.forEach(System.out::println);
     }
 
     /**
      * Method to handle sorting the assignments.
      */
     private void sortAssignments() {
-        System.out.println("sorted assignments (by student and problem):");
-        List<Assignment> students = null;
         try {
-            students = assignmentController.sortAssignmentsAscendingById();
+            System.out.println("sorted assignments (by student and problem):");
+            List<Assignment> students = assignmentController.sortAssignmentsAscendingById();
+            students.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        students.forEach(System.out::println);
     }
+
 
 
     /**
      * Method to handle printing the passing students.
      */
     private void passingStudents() {
-        System.out.println("students currently passing at least one assignment:");
-        Set<Student> students= null;
         try {
-            students = studentController.getStudentsWhoPassed();
+            System.out.println("students currently passing at least one assignment:");
+            Set<Student> students=studentController.getStudentsWhoPassed();
+            students.forEach(System.out::println);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        students.forEach(System.out::println);
     }
 
     /**
@@ -562,8 +553,8 @@ public class Console {
         System.out.println("problem assigned the most times:");
         try {
             System.out.println(labProblemController.getProblemAssignedMostTimes());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (MyException | SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -574,8 +565,9 @@ public class Console {
         System.out.println("student with the most assigned problems:");
         try {
             System.out.println(studentController.getStudentsWithMostProblems());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (MyException | SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
+
 }

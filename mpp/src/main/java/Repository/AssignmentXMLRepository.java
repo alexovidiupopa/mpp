@@ -81,13 +81,14 @@ public class AssignmentXMLRepository extends AssignmentFileRepository {
         NodeList children = root.getChildNodes();
         return IntStream
                 .range(0, children.getLength())
-                .mapToObj(index -> children.item(index))
+                .mapToObj(children::item)
                 .filter(node -> node instanceof Element)
                 .map(node -> createAssignmentFromElement((Element) node))
                 .collect(Collectors.toSet());
     }
+
     @Override
-    protected void saveAllToFile() throws IOException, ParserConfigurationException, TransformerException {
+    protected void saveAllToFile() throws ParserConfigurationException, TransformerException {
         Document document = DocumentBuilderFactory
                 .newInstance()
                 .newDocumentBuilder()
@@ -127,4 +128,5 @@ public class AssignmentXMLRepository extends AssignmentFileRepository {
         assignmentElement.appendChild(gradeElement);
         return assignmentElement;
     }
+
 }
