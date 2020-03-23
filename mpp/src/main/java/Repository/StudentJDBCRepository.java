@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public class StudentJDBCRepository extends DatabaseRepository<Long, Student> {
-
     public StudentJDBCRepository(Validator<Student> validator, String dbCredentialsFilename) {
         super(validator, dbCredentialsFilename);
     }

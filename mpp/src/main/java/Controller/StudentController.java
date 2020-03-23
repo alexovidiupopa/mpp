@@ -127,8 +127,8 @@ public class StudentController {
                         return this.getStudentById(assignment.getId().getFirst());
                     } catch (SQLException e) {
                         e.printStackTrace();
-                    }
-                    return null;
+                        return null;
+                    }                   
                 })
                 .collect(Collectors.toSet());
     }
