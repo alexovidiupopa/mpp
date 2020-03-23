@@ -1,0 +1,40 @@
+--manually create a database called problemsdb
+--in it, create a schema called db_schema
+--this, of course, can also be done automatically by scripting but i was too lazy to do it
+drop table if exists problemsdb.db_schema.Assignments;
+drop table if exists problemsdb.db_schema.Students;
+drop table if exists problemsdb.db_schema.Problems;
+
+create table problemsdb.db_schema.Students(
+    id bigserial primary key,
+    serialNumber varchar(255),
+    name varchar(255),
+    groupNumber smallint
+);
+
+create table problemsdb.db_schema.Problems(
+    id bigserial primary key,
+    description varchar(255),
+    score int
+);
+
+create table problemsdb.db_schema.Assignments(
+    sid bigserial references problemsdb.db_schema.Students(id),
+    aid bigserial references problemsdb.db_schema.Problems(id),
+    grade float default null,
+    primary key(sid,aid)
+);
+
+insert into problemsdb.db_schema.Students(serialnumber, name, groupnumber) values ('111','alex',3), ('222','vlad',2),
+                                                 ('333','dani',4), ('444', 'adi', 1);
+--select * from problemsdb.db_schema.Students;
+
+insert into problemsdb.db_schema.Problems(description, score) values ('stack',10), ('queue',25),
+                                                                     ('heap',23);
+--select * from problemsdb.db_schema.Problems;
+
+insert into problemsdb.db_schema.Assignments(sid, aid) values (1,1),(1,2),(2,3);
+insert into problemsdb.db_schema.Assignments (sid, aid, grade) values (3,3, 7.3),(4,3, 8.1);
+--select * from problemsdb.db_schema.Assignments;
+
+

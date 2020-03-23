@@ -1,21 +1,18 @@
 package Controller;
 
 import Model.Assignment;
+import Model.Exceptions.MyException;
 import Model.Exceptions.RepositoryException;
-import Model.LabProblem;
-import Model.Student;
 import Model.Exceptions.ValidatorException;
+import Model.Student;
 import Repository.RepositoryInterface;
 import org.xml.sax.SAXException;
-import Utils.Pair;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,7 +34,7 @@ public class StudentController {
      * @param student - given student
      * @throws ValidatorException if student is not valid
      */
-    public void addStudent(Student student) throws ValidatorException, RepositoryException, IOException, ParserConfigurationException, TransformerException, SAXException {
+    public void addStudent(Student student) throws ValidatorException, RepositoryException, IOException, ParserConfigurationException, TransformerException, SAXException, SQLException {
         Optional<Student> optional = repository.add(student);
         if (optional.isPresent())
             throw new RepositoryException("Id already exists");
@@ -47,7 +44,7 @@ public class StudentController {
      * Removes the given student from the repository.
      * @param student - given student
      */
-    public void deleteStudent(Student student) throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void deleteStudent(Student student) throws RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.assignmentController
                 .getAllAssignments()
                 .stream()
@@ -55,7 +52,7 @@ public class StudentController {
                 .forEach(a -> {
                     try {
                         this.assignmentController.deleteAssignment(a);
-                    } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException e) {
+                    } catch (IOException | RepositoryException | TransformerException | ParserConfigurationException | SQLException e) {
                         e.printStackTrace();
                     }
                 });
@@ -69,7 +66,7 @@ public class StudentController {
      * @param student - given student
      * @throws ValidatorException if the student is not valid
      */
-    public void updateStudent(Student student) throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void updateStudent(Student student) throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         Optional<Student> optional = repository.update(student);
         if (optional.isPresent())
             throw new RepositoryException("Student doesn't exist");
@@ -80,7 +77,7 @@ public class StudentController {
      * @param id - given student id
      * @return Student in the repository with the given id.
      */
-    public Student getStudentById(long id) {
+    public Student getStudentById(long id) throws SQLException {
         Optional<Student> optional = this.repository.findById(id);
         return optional.orElse(null);
     }
@@ -89,7 +86,7 @@ public class StudentController {
      * Gets all the students currently in the repository.
      * @return HashSet containing all students in the repository.
      */
-    public Set<Student> getAllStudents() {
+    public Set<Student> getAllStudents() throws SQLException {
         Iterable<Student> students = repository.getAll();
         return StreamSupport.stream(students.spliterator(), false).collect(Collectors.toSet());
     }
@@ -99,7 +96,7 @@ public class StudentController {
      * @param s - given string
      * @return HashSet containing the above students.
      */
-    public Set<Student> filterStudentsByName(String s) {
+    public Set<Student> filterStudentsByName(String s) throws SQLException {
         Iterable<Student> students = repository.getAll();
         return StreamSupport.stream(students.spliterator(), false)
                 .filter(student -> student.getName().contains(s))
@@ -110,11 +107,49 @@ public class StudentController {
      * Returns all students sorted ascending by their name (using string comparator)
      * @return List containing said students.
      */
-    public List<Student> sortStudentsAscendingByName(){
+    public List<Student> sortStudentsAscendingByName() throws SQLException {
         Iterable<Student> students = repository.getAll();
         return StreamSupport.stream(students.spliterator(),false)
                 .sorted(Comparator.comparing(Student::getName))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Determine which are the students who passed at least one assignment.
+     * @return a Set containing all the students respecting fore-mentioned property.
+     */
+    public Set<Student> getStudentsWhoPassed() throws SQLException {
+        Set<Assignment> assignments = assignmentController.getAllAssignments();
+        return assignments.stream()
+                .filter(assignment -> assignment.getGrade()!=null && assignment.getGrade()>=5.0)
+                .map(assignment -> {
+                    try {
+                        return this.getStudentById(assignment.getId().getFirst());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        return null;
+                    }                   
+                })
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Find the student which has been assigned the most problems.
+     * @return a Student respecting the fore-mentioned property.
+     */
+    public Student getStudentsWithMostProblems() throws MyException, SQLException {
+        Set<Assignment> assignments = assignmentController.getAllAssignments();
+        Map<Long, Long> countForId = assignments.stream()
+                .collect(Collectors.groupingBy(assignment -> assignment.getId().getFirst(), Collectors.counting()));
+        Map<Long, Long> sortedByValue = countForId.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Optional<Map.Entry<Long, Long>> student = sortedByValue.entrySet().stream().findFirst();
+        if(!student.isPresent())
+            throw new MyException("No student found");
+        return this.getStudentById(student.get().getKey());
     }
 
 }

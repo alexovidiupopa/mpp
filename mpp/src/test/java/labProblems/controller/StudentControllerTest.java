@@ -1,9 +1,11 @@
 package labProblems.controller;
 
+import Controller.AssignmentController;
 import Controller.StudentController;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.Student;
+import Model.Validators.AssignmentValidator;
 import Model.Validators.StudentValidator;
 import Repository.MemoryRepository;
 import org.junit.After;
@@ -27,6 +29,8 @@ public class StudentControllerTest {
     @Before
     public void setUp() throws Exception {
         this.studentController = new StudentController(new MemoryRepository<>(new StudentValidator()));
+        AssignmentController assignmentController = new AssignmentController(new MemoryRepository<>(new AssignmentValidator()));
+        this.studentController.setAssignmentController(assignmentController);
         this.studentController.addStudent(new Student(23L, "ab12", "Mary", 1));
         this.studentController.addStudent(new Student(12L, "cd34", "Alex 1", 2));
         this.studentController.addStudent(new Student(45L, "ef56", "Andrew", 1));
