@@ -2,6 +2,7 @@ package Repository;
 
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
+import Model.Validators.Validator;
 import Utils.Sort;
 import org.xml.sax.SAXException;
 
@@ -11,8 +12,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProblem> {
-    public LabProblemJDBCRepository(String dbCredentialsFilename) {
-        super(dbCredentialsFilename);
+    public LabProblemJDBCRepository(Validator<LabProblem> validator, String dbCredentialsFilename) {
+        super(validator, dbCredentialsFilename);
     }
 
     @Override
