@@ -2,6 +2,8 @@ package Repository;
 
 
 import Model.BaseEntity;
+import Model.Student;
+import Model.Validators.Validator;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,8 +16,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DatabaseRepository<ID extends Serializable, T extends BaseEntity<ID>>
-        implements SortingRepository<ID, T> {
+public abstract class DatabaseRepository<ID extends Serializable, T extends BaseEntity<ID>> implements SortingRepository<ID, T> {
+
+    Validator<Student> validator;
+
     private String dbType;
     private String dbHost;
     private String dbPort;
@@ -23,7 +27,7 @@ public abstract class DatabaseRepository<ID extends Serializable, T extends Base
     private String dbUser;
     private String dbPassword;
 
-    public DatabaseRepository(String dbCredentialsFilename) {
+    public DatabaseRepository(Validator<? extends BaseEntity> validator, String dbCredentialsFilename) {
         loadDBConfiguration(dbCredentialsFilename);
     }
 

@@ -10,9 +10,4 @@
         <name>stefan</name>
         <group>2</group>
     </student>
-    <student id="2">
-        <serialNo>2</serialNo>
-        <name>vlad</name>
-        <group>3</group>
-    </student>
 </students>
