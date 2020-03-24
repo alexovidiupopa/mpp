@@ -17,8 +17,6 @@ import java.util.List;
 
 public abstract class DatabaseRepository<ID extends Serializable, T extends BaseEntity<ID>> implements SortingRepository<ID, T> {
 
-    Validator<Student> validator;
-
     private String dbType;
     private String dbHost;
     private String dbPort;
