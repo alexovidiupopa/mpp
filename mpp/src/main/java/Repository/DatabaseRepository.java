@@ -24,6 +24,7 @@ public abstract class DatabaseRepository<ID extends Serializable, T extends Base
     private String dbUser;
     private String dbPassword;
     protected Validator<T> validator;
+
     public DatabaseRepository(Validator<T> validator, String dbCredentialsFilename) {
         this.validator = validator;
         loadDBConfiguration(dbCredentialsFilename);

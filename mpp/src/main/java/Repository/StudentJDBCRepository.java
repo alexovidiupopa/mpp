@@ -14,13 +14,14 @@ import java.util.Optional;
 import java.util.Set;
 
 public class StudentJDBCRepository extends DatabaseRepository<Long, Student> {
+
     public StudentJDBCRepository(Validator<Student> validator, String dbCredentialsFilename) {
         super(validator, dbCredentialsFilename);
     }
 
     @Override
-    public Iterable<Student> findAll(Sort sort) {
-        return null;
+    public Iterable<Student> getAll(Sort sort) throws SQLException, ClassNotFoundException {
+        return sort.sort(this.getAll());
     }
 
     @Override

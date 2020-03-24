@@ -6,6 +6,8 @@ import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.Student;
 import Repository.RepositoryInterface;
+import Utils.Direction;
+import Utils.Sort;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -107,10 +109,9 @@ public class StudentController {
      * Returns all students sorted ascending by their name (using string comparator)
      * @return List containing said students.
      */
-    public List<Student> sortStudentsAscendingByName() throws SQLException {
-        Iterable<Student> students = repository.getAll();
+    public List<Student> sortStudentsAscendingByName() throws SQLException, ClassNotFoundException {
+        Iterable<Student> students = repository.getAll(new Sort(Direction.ASC, "name"));
         return StreamSupport.stream(students.spliterator(),false)
-                .sorted(Comparator.comparing(Student::getName))
                 .collect(Collectors.toList());
     }
 

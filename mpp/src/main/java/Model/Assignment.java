@@ -21,11 +21,15 @@ public class Assignment extends BaseEntity<Pair<Long, Long>> {
 
     }
 
+    @Override
+    public Pair<Long, Long> getId(){
+        return super.getId();
+    }
+
     /**
      * Sets the object's grade to the given parameter value.
      * @param grade - new grade
      */
-
     public void setGrade(Double grade) {
         this.grade = grade;
     }

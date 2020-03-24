@@ -4,7 +4,9 @@ import Model.Assignment;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Repository.RepositoryInterface;
+import Utils.Direction;
 import Utils.Pair;
+import Utils.Sort;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,11 +99,9 @@ public class AssignmentController {
      * In case of equality, assignments are sorted ascending by their problem
      * @return List containing said assignments.
      */
-    public List<Assignment> sortAssignmentsAscendingById() throws SQLException {
-        Iterable<Assignment> assignments = repository.getAll();
+    public List<Assignment> sortAssignmentsAscendingById() throws SQLException, ClassNotFoundException {
+        Iterable<Assignment> assignments = repository.getAll(new Sort(Direction.ASC, "id"));
         return StreamSupport.stream(assignments.spliterator(),false)
-                .sorted((a1, a2) -> (int) (a1.getId().getSecond() - a2.getId().getSecond()))
-                .sorted((a1, a2) -> (int) (a1.getId().getFirst() - a2.getId().getFirst()))
                 .collect(Collectors.toList());
     }
 
