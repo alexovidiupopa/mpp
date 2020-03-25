@@ -57,7 +57,7 @@ public class AssignmentXMLRepository extends AssignmentFileRepository {
         parseXMLFile().forEach(entity -> {
             try {
                 super.add(entity);
-            } catch (ValidatorException | IOException | TransformerException | SAXException | ParserConfigurationException e) {
+            } catch (ValidatorException | IOException | TransformerException | ParserConfigurationException e) {
                 e.printStackTrace();
             }
         });

@@ -49,7 +49,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
                 try {
                     super.add(problem);
                 }
-                catch (ValidatorException | IOException | TransformerException | SAXException | ParserConfigurationException e) {
+                catch (ValidatorException | IOException | TransformerException | ParserConfigurationException e) {
                     e.printStackTrace();
                 }
             });
@@ -60,7 +60,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     }
 
     @Override
-    public Optional<LabProblem> add(LabProblem entity) throws ValidatorException, IOException, ParserConfigurationException, TransformerException, SAXException {
+    public Optional<LabProblem> add(LabProblem entity) throws ValidatorException, IOException, ParserConfigurationException, TransformerException {
         Optional<LabProblem> optional = super.add(entity);
         if (optional.isPresent()) {
             return optional;

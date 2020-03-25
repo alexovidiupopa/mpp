@@ -50,7 +50,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
                 try {
                     super.add(student);
             }
-                catch (ValidatorException | NumberFormatException | IOException | TransformerException | SAXException | ParserConfigurationException e) {
+                catch (ValidatorException | NumberFormatException | IOException | TransformerException | ParserConfigurationException e) {
                     e.printStackTrace();
                 }
             });
@@ -61,7 +61,7 @@ public class StudentFileRepository extends MemoryRepository<Long, Student> {
     }
 
     @Override
-    public Optional<Student> add(Student entity) throws ValidatorException, IOException, ParserConfigurationException, TransformerException, SAXException {
+    public Optional<Student> add(Student entity) throws ValidatorException, IOException, ParserConfigurationException, TransformerException {
         Optional<Student> optional = super.add(entity);
         if (optional.isPresent()) {
             return optional;
