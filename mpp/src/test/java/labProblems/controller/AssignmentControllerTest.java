@@ -29,30 +29,22 @@ import static org.junit.Assert.*;
 
 public class AssignmentControllerTest {
 
-    private Validator<Student> studentValidator;
-    private Validator<LabProblem> labProblemValidator;
-    private Validator<Assignment> assignmentValidator;
-
-    private RepositoryInterface<Long, Student> studentRepo;
-    private RepositoryInterface<Long, LabProblem> labProblemRepo;
-    private RepositoryInterface<Pair<Long,Long>,Assignment> assignmentRepo;
-
     private StudentController studentController;
     private LabProblemController labProblemController;
     private AssignmentController assignmentController;
 
     @Before
     public void setUp() throws Exception {
-        studentValidator = new StudentValidator();
-        studentRepo = new MemoryRepository<>(studentValidator);
+        Validator<Student> studentValidator = new StudentValidator();
+        RepositoryInterface<Long, Student> studentRepo = new MemoryRepository<>(studentValidator);
         studentController = new StudentController(studentRepo);
 
-        labProblemValidator = new LabProblemValidator();
-        labProblemRepo = new MemoryRepository<>(labProblemValidator);
+        Validator<LabProblem> labProblemValidator = new LabProblemValidator();
+        RepositoryInterface<Long, LabProblem> labProblemRepo = new MemoryRepository<>(labProblemValidator);
         labProblemController = new LabProblemController(labProblemRepo);
 
-        assignmentValidator = new AssignmentValidator();
-        assignmentRepo = new MemoryRepository<>(assignmentValidator);
+        Validator<Assignment> assignmentValidator = new AssignmentValidator();
+        RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepo = new MemoryRepository<>(assignmentValidator);
         assignmentController = new AssignmentController(assignmentRepo);
 
         studentController.setAssignmentController(assignmentController);
@@ -69,7 +61,7 @@ public class AssignmentControllerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         studentController = null;
         labProblemController = null;
         assignmentController = null;

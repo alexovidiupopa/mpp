@@ -25,12 +25,12 @@ import static org.junit.Assert.assertTrue;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LabProblemJDBCRepositoryTest {
-    private Validator<LabProblem> validator;
+
     private RepositoryInterface<Long, LabProblem> repo;
 
     @Before
     public void setUp() throws Exception {
-        validator = new LabProblemValidator();
+        Validator<LabProblem> validator = new LabProblemValidator();
         repo = new LabProblemJDBCRepository(validator,".\\files\\credentials\\test.txt");
     }
 

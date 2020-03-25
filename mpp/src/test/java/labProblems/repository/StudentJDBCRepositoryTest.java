@@ -4,7 +4,6 @@ import Model.Exceptions.ValidatorException;
 import Model.Student;
 import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
-import Repository.DatabaseRepository;
 import Repository.RepositoryInterface;
 import Repository.StudentJDBCRepository;
 import org.junit.After;
@@ -26,11 +25,12 @@ import static org.junit.Assert.assertTrue;
 
 @FixMethodOrder (MethodSorters.NAME_ASCENDING)
 public class StudentJDBCRepositoryTest {
-    private Validator<Student> validator;
+
     private RepositoryInterface<Long, Student> repo;
+
     @Before
-    public void setUp() throws Exception {
-        validator=new StudentValidator();
+    public void setUp() {
+        Validator<Student> validator = new StudentValidator();
         repo = new StudentJDBCRepository(validator, ".\\files\\credentials\\test.txt");
 
     }
