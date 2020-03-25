@@ -36,7 +36,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
         Connection connection = dbConnection();
         Pair<Long, Long> id = entity.getId();
         Double grade = entity.getGrade();
-        String sql = "insert into assignments(sid, aid) values (?, ?)";
+        String sql = "insert into Assignments(sid, aid) values (?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,id.getFirst());
         preparedStatement.setLong(2,id.getSecond());
@@ -52,7 +52,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
     @Override
     public Optional<Assignment> delete(Pair<Long, Long> longLongPair) throws IOException, TransformerException, ParserConfigurationException, SQLException {
         Connection connection = dbConnection();
-        String sql = "delete from assignments where sid=? and aid=?";
+        String sql = "delete from Assignments where sid=? and aid=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,longLongPair.getFirst());
         preparedStatement.setLong(2,longLongPair.getSecond());
@@ -72,7 +72,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
         Connection connection = dbConnection();
         Pair<Long, Long> id = entity.getId();
         Double grade = entity.getGrade();
-        String sql = "update assignments set grade=? where sid=? and aid=?";
+        String sql = "update Assignments set grade=? where sid=? and aid=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setDouble(1,grade);
         preparedStatement.setLong(2,id.getFirst());
@@ -92,7 +92,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
     public Optional<Assignment> findById(Pair<Long, Long> longLongPair) throws SQLException {
         Assignment assignment = null;
         Connection connection = dbConnection();
-        String sql = "select * from assignments where sid=? and aid=?";
+        String sql = "select * from Assignments where sid=? and aid=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,longLongPair.getFirst());
         preparedStatement.setLong(2,longLongPair.getSecond());
@@ -107,7 +107,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
     public Iterable<Assignment> getAll() throws SQLException {
         Set<Assignment> assignments = new HashSet<>();
         Connection connection = dbConnection();
-        String sql = "select * from assignments";
+        String sql = "select * from Assignments";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){

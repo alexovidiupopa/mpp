@@ -1,13 +1,10 @@
 package Repository;
 
 import Model.BaseEntity;
-import Model.Exceptions.ValidatorException;
 import Model.Validators.Validator;
+import Model.Exceptions.ValidatorException;
 import Utils.Sort;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
@@ -23,7 +20,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     }
 
     @Override
-    public Optional<T> add(T entity) throws ValidatorException, IOException, TransformerException, SAXException, ParserConfigurationException {
+    public Optional<T> add(T entity) throws ValidatorException, IOException {
         if (entity == null) {
             throw new IllegalArgumentException("entity must not be null");
         }
@@ -32,7 +29,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     }
 
     @Override
-    public Optional<T> delete(ID id) throws IOException, TransformerException, ParserConfigurationException {
+    public Optional<T> delete(ID id) throws IOException {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
@@ -40,7 +37,7 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     }
 
     @Override
-    public Optional<T> update(T entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException {
+    public Optional<T> update(T entity) throws ValidatorException, IOException {
         if (entity == null) {
             throw new IllegalArgumentException("entity must not be null");
         }
