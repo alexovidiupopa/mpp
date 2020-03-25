@@ -34,7 +34,7 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
         long id = entity.getId();
         String desc = entity.getDescription();
         int score = entity.getScore();
-        String sql = "insert into problemsdb.db_schema.Problems(id, description, score) values (?, ?, ?)";
+        String sql = "insert into Problems(id, description, score) values (?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,id);
         preparedStatement.setString(2,desc);
@@ -51,7 +51,7 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
     @Override
     public Optional<LabProblem> delete(Long id) throws IOException, TransformerException, ParserConfigurationException, SQLException {
         Connection connection = dbConnection();
-        String sql = "delete from problemsdb.db_schema.Problems where id=?";
+        String sql = "delete from Problems where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,id);
         try{
@@ -71,7 +71,7 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
         long id = entity.getId();
         String desc = entity.getDescription();
         int score = entity.getScore();
-        String sql = "update problemsdb.db_schema.Problems set description=?, score=? where id=?";
+        String sql = "update Problems set description=?, score=? where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(3,id);
         preparedStatement.setString(1,desc);
@@ -91,7 +91,7 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
     public Optional<LabProblem> findById(Long aLong) throws SQLException {
         LabProblem problem = null;
         Connection connection = dbConnection();
-        String sql = "select * from problemsdb.db_schema.Problems where id=?";
+        String sql = "select * from Problems where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,aLong);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -105,7 +105,7 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
     public Iterable<LabProblem> getAll() throws SQLException {
         Set<LabProblem> problems = new HashSet<>();
         Connection connection = dbConnection();
-        String sql = "select * from problemsdb.db_schema.Problems";
+        String sql = "select * from Problems";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){

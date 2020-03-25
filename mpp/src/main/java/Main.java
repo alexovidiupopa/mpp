@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         Validator<Student> studentValidator = new StudentValidator();
         //RepositoryInterface<Long, Student> studentRepository = new StudentXMLRepository(studentValidator, ".\\files\\xml\\students.xml");
-        RepositoryInterface<Long, Student> studentRepository = new StudentJDBCRepository(studentValidator, ".\\files\\credentials\\vlad.txt");
+        RepositoryInterface<Long, Student> studentRepository = new StudentJDBCRepository(studentValidator, ".\\files\\credentials\\alex.txt");
         StudentController studentController = new StudentController(studentRepository);
 
         Validator<LabProblem> labProblemValidator = new LabProblemValidator();
