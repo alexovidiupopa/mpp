@@ -5,11 +5,7 @@ import Model.Exceptions.ValidatorException;
 import Model.Validators.Validator;
 import Utils.Sort;
 import Utils.Pair;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,16 +22,15 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
     }
 
     @Override
-    public Iterable<Assignment> getAll(Sort sort) throws SQLException, ClassNotFoundException {
+    public Iterable<Assignment> getAll(Sort sort) throws SQLException {
         return sort.sort(this.getAll());
     }
 
     @Override
-    public Optional<Assignment> add(Assignment entity) throws ValidatorException, IOException, TransformerException, SAXException, ParserConfigurationException, SQLException {
+    public Optional<Assignment> add(Assignment entity) throws ValidatorException, SQLException {
         validator.validate(entity);
         Connection connection = dbConnection();
         Pair<Long, Long> id = entity.getId();
-        Double grade = entity.getGrade();
         String sql = "insert into Assignments(sid, aid) values (?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setLong(1,id.getFirst());
@@ -45,12 +40,12 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
             return Optional.empty();
         }
         catch (SQLException se){
-            return Optional.ofNullable(entity);
+            return Optional.of(entity);
         }
     }
 
     @Override
-    public Optional<Assignment> delete(Pair<Long, Long> longLongPair) throws IOException, TransformerException, ParserConfigurationException, SQLException {
+    public Optional<Assignment> delete(Pair<Long, Long> longLongPair) throws SQLException {
         Connection connection = dbConnection();
         String sql = "delete from Assignments where sid=? and aid=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -67,7 +62,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
     }
 
     @Override
-    public Optional<Assignment> update(Assignment entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException, SQLException {
+    public Optional<Assignment> update(Assignment entity) throws ValidatorException, SQLException {
         validator.validate(entity);
         Connection connection = dbConnection();
         Pair<Long, Long> id = entity.getId();
@@ -80,11 +75,11 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
         try{
             int affected = preparedStatement.executeUpdate();
             if (affected==0)
-                return Optional.ofNullable(entity);
+                return Optional.of(entity);
             return Optional.empty();
         }
         catch (SQLException se){
-            return Optional.ofNullable(entity);
+            return Optional.of(entity);
         }
     }
 
@@ -113,7 +108,7 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
         while (resultSet.next()){
             Long sid = resultSet.getLong("sid");
             Long aid = resultSet.getLong("aid");
-            Double grade = resultSet.getDouble("grade");
+            double grade = resultSet.getDouble("grade");
             assignments.add(new Assignment(new Pair<>(sid, aid), grade));
         }
         return assignments

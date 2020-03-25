@@ -18,7 +18,7 @@ public class Sort {
         this.parameters = new ArrayList<>();
         this.parameters.add(new Pair<>(direction, first));
         this.parameters.addAll(Arrays.stream(others)
-                .map(parameter -> new Pair<Direction, String>(direction, parameter))
+                .map(parameter -> new Pair<>(direction, parameter))
                 .collect(Collectors.toList())
         );
     }
@@ -35,7 +35,7 @@ public class Sort {
         return parameters;
     }
 
-    public <T> Iterable<T> sort(Iterable<T> elements) throws ClassNotFoundException {
+    public <T> Iterable<T> sort(Iterable<T> elements) {
         return StreamSupport.stream(elements.spliterator(), false)
                 .sorted(new SortComparator())
                 .collect(Collectors.toList());
@@ -44,7 +44,7 @@ public class Sort {
     private class SortComparator implements Comparator<Object>{
 
         public int compareCustom(Object first, Object second, Pair<Direction, String> criteria) {
-            Object firstValue = null;
+            Object firstValue;
             try {
                 firstValue = getValueByFieldName(first, criteria.getSecond());
                 Object secondValue = getValueByFieldName(second, criteria.getSecond());

@@ -110,7 +110,7 @@ public class StudentController {
      * @return List containing said students.
      */
     public List<Student> sortStudentsAscendingByName() throws SQLException, ClassNotFoundException {
-        Iterable<Student> students = repository.getAll(new Sort(Direction.ASC, "name"));
+        Iterable<Student> students = repository.getAll(new Sort("name"));
         return StreamSupport.stream(students.spliterator(),false)
                 .collect(Collectors.toList());
     }

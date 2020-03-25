@@ -20,7 +20,7 @@ public class StudentJDBCRepository extends DatabaseRepository<Long, Student> {
     }
 
     @Override
-    public Iterable<Student> getAll(Sort sort) throws SQLException, ClassNotFoundException {
+    public Iterable<Student> getAll(Sort sort) throws SQLException {
         return sort.sort(this.getAll());
     }
 

@@ -4,11 +4,7 @@ import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Model.Validators.Validator;
 import Utils.Sort;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,12 +20,12 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
     }
 
     @Override
-    public Iterable<LabProblem> getAll(Sort sort) throws SQLException, ClassNotFoundException {
+    public Iterable<LabProblem> getAll(Sort sort) throws SQLException {
         return sort.sort(this.getAll());
     }
 
     @Override
-    public Optional<LabProblem> add(LabProblem entity) throws ValidatorException, IOException, TransformerException, SAXException, ParserConfigurationException, SQLException {
+    public Optional<LabProblem> add(LabProblem entity) throws ValidatorException, SQLException {
         validator.validate(entity);
         Connection connection = dbConnection();
         long id = entity.getId();
@@ -45,12 +41,12 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
             return Optional.empty();
         }
         catch (SQLException se){
-            return Optional.ofNullable(entity);
+            return Optional.of(entity);
         }
     }
 
     @Override
-    public Optional<LabProblem> delete(Long id) throws IOException, TransformerException, ParserConfigurationException, SQLException {
+    public Optional<LabProblem> delete(Long id) throws SQLException {
         Connection connection = dbConnection();
         String sql = "delete from Problems where id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -66,7 +62,7 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
     }
 
     @Override
-    public Optional<LabProblem> update(LabProblem entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException, SQLException {
+    public Optional<LabProblem> update(LabProblem entity) throws ValidatorException, SQLException {
         validator.validate(entity);
         Connection connection = dbConnection();
         long id = entity.getId();
@@ -80,11 +76,11 @@ public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProble
         try{
             int affected = preparedStatement.executeUpdate();
             if (affected==0)
-                return Optional.ofNullable(entity);
+                return Optional.of(entity);
             return Optional.empty();
         }
         catch (SQLException se){
-            return Optional.ofNullable(entity);
+            return Optional.of(entity);
         }
     }
 
