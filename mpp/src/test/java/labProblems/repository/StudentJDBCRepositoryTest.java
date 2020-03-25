@@ -31,7 +31,7 @@ public class StudentJDBCRepositoryTest {
     @Before
     public void setUp() throws Exception {
         validator=new StudentValidator();
-        repo = new StudentJDBCRepository(validator, ".\\files\\credentials\\alex-test.txt");
+        repo = new StudentJDBCRepository(validator, ".\\files\\credentials\\test.txt");
 
     }
 
