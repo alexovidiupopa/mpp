@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -43,48 +44,48 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testAddStudent() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
+    public void testAddStudent() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException, SQLException {
         this.studentController.addStudent(new Student(4L, "1234", "Michael", 1));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testAddStudentException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
+    public void testAddStudentException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException, SQLException {
         this.studentController.addStudent(new Student(1L, "abcd", "William", -2));
     }
 
     @Test
-    public void testDeleteStudent() throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void testDeleteStudent() throws RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.studentController.deleteStudent(new Student(23L, "ab12", "Mary", 1));
         assertEquals(this.studentController.getAllStudents().size(),3);
         assertFalse(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Mary", 1)));
     }
 
     @Test
-    public void testUpdateStudent() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void testUpdateStudent() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.studentController.updateStudent(new Student(23L, "ab12", "Angela", 2));
         assertTrue(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Angela", 2)));
         assertFalse(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Mary", 1)));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testUpdateStudentException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void testUpdateStudentException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.studentController.updateStudent(new Student(23L, "", "Angela", 2));
     }
 
     @Test(expected = RepositoryException.class)
-    public void testAddStudentUsedId() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
+    public void testAddStudentUsedId() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException, SQLException {
         this.studentController.addStudent(new Student(23L, "abcd", "William", 2));
     }
 
     @Test
-    public void testGetAllStudents(){
+    public void testGetAllStudents() throws SQLException {
         assertEquals(this.studentController.getAllStudents().size(), 4);
         assertTrue(this.studentController.getAllStudents().contains(new Student(89L, "gh78", "Alex 2", 3)));
         assertTrue(this.studentController.getAllStudents().contains(new Student(23L, "ab12", "Mary", 1)));
     }
 
     @Test
-    public void testFilterStudentByName(){
+    public void testFilterStudentByName() throws SQLException {
         Set<Student> filtered = this.studentController.filterStudentsByName("Alex");
         assertEquals(filtered.size(), 2);
         assertTrue(this.studentController.getAllStudents().contains(new Student(12L, "cd34", "Alex 1", 2)));
@@ -92,7 +93,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testSortStudentsAscendingByName() {
+    public void testSortStudentsAscendingByName() throws SQLException, ClassNotFoundException {
         List<Student> sortedStudents = this.studentController.sortStudentsAscendingByName();
         assertArrayEquals(sortedStudents.toArray(), this.studentController.getAllStudents().stream().sorted(Comparator.comparing(Student::getName)).toArray());
     }

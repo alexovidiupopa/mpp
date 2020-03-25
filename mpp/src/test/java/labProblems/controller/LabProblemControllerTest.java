@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -42,47 +43,47 @@ public class LabProblemControllerTest {
     }
 
     @Test
-    public void testAddProblem() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
+    public void testAddProblem() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException, SQLException {
         this.labProblemController.addProblem(new LabProblem(55L, "problem5", 40));
     }
 
     @Test(expected = ValidatorException.class)
-    public void testAddProblemException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
+    public void testAddProblemException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException, SQLException {
         this.labProblemController.addProblem(new LabProblem(55L, "problem5", -100));
     }
 
     @Test (expected = RepositoryException.class)
-    public void testAddProblemUsedId() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException {
+    public void testAddProblemUsedId() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SAXException, SQLException {
         this.labProblemController.addProblem(new LabProblem(33L, "problem5", 100));
     }
 
     @Test
-    public void testDeleteProblem() throws RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void testDeleteProblem() throws RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.labProblemController.deleteProblem(new LabProblem(33L, "problem3", 10));
         assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
     }
 
     @Test
-    public void testUpdateProblem() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void testUpdateProblem() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.labProblemController.updateProblem(new LabProblem(33L, "updated", 10));
         assertFalse(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "problem3", 10)));
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(33L, "updated", 10)));
     }
 
     @Test (expected = ValidatorException.class)
-    public void testUpdateProblemException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException {
+    public void testUpdateProblemException() throws ValidatorException, RepositoryException, IOException, TransformerException, ParserConfigurationException, SQLException {
         this.labProblemController.updateProblem(new LabProblem(33L, "expect-exception", -1));
     }
 
     @Test
-    public void testGetAllProblems(){
+    public void testGetAllProblems() throws SQLException {
         assertEquals(this.labProblemController.getAllProblems().size(), 4);
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(11L, "problem1", 100)));
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(44L, "problem4", 200)));
     }
 
     @Test
-    public void testFilterProblemsByScore(){
+    public void testFilterProblemsByScore() throws SQLException {
         Set<LabProblem> filtered = this.labProblemController.filterProblemsByScore(100);
         assertEquals(filtered.size(), 2);
         assertTrue(this.labProblemController.getAllProblems().contains(new LabProblem(11L, "problem1", 100)));
@@ -90,7 +91,7 @@ public class LabProblemControllerTest {
     }
 
     @Test
-    public void testSortProblemsDescendingByScore() {
+    public void testSortProblemsDescendingByScore() throws SQLException, ClassNotFoundException {
         List<LabProblem> sortedProblems = this.labProblemController.sortProblemsDescendingByScore();
         assertArrayEquals(sortedProblems.toArray(), this.labProblemController.getAllProblems().stream().sorted((o1, o2) -> o2.getScore() - o1.getScore()).toArray());
     }

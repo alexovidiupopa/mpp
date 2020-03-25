@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long>, Assignment> {
 
@@ -115,6 +116,10 @@ public class AssignmentsJDBCRepository extends DatabaseRepository<Pair<Long,Long
             Double grade = resultSet.getDouble("grade");
             assignments.add(new Assignment(new Pair<>(sid, aid), grade));
         }
-        return assignments;
+        return assignments
+                .stream()
+                .peek(a -> {if(a.getGrade() == 0) a.setGrade(null);
+                })
+                .collect(Collectors.toSet());
     }
 }

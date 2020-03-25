@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
@@ -75,29 +76,29 @@ public class AssignmentControllerTest {
     }
 
     @Test (expected = RepositoryException.class)
-    public void testAddAlreadyExisting() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException {
+    public void testAddAlreadyExisting() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException, SQLException {
         assignmentController.addAssignment(new Assignment(new Pair<>(1L,1L)));
     }
 
     @Test (expected = RepositoryException.class)
-    public void testAddNotExistingStudent() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException {
+    public void testAddNotExistingStudent() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException, SQLException {
         assignmentController.addAssignment(new Assignment(new Pair<>(10L,1L)));
     }
 
     @Test (expected = RepositoryException.class)
-    public void testAddNotExistingProblem() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException {
+    public void testAddNotExistingProblem() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException, SQLException {
         assignmentController.addAssignment(new Assignment(new Pair<>(1L,10L)));
     }
 
     @Test
-    public void testGradeAssignment() throws RepositoryException, IOException, TransformerException, ParserConfigurationException, ValidatorException {
+    public void testGradeAssignment() throws RepositoryException, IOException, TransformerException, ParserConfigurationException, ValidatorException, SQLException {
         assignmentController.updateAssignment(new Assignment(new Pair<>(1L,1L),3.4));
         assertTrue(assignmentController.getAllAssignments().contains(new Assignment(new Pair<>(1L,1L),3.4)));
         assertFalse(assignmentController.getAllAssignments().contains(new Assignment(new Pair<>(1L,1L),-1)));
     }
 
     @Test
-    public void testAddAssignment() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException {
+    public void testAddAssignment() throws SAXException, ValidatorException, RepositoryException, TransformerException, IOException, ParserConfigurationException, SQLException {
         assignmentController.addAssignment(new Assignment(new Pair<>(2L,2L),-1));
         assertTrue(assignmentController.getAllAssignments().contains(new Assignment(new Pair<>(2L,2L),-1)));
         assertEquals(assignmentController.getAllAssignments().size(),2);
