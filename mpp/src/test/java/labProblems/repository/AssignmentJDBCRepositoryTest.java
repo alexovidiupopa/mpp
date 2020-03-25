@@ -30,7 +30,7 @@ public class AssignmentJDBCRepositoryTest {
     @Before
     public void setUp() {
         Validator<Assignment> assignmentValidator = new AssignmentValidator();
-        this.testRepository = new AssignmentsJDBCRepository(assignmentValidator,".\\files\\credentials\\test.txt");
+        this.testRepository = new AssignmentsJDBCRepository(assignmentValidator,".\\files\\credentials\\alex-test.txt");
     }
 
     @After
