@@ -2,6 +2,7 @@ package Repository;
 
 import Model.BaseEntity;
 import Model.Exceptions.ValidatorException;
+import Utils.Sort;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -66,5 +67,11 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @return all entities.
      */
     Iterable<T> getAll() throws SQLException;
+
+    /**
+     *
+     * @return all entities sorted by the given rule.
+     */
+    Iterable<T> getAll(Sort sort) throws SQLException, ClassNotFoundException;
 
 }

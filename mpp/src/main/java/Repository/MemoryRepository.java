@@ -3,12 +3,11 @@ package Repository;
 import Model.BaseEntity;
 import Model.Validators.Validator;
 import Model.Exceptions.ValidatorException;
-
+import Utils.Sort;
+import org.xml.sax.SAXException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.SQLException;
+import java.util.*;
 
 public class MemoryRepository<ID, T extends BaseEntity<ID>> implements RepositoryInterface<ID, T> {
 
@@ -57,6 +56,11 @@ public class MemoryRepository<ID, T extends BaseEntity<ID>> implements Repositor
     @Override
     public Iterable<T> getAll() {
         return new HashSet<>(entities.values());
+    }
+
+    @Override
+    public Iterable<T> getAll(Sort sort) throws SQLException {
+        return getAll();
     }
 
 }

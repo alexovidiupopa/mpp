@@ -18,13 +18,14 @@ import java.util.Optional;
 import java.util.Set;
 
 public class LabProblemJDBCRepository extends DatabaseRepository<Long, LabProblem> {
+
     public LabProblemJDBCRepository(Validator<LabProblem> validator, String dbCredentialsFilename) {
         super(validator, dbCredentialsFilename);
     }
 
     @Override
-    public Iterable<LabProblem> findAll(Sort sort) {
-        return null;
+    public Iterable<LabProblem> getAll(Sort sort) throws SQLException, ClassNotFoundException {
+        return sort.sort(this.getAll());
     }
 
     @Override

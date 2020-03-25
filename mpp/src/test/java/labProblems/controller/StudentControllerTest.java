@@ -93,7 +93,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testSortStudentsAscendingByName() throws SQLException {
+    public void testSortStudentsAscendingByName() throws SQLException, ClassNotFoundException {
         List<Student> sortedStudents = this.studentController.sortStudentsAscendingByName();
         assertArrayEquals(sortedStudents.toArray(), this.studentController.getAllStudents().stream().sorted(Comparator.comparing(Student::getName)).toArray());
     }

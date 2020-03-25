@@ -28,7 +28,7 @@ public class AssignmentFileRepositoryTest {
     @Before
     public void setUp() {
         assignmentValidator=new AssignmentValidator();
-        testRepository = new AssignmentFileRepository(assignmentValidator,".\\files\\txt\\test-assignments.txt");
+        testRepository = new AssignmentFileRepository(assignmentValidator,".\\files\\credentials\\test.txt");
     }
 
     @After

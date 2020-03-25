@@ -219,7 +219,7 @@ public class Console {
             System.out.println("sorted students (by name):");
             List<Student> students = studentController.sortStudentsAscendingByName();
             students.forEach(System.out::println);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -348,7 +348,7 @@ public class Console {
             System.out.println("sorted problems (by score):");
             List<LabProblem> students = labProblemController.sortProblemsDescendingByScore();
             students.forEach(System.out::println);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -526,7 +526,7 @@ public class Console {
             System.out.println("sorted assignments (by student and problem):");
             List<Assignment> students = assignmentController.sortAssignmentsAscendingById();
             students.forEach(System.out::println);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }

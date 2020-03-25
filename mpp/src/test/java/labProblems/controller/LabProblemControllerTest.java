@@ -91,7 +91,7 @@ public class LabProblemControllerTest {
     }
 
     @Test
-    public void testSortProblemsDescendingByScore() throws SQLException {
+    public void testSortProblemsDescendingByScore() throws SQLException, ClassNotFoundException {
         List<LabProblem> sortedProblems = this.labProblemController.sortProblemsDescendingByScore();
         assertArrayEquals(sortedProblems.toArray(), this.labProblemController.getAllProblems().stream().sorted((o1, o2) -> o2.getScore() - o1.getScore()).toArray());
     }

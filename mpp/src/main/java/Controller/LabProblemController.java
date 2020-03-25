@@ -6,6 +6,8 @@ import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Model.LabProblem;
 import Repository.RepositoryInterface;
+import Utils.Direction;
+import Utils.Sort;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -110,10 +112,9 @@ public class LabProblemController {
      * Returns all lab problems sorted descending by score.
      * @return List containing said problems.
      */
-    public List<LabProblem> sortProblemsDescendingByScore() throws SQLException {
-        Iterable<LabProblem> problems = repository.getAll();
+    public List<LabProblem> sortProblemsDescendingByScore() throws SQLException, ClassNotFoundException {
+        Iterable<LabProblem> problems = repository.getAll(new Sort(Direction.DESC, "score"));
         return StreamSupport.stream(problems.spliterator(),false)
-                .sorted((o1, o2) -> o2.getScore()-o1.getScore())
                 .collect(Collectors.toList());
     }
     /**
