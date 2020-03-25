@@ -81,7 +81,7 @@ public class StudentXMLRepository extends StudentFileRepository {
         NodeList children = root.getChildNodes();
         return IntStream
                 .range(0, children.getLength())
-                .mapToObj(index -> children.item(index))
+                .mapToObj(children::item)
                 .filter(node -> node instanceof Element)
                 .map(node -> createStudentFromElement((Element) node))
                 .collect(Collectors.toSet());
@@ -110,7 +110,7 @@ public class StudentXMLRepository extends StudentFileRepository {
 
 
     @Override
-    protected void saveAllToFile() throws IOException, ParserConfigurationException, TransformerException {
+    protected void saveAllToFile() throws ParserConfigurationException, TransformerException {
         Document document = DocumentBuilderFactory
                 .newInstance()
                 .newDocumentBuilder()

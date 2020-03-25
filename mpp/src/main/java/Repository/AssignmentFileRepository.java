@@ -74,7 +74,7 @@ public class AssignmentFileRepository extends MemoryRepository<Pair<Long, Long>,
     }
 
     @Override
-    public Optional<Assignment> delete(Pair<Long,Long> id) throws IOException, TransformerException, ParserConfigurationException {
+    public Optional<Assignment> delete(Pair<Long, Long> id) throws IOException, TransformerException, ParserConfigurationException {
         Optional<Assignment> optional = super.delete(id);
         if (!optional.isPresent())
             return Optional.empty();

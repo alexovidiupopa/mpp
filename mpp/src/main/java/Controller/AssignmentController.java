@@ -4,12 +4,15 @@ import Model.Assignment;
 import Model.Exceptions.RepositoryException;
 import Model.Exceptions.ValidatorException;
 import Repository.RepositoryInterface;
+import Utils.Direction;
 import Utils.Pair;
+import Utils.Sort;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,7 +42,7 @@ public class AssignmentController {
      * @param assignment - given assignment
      * @throws ValidatorException if assignment is not valid
      */
-    public void addAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException, ParserConfigurationException, TransformerException, SAXException {
+    public void addAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException, ParserConfigurationException, TransformerException, SAXException, SQLException {
         if(this.studentController.getStudentById(assignment.getId().getFirst()) == null)
             throw new RepositoryException("Student id does not exist");
         if(this.problemController.getProblemById(assignment.getId().getSecond()) == null)
@@ -53,7 +56,7 @@ public class AssignmentController {
      * Removes the given assignment from the repository.
      * @param assignment - given assignment
      */
-    public void deleteAssignment(Assignment assignment) throws IOException, RepositoryException, TransformerException, ParserConfigurationException {
+    public void deleteAssignment(Assignment assignment) throws IOException, RepositoryException, TransformerException, ParserConfigurationException, SQLException {
         Optional<Assignment> optional = repository.delete(assignment.getId());
         if (!optional.isPresent())
             throw new RepositoryException("Assignments doesn't exist");
@@ -64,7 +67,7 @@ public class AssignmentController {
      * @param assignment - given assignment
      * @throws ValidatorException if the assignment is not valid
      */
-    public void updateAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException, TransformerException, ParserConfigurationException {
+    public void updateAssignment(Assignment assignment) throws ValidatorException, IOException, RepositoryException, TransformerException, ParserConfigurationException, SQLException {
         Optional<Assignment> optional = repository.update(assignment);
         if (optional.isPresent())
             throw new RepositoryException("Assignments doesn't exist");
@@ -74,7 +77,7 @@ public class AssignmentController {
      * Gets all the assignments currently in the repository.
      * @return HashSet containing all assignments in the repository.
      */
-    public Set<Assignment> getAllAssignments() {
+    public Set<Assignment> getAllAssignments() throws SQLException {
         Iterable<Assignment> assignments = repository.getAll();
         return StreamSupport.stream(assignments.spliterator(), false).collect(Collectors.toSet());
     }
@@ -84,7 +87,7 @@ public class AssignmentController {
      * * @param g - the given grade
      * @return HashSet containing the above assignments.
      */
-    public Set<Assignment> filterAssignmentsByGrade(double g) {
+    public Set<Assignment> filterAssignmentsByGrade(double g) throws SQLException {
         Iterable<Assignment> filtered = repository.getAll();
         return StreamSupport.stream(filtered.spliterator(), false)
                 .filter(assignment -> assignment.getGrade() != null && assignment.getGrade() >= g)
@@ -96,11 +99,9 @@ public class AssignmentController {
      * In case of equality, assignments are sorted ascending by their problem
      * @return List containing said assignments.
      */
-    public List<Assignment> sortAssignmentsAscendingById(){
-        Iterable<Assignment> assignments = repository.getAll();
+    public List<Assignment> sortAssignmentsAscendingById() throws SQLException, ClassNotFoundException {
+        Iterable<Assignment> assignments = repository.getAll(new Sort(Direction.ASC, "id"));
         return StreamSupport.stream(assignments.spliterator(),false)
-                .sorted((a1, a2) -> (int) (a1.getId().getSecond() - a2.getId().getSecond()))
-                .sorted((a1, a2) -> (int) (a1.getId().getFirst() - a2.getId().getFirst()))
                 .collect(Collectors.toList());
     }
 

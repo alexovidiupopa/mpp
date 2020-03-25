@@ -2,11 +2,13 @@ package Repository;
 
 import Model.BaseEntity;
 import Model.Exceptions.ValidatorException;
+import Utils.Sort;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
@@ -22,7 +24,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws ValidatorException
      *             if the entity is not valid.
      */
-    Optional<T> add(T entity) throws ValidatorException, IOException, TransformerException, SAXException, ParserConfigurationException;
+    Optional<T> add(T entity) throws ValidatorException, IOException, TransformerException, SAXException, ParserConfigurationException, SQLException;
 
     /**
      * Removes the entity with the given id.
@@ -33,7 +35,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws IllegalArgumentException
      *             if the given id is null.
      */
-    Optional<T> delete(ID id) throws IOException, TransformerException, ParserConfigurationException;
+    Optional<T> delete(ID id) throws IOException, TransformerException, ParserConfigurationException, SQLException;
 
     /**
      * Updates the given entity.
@@ -47,7 +49,7 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws ValidatorException
      *             if the entity is not valid.
      */
-    Optional<T> update(T entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException;
+    Optional<T> update(T entity) throws ValidatorException, IOException, TransformerException, ParserConfigurationException, SQLException;
 
     /**
      * Find the entity with the given {@code id}.
@@ -58,12 +60,18 @@ public interface RepositoryInterface<ID, T extends BaseEntity<ID>> {
      * @throws IllegalArgumentException
      *             if the given id is null.
      */
-    Optional<T> findById(ID id);
+    Optional<T> findById(ID id) throws SQLException;
 
     /**
      *
      * @return all entities.
      */
-    Iterable<T> getAll();
+    Iterable<T> getAll() throws SQLException;
+
+    /**
+     *
+     * @return all entities sorted by the given rule.
+     */
+    Iterable<T> getAll(Sort sort) throws SQLException, ClassNotFoundException;
 
 }

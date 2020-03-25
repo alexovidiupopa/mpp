@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import Model.Exceptions.ValidatorException;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -36,14 +37,14 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void testFindById() {
+    public void testFindById() throws SQLException {
         if(!testStudentRepository.findById(1L).isPresent())
             fail();
         assertEquals(testStudentRepository.findById(1L).get(), new Student(1L,"1234","alex",1));
     }
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws SQLException {
         Set<Student> allStudents = (HashSet<Student>) testStudentRepository.getAll();
         assertEquals(allStudents.size(),2);
         assertTrue(allStudents.contains(new Student(2L,"9999","vlad",3)));

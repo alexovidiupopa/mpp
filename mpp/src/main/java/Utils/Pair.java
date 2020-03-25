@@ -1,8 +1,9 @@
 package Utils;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Pair<T1, T2> {
+public class Pair<T1 extends Comparable<T1>, T2 extends Comparable<T2>> implements Serializable, Comparable<Pair<T1, T2>> {
 
     private T1 first;
     private T2 second;
@@ -44,5 +45,14 @@ public class Pair<T1, T2> {
     @Override
     public int hashCode() {
         return Objects.hash(first, second);
+    }
+
+    @Override
+    public int compareTo(Pair<T1, T2> other) {
+        int resultFirst = this.first.compareTo(other.getFirst());
+        if(resultFirst != 0)
+            return resultFirst;
+        else
+            return this.second.compareTo(other.getSecond());
     }
 }

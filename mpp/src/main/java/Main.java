@@ -9,10 +9,7 @@ import Model.Validators.AssignmentValidator;
 import Model.Validators.LabProblemValidator;
 import Model.Validators.StudentValidator;
 import Model.Validators.Validator;
-import Repository.AssignmentXMLRepository;
-import Repository.LabProblemXMLRepository;
-import Repository.RepositoryInterface;
-import Repository.StudentXMLRepository;
+import Repository.*;
 import Utils.Pair;
 import View.Console;
 
@@ -20,30 +17,22 @@ public class Main {
 
     public static void main(String[] args) {
         Validator<Student> studentValidator = new StudentValidator();
-        RepositoryInterface<Long, Student> studentRepository = new StudentXMLRepository(studentValidator, ".\\files\\xml\\students.xml");
+        RepositoryInterface<Long, Student> studentRepository = new StudentJDBCRepository(studentValidator, ".\\files\\credentials\\vlad.txt");
         StudentController studentController = new StudentController(studentRepository);
         Validator<LabProblem> labProblemValidator = new LabProblemValidator();
-        RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemXMLRepository(labProblemValidator, ".\\files\\xml\\problems.xml");
+        RepositoryInterface<Long, LabProblem> labProblemRepository = new LabProblemJDBCRepository(labProblemValidator,".\\files\\credentials\\vlad.txt");
         LabProblemController labProblemController = new LabProblemController(labProblemRepository);
-
-
         Validator<Assignment> assignmentValidator = new AssignmentValidator();
-        RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentXMLRepository(assignmentValidator, ".\\files\\xml\\assignments.xml");
+        RepositoryInterface<Pair<Long, Long>, Assignment> assignmentRepository = new AssignmentsJDBCRepository(assignmentValidator, ".\\files\\credentials\\vlad.txt");
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
-
 
         studentController.setAssignmentController(assignmentController);
         labProblemController.setAssignmentController(assignmentController);
         assignmentController.setStudentController(studentController);
         assignmentController.setProblemController(labProblemController);
 
-
         Console console = new Console(studentController, labProblemController, assignmentController);
         console.run();
     }
 
 }
-
-// TODO
-// Delete stud/probl -- doesnt exist
-// Update probl -- deletes problem

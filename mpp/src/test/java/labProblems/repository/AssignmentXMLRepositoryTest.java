@@ -13,6 +13,7 @@ import org.junit.Test;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class AssignmentXMLRepositoryTest {
     }
 
     @Test
-    public void testLoadData() {
+    public void testLoadData() throws SQLException {
         Set<Assignment> assignments = (HashSet<Assignment>) testRepository.getAll();
         assertEquals(assignments.size(),3);
         assertTrue(assignments.contains(new Assignment(new Pair<>(2L,2L),1.3)));
@@ -45,7 +46,7 @@ public class AssignmentXMLRepositoryTest {
     }
 
     @Test
-    public void testSaveAllToFile() throws IOException, TransformerException, ParserConfigurationException {
+    public void testSaveAllToFile() throws IOException, TransformerException, ParserConfigurationException, SQLException {
         Set<Assignment> assignments = (HashSet<Assignment>) testRepository.getAll();
         assertEquals(assignments.size(),3);
         testRepository.delete(new Pair<>(2L,2L));

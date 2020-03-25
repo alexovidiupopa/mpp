@@ -29,11 +29,7 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
         this.fileName = fileName;
         try {
             loadData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
@@ -77,9 +73,9 @@ public class LabProblemFileRepository extends MemoryRepository<Long, LabProblem>
     public Optional<LabProblem> delete(Long id) throws IOException, TransformerException, ParserConfigurationException {
         Optional<LabProblem> optional = super.delete(id);
         if (!optional.isPresent())
-            return optional;
+            return Optional.empty();
         saveAllToFile();
-        return Optional.empty();
+        return optional;
     }
 
     @Override
