@@ -1,0 +1,5 @@
+rootProject.name = 'spring-remoting'
+include 'server'
+include 'common'
+include 'client'
+
