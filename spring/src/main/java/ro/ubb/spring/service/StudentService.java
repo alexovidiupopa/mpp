@@ -1,0 +1,126 @@
+package ro.ubb.spring.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import ro.ubb.spring.model.Assignment;
+import ro.ubb.spring.model.Exceptions.MyException;
+import ro.ubb.spring.model.Student;
+import ro.ubb.spring.model.Validators.StudentValidator;
+import ro.ubb.spring.repository.StudentRepository;
+
+import javax.transaction.Transactional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@Service
+public class StudentService implements IStudentService{
+    public static final Logger log = LoggerFactory.getLogger(StudentService.class);
+
+    @Autowired
+    private StudentValidator validator;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private IAssignmentService assignmentService;
+
+
+    @Override
+    @Transactional
+    public void addStudent(Student student) throws MyException {
+        log.trace("addStudent - method entered student={}",student);
+        validator.validate(student);
+        Student std = studentRepository.save(student);
+        log.trace("addStudent - method finished student={}", std);
+    }
+
+    @Override
+    @Transactional
+    public void deleteStudent(Student student) throws MyException {
+        log.trace("deleteStudent - method entered={}",student);
+        validator.validate(student);
+        studentRepository.delete(student);
+        log.trace("deleteStudent - method finished");
+    }
+
+    @Override
+    @Transactional
+    public void updateStudent(Student student) throws MyException {
+        log.trace("updateStudent - method entered: student={}", student);
+        validator.validate(student);
+        studentRepository.findById(student.getId())
+                .ifPresent(s -> {
+                    s.setName(student.getName());
+                    s.setGroup(student.getGroup());
+                    log.debug("updateStudent - updated: s={}", s);
+                });
+        log.trace("updateStudent - method finished");
+    }
+
+    @Override
+    public Student getStudentById(long id) throws MyException {
+        log.trace("getStudentById - method entered={}", id);
+        return studentRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Student> getAllStudents() {
+        log.trace("getAllStudents - method entered");
+        return studentRepository.findAll();
+
+    }
+
+    @Override
+    public List<Student> filterStudentsByName(String s) {
+        log.trace("filterStudentsByName - method entered s={}",s);
+        return studentRepository.findAll()
+                .stream()
+                .filter(student -> student.getName().contains(s))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Student> sortStudentsAscendingByName() {
+        log.trace("sortStudentsAscendingByName - method entered");
+        Iterable<Student> students = studentRepository.findAll(Sort.by("name").ascending());
+        return StreamSupport.stream(students.spliterator(),false)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<Student> getStudentsWhoPassed() {
+        log.trace("getStudentsWhoPassed - method entered");
+        List<Assignment> assignments = assignmentService.getAllAssignments();
+        return assignments.stream()
+                .filter(assignment -> assignment.getGrade()!=null && assignment.getGrade()>=5.0)
+                .map(assignment -> {
+                    try {
+                        return this.getStudentById(assignment.getId().getFirst());
+                    } catch (MyException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Student getStudentsWithMostProblems() throws MyException {
+        log.trace("getStudentsWithMostProblems - method entered");
+        List<Assignment> assignments = assignmentService.getAllAssignments();
+        Map<Long, Long> countForId = assignments.stream()
+                .collect(Collectors.groupingBy(assignment -> assignment.getId().getFirst(), Collectors.counting()));
+        Map<Long, Long> sortedByValue = countForId.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Optional<Map.Entry<Long, Long>> student = sortedByValue.entrySet().stream().findFirst();
+        return this.getStudentById(student.get().getKey());
+    }
+}
