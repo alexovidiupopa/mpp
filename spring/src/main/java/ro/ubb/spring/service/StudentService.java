@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ro.ubb.spring.model.Assignment;
 import ro.ubb.spring.model.Exceptions.MyException;
+import ro.ubb.spring.model.Exceptions.RepositoryException;
 import ro.ubb.spring.model.Student;
 import ro.ubb.spring.model.Validators.StudentValidator;
 import ro.ubb.spring.repository.StudentRepository;
@@ -35,6 +36,8 @@ public class StudentService implements IStudentService{
     public void addStudent(Student student) throws MyException {
         log.trace("addStudent - method entered student={}",student);
         validator.validate(student);
+        if (studentRepository.existsById(student.getId()))
+            throw new RepositoryException("Student already exists");
         Student std = studentRepository.save(student);
         log.trace("addStudent - method finished student={}", std);
     }
@@ -44,6 +47,8 @@ public class StudentService implements IStudentService{
     public void deleteStudent(Student student) throws MyException {
         log.trace("deleteStudent - method entered={}",student);
         validator.validate(student);
+        if (!studentRepository.existsById(student.getId()))
+            throw new RepositoryException("Student doesn't exist");
         studentRepository.delete(student);
         log.trace("deleteStudent - method finished");
     }
@@ -53,6 +58,8 @@ public class StudentService implements IStudentService{
     public void updateStudent(Student student) throws MyException {
         log.trace("updateStudent - method entered: student={}", student);
         validator.validate(student);
+        if (!studentRepository.existsById(student.getId()))
+            throw new RepositoryException("Student doesn't exist");
         studentRepository.findById(student.getId())
                 .ifPresent(s -> {
                     s.setName(student.getName());

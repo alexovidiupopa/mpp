@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ro.ubb.spring.model.Assignment;
 import ro.ubb.spring.model.Exceptions.MyException;
+import ro.ubb.spring.model.Exceptions.RepositoryException;
 import ro.ubb.spring.model.Validators.AssignmentValidator;
 import ro.ubb.spring.repository.AssignmentRepository;
 
@@ -26,27 +27,41 @@ public class AssignmentService implements IAssignmentService {
     @Autowired
     private AssignmentRepository assignmentRepository;
 
-
-
     @Override
     @Transactional
     public void addAssignment(Assignment assignment) throws MyException {
-        log.trace("addStudent - method entered assignment={}",assignment);
+        log.trace("addAssignment - method entered assignment={}",assignment);
         validator.validate(assignment);
+        if (assignmentRepository.existsById(assignment.getId()))
+            throw new RepositoryException("Assignment already exists");
         Assignment asg = assignmentRepository.save(assignment);
-        log.trace("addStudent - method finished assignment={}",asg);
+        log.trace("addAssignment - method finished assignment={}",asg);
     }
 
     @Override
     @Transactional
     public void deleteAssignment(Assignment assignment) throws MyException {
-
+        log.trace("deleteAssignment - method entered assignment={}",assignment);
+        validator.validate(assignment);
+        if (!assignmentRepository.existsById(assignment.getId()))
+            throw new RepositoryException("Assignment doesn't exist");
+        assignmentRepository.delete(assignment);
+        log.trace("deleteAssignment - method entered finished");
     }
 
     @Override
     @Transactional
     public void updateAssignment(Assignment assignment) throws MyException {
-
+        log.trace("updateAssignment - method entered assignment={}",assignment);
+        validator.validate(assignment);
+        if (!assignmentRepository.existsById(assignment.getId()))
+            throw new RepositoryException("Assignment doesn't exist");
+        assignmentRepository.findById(assignment.getId())
+                .ifPresent(assig -> {
+                    assig.setGrade(assignment.getGrade());
+                    log.debug("updateAssignment - updated: assig={}",assig);
+                });
+        log.trace("updateAssignment - method finished",assignment);
     }
 
     @Override

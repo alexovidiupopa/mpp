@@ -100,7 +100,7 @@ public class Console {
                 studentService.addStudent(student);
                 System.out.println("Student added successfully");
             } catch (MyException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }

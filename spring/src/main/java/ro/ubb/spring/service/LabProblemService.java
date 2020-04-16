@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ro.ubb.spring.model.Assignment;
 import ro.ubb.spring.model.Exceptions.MyException;
+import ro.ubb.spring.model.Exceptions.RepositoryException;
 import ro.ubb.spring.model.LabProblem;
 import ro.ubb.spring.model.Validators.LabProblemValidator;
 import ro.ubb.spring.repository.LabProblemRepository;
@@ -38,6 +39,8 @@ public class LabProblemService implements ILabProblemService {
     public void addProblem(LabProblem problem) throws MyException {
         log.trace("addProblem - method entered problem={}",problem);
         validator.validate(problem);
+        if (labProblemRepository.existsById(problem.getId()))
+            throw new RepositoryException("Lab problem already exists");
         LabProblem prb = labProblemRepository.save(problem);
         log.trace("addProblem - method finished problem={}", prb);
     }
@@ -47,6 +50,8 @@ public class LabProblemService implements ILabProblemService {
     public void deleteProblem(LabProblem problem) throws MyException {
         log.trace("deleteProblem - method entered={}",problem);
         validator.validate(problem);
+        if (!labProblemRepository.existsById(problem.getId()))
+            throw new RepositoryException("Lab problem doesn't exist");
         labProblemRepository.delete(problem);
         log.trace("deleteProblem - method finished");
     }
@@ -56,6 +61,8 @@ public class LabProblemService implements ILabProblemService {
     public void updateProblem(LabProblem problem) throws MyException {
         log.trace("updateProblem - method entered: problem={}", problem);
         validator.validate(problem);
+        if (!labProblemRepository.existsById(problem.getId()))
+            throw new RepositoryException("Lab problem doesn't exist");
         labProblemRepository.findById(problem.getId())
                 .ifPresent(p -> {
                     p.setDescription(problem.getDescription());

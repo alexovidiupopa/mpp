@@ -19,8 +19,9 @@ dependencies {
     compile group:'org.springframework.data', name:'spring-data-jpa', version:'2.2.3.RELEASE'
     compile group:'org.postgresql', name:'postgresql', version: '42.2.5'
     compile group: 'com.zaxxer', name: 'HikariCP', version:'3.3.1'
-    compileOnly ('org.projectlombok:lombok:1.16.20')
-    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: "2.6.2"
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version:"2.10.0"
     compile group: 'org.slf4j', name:'slf4j-simple', version:'1.7.25'
+    compile group: 'org.slf4j', name:'slf4j-api', version: '1.7.25'
+
 }
+
