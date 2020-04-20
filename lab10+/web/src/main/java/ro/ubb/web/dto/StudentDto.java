@@ -2,6 +2,8 @@ package ro.ubb.web.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * Created by radu.
  */
@@ -11,7 +13,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Builder
-public class StudentDto extends BaseDto<Long> {
+public class StudentDto extends BaseDto<Long> implements Serializable {
     private String serialNumber;
     private String name;
     private int groupNumber;

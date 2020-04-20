@@ -11,4 +11,13 @@ import ro.ubb.core.utils.Pair;
 @Builder
 public class AssignmentDto extends BaseDto<Pair<Long, Long>> {
     private Double grade;
+
+    public AssignmentDto(Pair<Long, Long> longLongPair) {
+        super(longLongPair);
+    }
+
+    public AssignmentDto(Pair<Long, Long> longLongPair, double grade) {
+        super(longLongPair);
+        this.grade=grade;
+    }
 }

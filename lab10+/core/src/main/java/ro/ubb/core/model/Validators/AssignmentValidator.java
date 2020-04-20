@@ -2,7 +2,6 @@ package ro.ubb.core.model.Validators;
 
 
 import org.springframework.stereotype.Component;
-import ro.ubb.core.model.Exceptions.ValidatorException;
 import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.ValidatorException;
 

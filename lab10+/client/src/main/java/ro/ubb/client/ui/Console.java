@@ -5,8 +5,8 @@ import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.model.LabProblem;
 import ro.ubb.core.model.Student;
-import ro.ubb.web.dto.StudentDto;
-import ro.ubb.web.dto.StudentsDto;
+import ro.ubb.core.utils.Pair;
+import ro.ubb.web.dto.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,16 +32,16 @@ public class Console {
         commands = new HashMap<>();
         commands.put("exit", () -> System.exit(0));
         commands.put("add students", this::addStudents);
-        //commands.put("add problems", this::addProblems);
-        //commands.put("add assignments", this::addAssignments);
+        commands.put("add problems", this::addProblems);
+        commands.put("add assignments", this::addAssignments);
         commands.put("delete students", this::deleteStudents);
-        //commands.put("delete problems", this::deleteProblems);
-        //commands.put("delete assignments", this::deleteAssignment);
+        commands.put("delete problems", this::deleteProblems);
+        commands.put("delete assignments", this::deleteAssignment);
         commands.put("update students", this::updateStudent);
-        //commands.put("update problems", this::updateProblems);
-        //commands.put("grade assignments", this::gradeAssignments);
+        commands.put("update problems", this::updateProblems);
+        commands.put("grade assignments", this::gradeAssignments);
         commands.put("list students", this::printAllStudents);
-        /*commands.put("list problems", this::printAllProblems);
+        commands.put("list problems", this::printAllProblems);
         commands.put("list assignments", this::printAllAssignments);
         commands.put("filter students", this::filterStudents);
         commands.put("filter problems", this::filterProblems);
@@ -51,7 +51,7 @@ public class Console {
         commands.put("sort assignments", this::sortAssignments);
         commands.put("most assigned problem", this::mostAssignedProblem);
         commands.put("students who passed", this::passingStudents);
-        commands.put("student most problems", this::studentMostAssignedProblems);*/
+        commands.put("student most problems", this::studentMostAssignedProblems);
     }
 
     public void printMenu(){
@@ -78,7 +78,7 @@ public class Console {
                     throw new MyException("Invalid command");
                 commands.get(command).run();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e);
             }
         }
     }
@@ -173,90 +173,63 @@ public class Console {
      * Method to handle printing the students.
      */
     private void printAllStudents() {
-        List<StudentDto> students = (List<StudentDto>) restTemplate.getForObject(studentsUrl, StudentsDto.class);
-        students.forEach(System.out::println);
+        StudentsDto students = restTemplate.getForObject(studentsUrl, StudentsDto.class);
+        assert students != null;
+        students.getStudents().forEach(System.out::println);
     }
-
-    /**
-     * Method to handle filtering the students.
-     */
-    /*private void filterStudents() {
+    private void filterStudents() {
         System.out.println("filtered students (name containing 's2'):");
-        List<Student> students = studentService.filterStudentsByName("s2");
-        students.forEach(System.out::println);
+        StudentsDto students = restTemplate.getForObject(studentsUrl+"/filter/s2", StudentsDto.class);
+        assert students != null;
+        students.getStudents().forEach(System.out::println);
     }
 
-    *//**
-     * Method to handle sorting the students.
-     *//*
+
     private void sortStudents() {
         System.out.println("sorted students (by name):");
-        List<StudentDto> students = studentService.sortStudentsAscendingByName();
-        students.forEach(System.out::println);
+        StudentsDto students = restTemplate.getForObject(studentsUrl+"/sort", StudentsDto.class);
+        assert students != null;
+        students.getStudents().forEach(System.out::println);
     }
 
-
-
-    *//**
-     * Method to handle adding lab problems.
-     *//*
     private void addProblems() {
         while (true) {
-            LabProblem newProblem = readProblem();
+            LabProblemDto newProblem = readProblem();
             if (newProblem == null || newProblem.getId() < 0) {
                 break;
             }
-            try {
-                labProblemService.addProblem(newProblem);
-                System.out.println("Problem added successfully");
-            } catch (MyException e) {
-                System.out.println(e.getMessage());
-            }
+            restTemplate.postForObject(problemsUrl, newProblem, LabProblemDto.class);
+            System.out.println("Problem added successfully");
         }
     }
 
-    *//**
-     * Method to handle deleting lab problems.
-     *//*
+
     private void deleteProblems(){
         while (true) {
-            LabProblem problem = readProblem();
+            LabProblemDto problem = readProblem();
             if (problem == null) {
                 break;
             }
-            try {
-                labProblemService.deleteProblem(problem);
-                System.out.println("Problem deleted successfully");
-            } catch (MyException e) {
-                System.out.println(e.getMessage());
-            }
+            restTemplate.delete(problemsUrl, problem);
+            System.out.println("Problem deleted successfully");
 
         }
     }
 
-    *//**
-     * Method to handle updating lab problems.
-     *//*
+
     private void updateProblems(){
         while (true) {
-            LabProblem problem = readProblem();
+            LabProblemDto problem = readProblem();
             if (problem == null) {
                 break;
             }
-            try {
-                labProblemService.updateProblem(problem);
-                System.out.println("Problem updated successfully");
-            } catch (MyException e) {
-                System.out.println(e.getMessage());
-            }
+            restTemplate.put(problemsUrl, problem);
+            System.out.println("Problem updated successfully");
         }
     }
 
-    *//**
-     * Helper method to handle reading a lab problem from keyboard.
-     * @return read problem
-     *//*
-    private LabProblem readProblem() {
+
+    private LabProblemDto readProblem() {
         System.out.println("Read problem {id, description, score}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
@@ -278,7 +251,7 @@ public class Console {
             }
             String description = arguments.get(1);
             int score = Integer.parseInt(arguments.get(2));
-            return new LabProblem(id, description, score);
+            return new LabProblemDto(id, description, score);
         }
         catch (MyException | IOException e) {
             System.out.println(e.getMessage());
@@ -286,75 +259,53 @@ public class Console {
         }
     }
 
-    *//**
-     * Method to handle printing the lab problems.
-     *//*
+
     private void printAllProblems() {
-        List<LabProblem> allProblems = labProblemService.getAllProblems();
-        allProblems.forEach(System.out::println);
+        LabProblemsDto allProblems = restTemplate.getForObject(problemsUrl, LabProblemsDto.class);
+        assert allProblems != null;
+        allProblems.getProblems().forEach(System.out::println);
     }
 
-    *//**
-     * Method to handle filtering the lab problems.
-     *//*
     private void filterProblems() {
         System.out.println("filtered problems (score >= 5):");
-        List<LabProblem> filteredProblems = this.labProblemService.filterProblemsByScore(5);
-        filteredProblems.forEach(System.out::println);
+        LabProblemsDto allProblems = restTemplate.getForObject(problemsUrl+"/filter/5", LabProblemsDto.class);
+        assert allProblems != null;
+        allProblems.getProblems().forEach(System.out::println);
     }
 
-    *//**
-     * Method to handle sorting the lab problems.
-     *//*
+
     private void sortProblems() {
         System.out.println("sorted problems (by score):");
-        List<LabProblem> students = labProblemService.sortProblemsDescendingByScore();
-        students.forEach(System.out::println);
+        LabProblemsDto allProblems = restTemplate.getForObject(problemsUrl+"/sort", LabProblemsDto.class);
+        assert allProblems != null;
+        allProblems.getProblems().forEach(System.out::println);
     }
 
-
-
-    *//**
-     * Method to handle adding assignment.
-     *//*
     private void addAssignments() {
         while (true) {
-            Assignment assignment = readAssignment();
+            AssignmentDto assignment = readAssignment();
             if (assignment == null) {
                 break;
             }
-            try {
-                this.assignmentService.addAssignment(assignment);
-                System.out.println("Assignment added successfully");
-            } catch (MyException e) {
-                System.out.println(e.getMessage());
-            }
+            restTemplate.postForObject(problemsUrl, assignment, AssignmentDto.class);
+            System.out.println("Assignment added successfully");
         }
     }
 
-    *//**
-     * Method to handle deleting assignment.
-     *//*
+
     private void deleteAssignment() {
         while (true) {
-            Assignment assignment = readAssignment();
+            AssignmentDto assignment = readAssignment();
             if (assignment == null) {
                 break;
             }
-            try {
-                assignmentService.deleteAssignment(assignment);
-                System.out.println("Assignment deleted successfully");
-            } catch (MyException e) {
-                System.out.println(e.getMessage());
-            }
+            restTemplate.delete(problemsUrl, assignment);
+            System.out.println("Assignment deleted successfully");
         }
     }
 
-    *//**
-     * Helper method to handle reading an assignment from keyboard.
-     * @return read assignment
-     *//*
-    private Assignment readAssignment() {
+
+    private AssignmentDto readAssignment() {
         System.out.println("Read assignment {studentId, ProblemId}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
@@ -381,7 +332,7 @@ public class Console {
             catch (NumberFormatException nfe) {
                 throw new MyException("Argument for problemId is not a number");
             }
-            return new Assignment(new Pair<>(studentId, problemId));
+            return new AssignmentDto(new Pair<>(studentId, problemId));
         }
         catch (MyException | IOException e) {
             System.out.println(e.getMessage());
@@ -389,28 +340,20 @@ public class Console {
         }
     }
 
-    *//**
-     * Method to handle grading assignment.
-     *//*
+
     private void gradeAssignments(){
         while (true) {
-            Assignment assignment = gradeAssignment();
+            AssignmentDto assignment = gradeAssignment();
             if (assignment == null) {
                 break;
             }
-            try {
-                assignmentService.updateAssignment(assignment);
-                System.out.println("Assignment updated successfully");
-            } catch (MyException e) {
-                System.out.println(e.getMessage());
-            }
+            restTemplate.put(assignmentsUrl, AssignmentDto.class);
+            System.out.println("Assignment updated successfully");
         }
     }
 
-    *//**
-     * Method to handle giving a grade to one assignment.
-     *//*
-    private Assignment gradeAssignment() {
+
+    private AssignmentDto gradeAssignment() {
         System.out.println("Read grade {studentId, problemId, grade}");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
@@ -444,7 +387,7 @@ public class Console {
             catch (NumberFormatException nfe) {
                 throw new MyException("Argument for grade is not a number");
             }
-            return new Assignment(new Pair<>(studentId, problemId), grade);
+            return new AssignmentDto(new Pair<>(studentId, problemId), grade);
         }
         catch (MyException | IOException e) {
             System.out.println(e.getMessage());
@@ -452,65 +395,43 @@ public class Console {
         }
     }
 
-    *//**
-     * Method to handle printing the assignment.
-     *//*
+
     private void printAllAssignments() {
-        List<Assignment> allAssignments = this.assignmentService.getAllAssignments();
-        allAssignments.forEach(System.out::println);
+        AssignmentsDto allAssignments = restTemplate.getForObject(assignmentsUrl, AssignmentsDto.class);
+        assert allAssignments != null;
+        allAssignments.getAssignments().forEach(System.out::println);
     }
 
-    *//**
-     * Method to handle filtering the assignments.
-     *//*
     private void filterAssignments() {
         System.out.println("filtered assignments (grade >= 5):");
-        List<Assignment> filteredAssignments = this.assignmentService.filterAssignmentsByGrade(5);
-        filteredAssignments.forEach(System.out::println);
+        AssignmentsDto allAssignments = restTemplate.getForObject(assignmentsUrl, AssignmentsDto.class);
+        assert allAssignments != null;
+        allAssignments.getAssignments().forEach(System.out::println);
     }
 
-    *//**
-     * Method to handle sorting the assignments.
-     *//*
+
     private void sortAssignments() {
         System.out.println("sorted assignments (by student and problem):");
-        List<Assignment> students = assignmentService.sortAssignmentsAscendingById();
-        students.forEach(System.out::println);
+        AssignmentsDto allAssignments = restTemplate.getForObject(assignmentsUrl+"/sort", AssignmentsDto.class);
+        assert allAssignments != null;
+        allAssignments.getAssignments().forEach(System.out::println);
     }
 
-
-
-    *//**
-     * Method to handle printing the passing students.
-     *//*
     private void passingStudents() {
         System.out.println("students currently passing at least one assignment:");
-        Set<Student> students=studentService.getStudentsWhoPassed();
-        students.forEach(System.out::println);
+        StudentsDto students = restTemplate.getForObject(studentsUrl+"/passed", StudentsDto.class);
+        assert students != null;
+        students.getStudents().forEach(System.out::println);
     }
 
-    *//**
-     * Method to handle getting the problem assigned the most times.
-     *//*
-    private void mostAssignedProblem() {
-        System.out.println("problem assigned the most times:");
-        try {
-            System.out.println(labProblemService.getProblemAssignedMostTimes());
-        } catch (MyException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    *//**
-     * Method to handle getting the student with the most assigned problems.
-     *//*
     private void studentMostAssignedProblems(){
         System.out.println("student with the most assigned problems:");
-        try {
-            System.out.println(studentService.getStudentsWithMostProblems());
-        } catch (MyException e) {
-            System.out.println(e.getMessage());
-        }
+        System.out.println(restTemplate.getForObject(studentsUrl+"/mostproblems", StudentDto.class));
     }
-*/
+
+    private void mostAssignedProblem() {
+        System.out.println("problem assigned the most times:");
+        System.out.println(restTemplate.getForObject(problemsUrl+"/mostassigned",LabProblemDto.class));
+    }
+
 }

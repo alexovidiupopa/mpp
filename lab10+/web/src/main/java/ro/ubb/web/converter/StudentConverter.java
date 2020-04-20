@@ -8,7 +8,7 @@ import ro.ubb.web.dto.StudentDto;
  * Created by radu.
  */
 @Component
-public class StudentConverter extends BaseConverter<Student, StudentDto> {
+public class StudentConverter extends BaseConverter<Long, Student, StudentDto> {
     @Override
     public Student convertDtoToModel(StudentDto dto) {
         Student student = Student.builder()

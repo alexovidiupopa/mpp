@@ -12,7 +12,6 @@ import ro.ubb.core.model.Exceptions.RepositoryException;
 import ro.ubb.core.model.Validators.AssignmentValidator;
 import ro.ubb.core.repository.AssignmentRepository;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
