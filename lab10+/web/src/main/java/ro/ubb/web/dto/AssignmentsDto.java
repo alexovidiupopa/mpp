@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class AssignmentsDto {
-    Set<AssignmentDto> assignments;
+    List<AssignmentDto> assignments;
 }

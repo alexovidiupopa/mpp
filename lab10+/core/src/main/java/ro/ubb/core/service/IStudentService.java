@@ -9,7 +9,7 @@ import java.util.Set;
 public interface IStudentService {
     void addStudent(Student student) throws MyException;
 
-    void deleteStudent(Student student) throws MyException;
+    void deleteStudent(Long id) throws MyException;
 
     void updateStudent(Student student) throws MyException;
 

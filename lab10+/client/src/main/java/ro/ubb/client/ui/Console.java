@@ -1,17 +1,19 @@
 package ro.ubb.client.ui;
 
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.MyException;
-import ro.ubb.core.model.LabProblem;
-import ro.ubb.core.model.Student;
 import ro.ubb.core.utils.Pair;
 import ro.ubb.web.dto.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class Console {
@@ -94,8 +96,18 @@ public class Console {
             if (student == null) {
                 break;
             }
-            restTemplate.postForObject(studentsUrl, student, StudentDto.class);
-            System.out.println("Student added successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.postForObject(studentsUrl, student, StudentDto.class);
+                            return "Student added successfully";
+                        }catch (RestClientException e){
+                            return "student already exists";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
+
         }
     }
 
@@ -108,8 +120,18 @@ public class Console {
             if (student == null) {
                 break;
             }
-            restTemplate.delete(studentsUrl, student);
-            System.out.println("Student deleted successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.delete(studentsUrl+"/{id}", student.getId());
+                            return "Student deleted successfully";
+
+                        } catch(RestClientException e){
+                            return "student doesn't exist";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
 
         }
     }
@@ -123,8 +145,18 @@ public class Console {
             if (student == null) {
                 break;
             }
-            restTemplate.put(studentsUrl, student);
-            System.out.println("Student updated successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.put(studentsUrl, student);
+                            return "Student updated successfully";
+                        }catch(RestClientException e){
+                            return "student doesn't exist";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
+
         }
     }
 
@@ -173,23 +205,23 @@ public class Console {
      * Method to handle printing the students.
      */
     private void printAllStudents() {
-        StudentsDto students = restTemplate.getForObject(studentsUrl, StudentsDto.class);
-        assert students != null;
-        students.getStudents().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(studentsUrl, StudentsDto.class)
+        ).thenAcceptAsync(result -> result.getStudents().forEach(System.out::println));
     }
     private void filterStudents() {
         System.out.println("filtered students (name containing 's2'):");
-        StudentsDto students = restTemplate.getForObject(studentsUrl+"/filter/s2", StudentsDto.class);
-        assert students != null;
-        students.getStudents().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(studentsUrl+"/filter/s2", StudentsDto.class)
+        ).thenAcceptAsync(result -> result.getStudents().forEach(System.out::println));
     }
 
 
     private void sortStudents() {
         System.out.println("sorted students (by name):");
-        StudentsDto students = restTemplate.getForObject(studentsUrl+"/sort", StudentsDto.class);
-        assert students != null;
-        students.getStudents().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(studentsUrl+"/sort", StudentsDto.class)
+        ).thenAcceptAsync(result -> result.getStudents().forEach(System.out::println));
     }
 
     private void addProblems() {
@@ -198,8 +230,17 @@ public class Console {
             if (newProblem == null || newProblem.getId() < 0) {
                 break;
             }
-            restTemplate.postForObject(problemsUrl, newProblem, LabProblemDto.class);
-            System.out.println("Problem added successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.postForObject(problemsUrl, newProblem, LabProblemDto.class);
+                            return "Problem added successfully";
+                        }catch(RestClientException e){
+                            return "Problem already exists";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
         }
     }
 
@@ -210,9 +251,18 @@ public class Console {
             if (problem == null) {
                 break;
             }
-            restTemplate.delete(problemsUrl, problem);
-            System.out.println("Problem deleted successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.delete(problemsUrl+"/{id}", problem.getId());
+                            return "Problem deleted successfully";
+                        }catch (RestClientException e){
+                            return "Problem doesn't exist";
+                        }
+                    }
 
+            )
+                    .thenAcceptAsync(System.out::println);
         }
     }
 
@@ -223,8 +273,17 @@ public class Console {
             if (problem == null) {
                 break;
             }
-            restTemplate.put(problemsUrl, problem);
-            System.out.println("Problem updated successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.put(problemsUrl, problem);
+                            return "Problem updated successfully";
+                        }catch (RestClientException e){
+                            return "Problem doesn't exist";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
         }
     }
 
@@ -261,24 +320,27 @@ public class Console {
 
 
     private void printAllProblems() {
-        LabProblemsDto allProblems = restTemplate.getForObject(problemsUrl, LabProblemsDto.class);
-        assert allProblems != null;
-        allProblems.getProblems().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(problemsUrl, LabProblemsDto.class)
+        )
+                .thenAcceptAsync(result -> result.getProblems().forEach(System.out::println));
     }
 
     private void filterProblems() {
         System.out.println("filtered problems (score >= 5):");
-        LabProblemsDto allProblems = restTemplate.getForObject(problemsUrl+"/filter/5", LabProblemsDto.class);
-        assert allProblems != null;
-        allProblems.getProblems().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(problemsUrl+"/filter/5", LabProblemsDto.class)
+        )
+                .thenAcceptAsync(result -> result.getProblems().forEach(System.out::println));
     }
 
 
     private void sortProblems() {
         System.out.println("sorted problems (by score):");
-        LabProblemsDto allProblems = restTemplate.getForObject(problemsUrl+"/sort", LabProblemsDto.class);
-        assert allProblems != null;
-        allProblems.getProblems().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(problemsUrl+"/sort", LabProblemsDto.class)
+        )
+                .thenAcceptAsync(result -> result.getProblems().forEach(System.out::println));
     }
 
     private void addAssignments() {
@@ -287,8 +349,17 @@ public class Console {
             if (assignment == null) {
                 break;
             }
-            restTemplate.postForObject(problemsUrl, assignment, AssignmentDto.class);
-            System.out.println("Assignment added successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.postForObject(assignmentsUrl, assignment, AssignmentDto.class);
+                            return "Assignment added successfully";
+                        }catch (RestClientException e){
+                            return "Assignment already exists";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
         }
     }
 
@@ -299,8 +370,18 @@ public class Console {
             if (assignment == null) {
                 break;
             }
-            restTemplate.delete(problemsUrl, assignment);
-            System.out.println("Assignment deleted successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.delete(assignmentsUrl+"/{sid}/{aid}", assignment.getId().getFirst(),assignment.getId().getSecond());
+                            return "Assignment deleted successfully";
+                        }catch (RestClientException e){
+                            return "Assignment doesn't exist";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
+
         }
     }
 
@@ -347,8 +428,17 @@ public class Console {
             if (assignment == null) {
                 break;
             }
-            restTemplate.put(assignmentsUrl, AssignmentDto.class);
-            System.out.println("Assignment updated successfully");
+            CompletableFuture.supplyAsync(
+                    ()->{
+                        try{
+                            restTemplate.put(assignmentsUrl, assignment);
+                            return "Assignment updated successfully";
+                        }catch (RestClientException e){
+                            return "Assignment doesn't exist";
+                        }
+                    }
+            )
+                    .thenAcceptAsync(System.out::println);
         }
     }
 
@@ -397,41 +487,48 @@ public class Console {
 
 
     private void printAllAssignments() {
-        AssignmentsDto allAssignments = restTemplate.getForObject(assignmentsUrl, AssignmentsDto.class);
-        assert allAssignments != null;
-        allAssignments.getAssignments().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(assignmentsUrl, AssignmentsDto.class)
+        )
+                .thenAcceptAsync(result -> result.getAssignments().forEach(System.out::println));
     }
 
     private void filterAssignments() {
         System.out.println("filtered assignments (grade >= 5):");
-        AssignmentsDto allAssignments = restTemplate.getForObject(assignmentsUrl, AssignmentsDto.class);
-        assert allAssignments != null;
-        allAssignments.getAssignments().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(assignmentsUrl+"/filter/5", AssignmentsDto.class)
+        )
+                .thenAcceptAsync(result -> result.getAssignments().forEach(System.out::println));
     }
 
 
     private void sortAssignments() {
         System.out.println("sorted assignments (by student and problem):");
-        AssignmentsDto allAssignments = restTemplate.getForObject(assignmentsUrl+"/sort", AssignmentsDto.class);
-        assert allAssignments != null;
-        allAssignments.getAssignments().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(assignmentsUrl+"/sort", AssignmentsDto.class)
+        )
+                .thenAcceptAsync(result -> result.getAssignments().forEach(System.out::println));
     }
 
     private void passingStudents() {
         System.out.println("students currently passing at least one assignment:");
-        StudentsDto students = restTemplate.getForObject(studentsUrl+"/passed", StudentsDto.class);
-        assert students != null;
-        students.getStudents().forEach(System.out::println);
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(studentsUrl+"/passed", StudentsDto.class)
+        ).thenAcceptAsync(result -> result.getStudents().forEach(System.out::println));
     }
 
     private void studentMostAssignedProblems(){
         System.out.println("student with the most assigned problems:");
-        System.out.println(restTemplate.getForObject(studentsUrl+"/mostproblems", StudentDto.class));
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(studentsUrl+"/mostproblems", StudentDto.class)
+        ).thenAcceptAsync(System.out::println);
     }
 
     private void mostAssignedProblem() {
         System.out.println("problem assigned the most times:");
-        System.out.println(restTemplate.getForObject(problemsUrl+"/mostassigned",LabProblemDto.class));
+        CompletableFuture.supplyAsync(
+                ()->restTemplate.getForObject(problemsUrl+"/mostassigned", LabProblemDto.class)
+        ).thenAcceptAsync(System.out::println);
     }
 
 }

@@ -44,12 +44,11 @@ public class StudentService implements IStudentService{
 
     @Override
     @Transactional
-    public void deleteStudent(Student student) throws MyException {
-        log.trace("deleteStudent - method entered={}",student);
-        validator.validate(student);
-        if (!studentRepository.existsById(student.getId()))
+    public void deleteStudent(Long id) throws MyException {
+        log.trace("deleteStudent - method entered={}",id);
+        if (!studentRepository.existsById(id))
             throw new RepositoryException("Student doesn't exist");
-        studentRepository.delete(student);
+        studentRepository.delete(studentRepository.getOne(id));
         log.trace("deleteStudent - method finished");
     }
 

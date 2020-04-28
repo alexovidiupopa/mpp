@@ -11,6 +11,7 @@ import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.model.Exceptions.RepositoryException;
 import ro.ubb.core.model.Validators.AssignmentValidator;
 import ro.ubb.core.repository.AssignmentRepository;
+import ro.ubb.core.utils.Pair;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,12 +41,11 @@ public class AssignmentService implements IAssignmentService {
 
     @Override
     @Transactional
-    public void deleteAssignment(Assignment assignment) throws MyException {
-        log.trace("deleteAssignment - method entered assignment={}",assignment);
-        validator.validate(assignment);
-        if (!assignmentRepository.existsById(assignment.getId()))
+    public void deleteAssignment(Pair<Long, Long> id) throws MyException {
+        log.trace("deleteAssignment - method entered assignment id={}",id);
+        if (!assignmentRepository.existsById(id))
             throw new RepositoryException("Assignment doesn't exist");
-        assignmentRepository.delete(assignment);
+        assignmentRepository.delete(assignmentRepository.getOne(id));
         log.trace("deleteAssignment - method entered finished");
     }
 

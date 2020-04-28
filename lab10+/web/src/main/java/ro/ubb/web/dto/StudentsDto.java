@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by radu.
@@ -14,5 +14,5 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 public class StudentsDto implements Serializable {
-    private Set<StudentDto> students;
+    private List<StudentDto> students;
 }

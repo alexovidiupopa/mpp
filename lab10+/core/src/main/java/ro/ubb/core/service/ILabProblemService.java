@@ -8,7 +8,7 @@ import java.util.List;
 public interface ILabProblemService {
     void addProblem(LabProblem problem) throws MyException;
 
-    void deleteProblem(LabProblem problem) throws MyException;
+    void deleteProblem(Long id) throws MyException;
 
     void updateProblem(LabProblem problem) throws MyException;
 

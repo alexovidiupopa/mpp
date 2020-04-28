@@ -47,12 +47,11 @@ public class LabProblemService implements ILabProblemService {
 
     @Override
     @Transactional
-    public void deleteProblem(LabProblem problem) throws MyException {
-        log.trace("deleteProblem - method entered={}",problem);
-        validator.validate(problem);
-        if (!labProblemRepository.existsById(problem.getId()))
+    public void deleteProblem(Long id) throws MyException {
+        log.trace("deleteProblem - method entered={}",id);
+        if (!labProblemRepository.existsById(id))
             throw new RepositoryException("Lab problem doesn't exist");
-        labProblemRepository.delete(problem);
+        labProblemRepository.delete(labProblemRepository.getOne(id));
         log.trace("deleteProblem - method finished");
     }
 

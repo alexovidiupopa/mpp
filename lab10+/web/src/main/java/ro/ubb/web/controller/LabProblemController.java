@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.service.ILabProblemService;
 import ro.ubb.web.converter.LabProblemConverter;
 import ro.ubb.web.dto.LabProblemDto;
@@ -49,30 +50,47 @@ public class LabProblemController {
         log.trace("end filter problems={}",cpy);
         return cpy;
     }
-    @SneakyThrows
+
     @RequestMapping(value = "/problems", method = RequestMethod.POST)
     ResponseEntity<?> saveProblem(@RequestBody LabProblemDto labProblemDto) {
         log.trace("begin add problem={}", labProblemDto);
-        labProblemService.addProblem(
-                converter.convertDtoToModel(labProblemDto)
-        );
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            labProblemService.addProblem(
+                    converter.convertDtoToModel(labProblemDto)
+            );
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MyException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
-    @SneakyThrows
+
     @RequestMapping(value = "/problems", method = RequestMethod.PUT)
     ResponseEntity<?> updateProblem(@RequestBody LabProblemDto labProblemDto) {
         log.trace("begin update problem={}", labProblemDto);
-        labProblemService.updateProblem(converter.convertDtoToModel(labProblemDto));
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            labProblemService.updateProblem(converter.convertDtoToModel(labProblemDto));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MyException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @SneakyThrows
-    @RequestMapping(value = "/problems", method = RequestMethod.DELETE)
-    ResponseEntity<?> deleteProblem(@RequestBody LabProblemDto labProblemDto){
-        log.trace("begin delete problem={}", labProblemDto);
-        labProblemService.deleteProblem(converter.convertDtoToModel(labProblemDto));
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    @RequestMapping(value = "/problems/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<?> deleteProblem(@PathVariable Long id){
+        log.trace("begin delete problem with id={}", id);
+        try {
+            labProblemService.deleteProblem(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MyException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @SneakyThrows

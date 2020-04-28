@@ -5,6 +5,7 @@ import ro.ubb.web.dto.BaseDto;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,21 +17,21 @@ public abstract class BaseConverter<Id extends Serializable,Model extends BaseEn
         implements Converter<Id,Model, Dto> {
 
 
-    public Set<Id> convertModelsToIDs(Set<Model> models) {
+    public List<Id> convertModelsToIDs(Set<Model> models) {
         return models.stream()
                 .map(model -> model.getId())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    public Set<Id> convertDTOsToIDs(Set<Dto> dtos) {
+    public List<Id> convertDTOsToIDs(Set<Dto> dtos) {
         return dtos.stream()
                 .map(dto -> (Id)dto.getId())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    public Set<Dto> convertModelsToDtos(Collection<Model> models) {
+    public List<Dto> convertModelsToDtos(Collection<Model> models) {
         return models.stream()
                 .map(model -> convertModelToDto(model))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

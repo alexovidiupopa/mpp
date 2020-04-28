@@ -7,19 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.MyException;
-import ro.ubb.core.service.IAssignmentService;
 import ro.ubb.core.service.IStudentService;
 import ro.ubb.web.converter.StudentConverter;
 import ro.ubb.web.dto.StudentDto;
 import ro.ubb.web.dto.StudentsDto;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 public class StudentController {
@@ -57,30 +49,45 @@ public class StudentController {
         return cpy;
     }
 
-    @SneakyThrows
     @RequestMapping(value = "/students", method = RequestMethod.POST)
     ResponseEntity<?> saveStudent(@RequestBody StudentDto studentDto) {
         log.trace("begin add student={}", studentDto);
-         studentService.addStudent(
-                studentConverter.convertDtoToModel(studentDto)
-        );
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            studentService.addStudent(
+                   studentConverter.convertDtoToModel(studentDto)
+           );
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MyException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
-    @SneakyThrows
+
     @RequestMapping(value = "/students", method = RequestMethod.PUT)
     ResponseEntity<?> updateStudent(@RequestBody StudentDto studentDto) {
         log.trace("begin update student={}", studentDto);
-        studentService.updateStudent(studentConverter.convertDtoToModel(studentDto));
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            studentService.updateStudent(studentConverter.convertDtoToModel(studentDto));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MyException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @SneakyThrows
-    @RequestMapping(value = "/students", method = RequestMethod.DELETE)
-    ResponseEntity<?> deleteStudent(@RequestBody StudentDto studentDto){
-        log.trace("begin delete student={}", studentDto);
-        studentService.deleteStudent(studentConverter.convertDtoToModel(studentDto));
-        return new ResponseEntity<>(HttpStatus.OK);
+    @RequestMapping(value = "/students/{id}", method = RequestMethod.DELETE)
+    ResponseEntity<?> deleteStudent(@PathVariable Long id){
+        log.trace("begin delete student with id={}", id);
+        try {
+            studentService.deleteStudent(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MyException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @RequestMapping(value="/students/passed",method = RequestMethod.GET)
