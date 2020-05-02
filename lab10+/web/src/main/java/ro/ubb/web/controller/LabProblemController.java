@@ -13,6 +13,8 @@ import ro.ubb.web.converter.LabProblemConverter;
 import ro.ubb.web.dto.LabProblemDto;
 import ro.ubb.web.dto.LabProblemsDto;
 
+import java.util.List;
+
 @RestController
 public class LabProblemController {
 
@@ -25,32 +27,32 @@ public class LabProblemController {
     private LabProblemConverter converter;
 
     @RequestMapping(value = "/problems", method = RequestMethod.GET)
-    LabProblemsDto getProblems() {
+    List<LabProblemDto> getProblems() {
         log.trace("begin get problems");
-        LabProblemsDto cpy = new LabProblemsDto(converter
-                .convertModelsToDtos(labProblemService.getAllProblems()));
+        List<LabProblemDto> cpy = new LabProblemsDto(converter
+                .convertModelsToDtos(labProblemService.getAllProblems())).getProblems();
         log.trace("end get problems={}",cpy);
         return cpy;
     }
 
     @RequestMapping(value = "/problems/sort", method = RequestMethod.GET)
-    LabProblemsDto getProblemsSorted() {
+    List<LabProblemDto> getProblemsSorted() {
         log.trace("begin sort problems");
-        LabProblemsDto cpy = new LabProblemsDto(converter
-                .convertModelsToDtos(labProblemService.sortProblemsDescendingByScore()));
+        List<LabProblemDto> cpy = new LabProblemsDto(converter
+                .convertModelsToDtos(labProblemService.sortProblemsDescendingByScore())).getProblems();
         log.trace("end sort problems={}",cpy);
         return cpy;
     }
 
     @RequestMapping(value = "/problems/filter/{score}", method = RequestMethod.GET)
-    LabProblemsDto getProblemsFiltered(@PathVariable String score) {
+    List<LabProblemDto> getProblemsFiltered(@PathVariable String score) {
         log.trace("begin filter problems score={}",score);
-        LabProblemsDto cpy = new LabProblemsDto(converter
-                .convertModelsToDtos(labProblemService.filterProblemsByScore(Integer.parseInt(score))));
+        List<LabProblemDto> cpy = new LabProblemsDto(converter
+                .convertModelsToDtos(labProblemService.filterProblemsByScore(Integer.parseInt(score)))).getProblems();
         log.trace("end filter problems={}",cpy);
         return cpy;
     }
-
+    @CrossOrigin
     @RequestMapping(value = "/problems", method = RequestMethod.POST)
     ResponseEntity<?> saveProblem(@RequestBody LabProblemDto labProblemDto) {
         log.trace("begin add problem={}", labProblemDto);
@@ -66,7 +68,7 @@ public class LabProblemController {
 
     }
 
-
+    @CrossOrigin
     @RequestMapping(value = "/problems", method = RequestMethod.PUT)
     ResponseEntity<?> updateProblem(@RequestBody LabProblemDto labProblemDto) {
         log.trace("begin update problem={}", labProblemDto);

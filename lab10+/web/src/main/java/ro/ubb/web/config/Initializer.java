@@ -18,6 +18,5 @@ public class Initializer implements WebApplicationInitializer {
         ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher", new DispatcherServlet(context));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/api/*");
-
     }
 }

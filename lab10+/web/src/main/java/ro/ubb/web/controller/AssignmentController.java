@@ -13,6 +13,8 @@ import ro.ubb.web.converter.AssignmentConverter;
 import ro.ubb.web.dto.AssignmentDto;
 import ro.ubb.web.dto.AssignmentsDto;
 
+import java.util.List;
+
 @RestController
 public class AssignmentController {
     public static final Logger log= LoggerFactory.getLogger(AssignmentController.class);
@@ -23,34 +25,34 @@ public class AssignmentController {
     private AssignmentConverter converter;
 
     @RequestMapping(value = "/assignments", method = RequestMethod.GET)
-    AssignmentsDto getAssignments(){
+    List<AssignmentDto> getAssignments(){
         log.trace("begin get assignments");
         AssignmentsDto cpy = new AssignmentsDto(converter.convertModelsToDtos(
                 assignmentService.getAllAssignments()
         ));
         log.trace("end get assignments={}", cpy);
-        return cpy;
+        return cpy.getAssignments();
     }
 
     @RequestMapping(value = "/assignments/sort", method = RequestMethod.GET)
-    AssignmentsDto getAssignmentsSorted(){
+    List<AssignmentDto> getAssignmentsSorted(){
         log.trace("begin sort assignments");
         AssignmentsDto cpy = new AssignmentsDto(converter.convertModelsToDtos(
                 assignmentService.sortAssignmentsAscendingById()
         ));
         log.trace("end sort assignments={}", cpy);
-        return cpy;
+        return cpy.getAssignments();
     }
     @RequestMapping(value = "/assignments/filter/{grade}", method = RequestMethod.GET)
-    AssignmentsDto getAssignmentsFiltered(@PathVariable String grade){
+    List<AssignmentDto> getAssignmentsFiltered(@PathVariable String grade){
         log.trace("begin filter assignments grade={}",grade);
         AssignmentsDto cpy = new AssignmentsDto(converter.convertModelsToDtos(
                 assignmentService.filterAssignmentsByGrade(Integer.parseInt(grade))
         ));
         log.trace("end filter assignments={}", cpy);
-        return cpy;
+        return cpy.getAssignments();
     }
-
+    @CrossOrigin
     @RequestMapping(value="/assignments", method = RequestMethod.POST)
     ResponseEntity<?> saveAssignment(@RequestBody AssignmentDto assignmentDto){
         log.trace("begin add assignment={}", assignmentDto);
@@ -78,9 +80,9 @@ public class AssignmentController {
         }
 
     }
-
-    @RequestMapping(value = "/assignments", method = RequestMethod.PUT)
-    ResponseEntity<?> updateAssignment(@RequestBody AssignmentDto assignmentDto){
+    @CrossOrigin
+    @RequestMapping(value = "/assignments/{sid}/{aid}", method = RequestMethod.PUT)
+    ResponseEntity<?> updateAssignment(@RequestBody AssignmentDto assignmentDto, @PathVariable String sid, @PathVariable String aid){
         log.trace("begin update assignment={}", assignmentDto);
         try {
             assignmentService.updateAssignment(

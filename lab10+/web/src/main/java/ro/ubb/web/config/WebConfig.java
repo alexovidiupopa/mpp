@@ -22,6 +22,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
+                        .exposedHeaders("Access-Control-Allow-Origin:*")
                         .allowedOrigins("http://localhost:4200", "http://localhost:8080")
                         .allowedMethods("GET", "PUT", "POST", "DELETE");
             }

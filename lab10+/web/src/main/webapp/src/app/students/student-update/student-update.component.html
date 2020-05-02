@@ -1,0 +1,22 @@
+<label>Id:
+  <input #id/>
+  <br/>
+</label>
+<label>Serial number:
+  <input #serialNumber/>
+  <br/>
+</label>
+
+<label>Name:
+  <input #name/>
+  <br/>
+</label>
+
+<label>Group number:
+  <input #groupNumber/>
+  <br/>
+</label>
+
+<button (click)="updateStudent(Number(id.value),serialNumber.value,name.value, Number(groupNumber.value))">
+  Save
+</button>

@@ -1,0 +1,16 @@
+<label>Name filter :
+  <input #name/>
+  <br/>
+</label>
+
+<button (click)="filterStudents(name.value)">
+  Filter
+</button>
+
+<ol class="students">
+  <li *ngFor="let student of students ">
+    {{student.serialNumber}}
+    {{student.name}}
+    {{student.groupNumber}}
+  </li>
+</ol>

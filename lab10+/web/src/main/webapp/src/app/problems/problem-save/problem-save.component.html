@@ -1,0 +1,20 @@
+<label>Id:
+  <input #id/>
+  <br/>
+</label>
+
+<label>Description:
+  <input #desc/>
+  <br/>
+</label>
+
+<label>Score:
+  <input #score/>
+  <br/>
+</label>
+
+<button (click)="saveProblem(Number(id.value), desc.value, Number(score.value))">
+  Save
+</button>
+
+

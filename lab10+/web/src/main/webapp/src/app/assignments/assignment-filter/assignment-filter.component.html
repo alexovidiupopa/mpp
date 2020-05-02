@@ -1,0 +1,16 @@
+<label>Grade filter :
+  <input #grade/>
+  <br/>
+</label>
+
+<button (click)="filterAssignments(grade.value)">
+  Filter
+</button>
+
+<ol class="assignments">
+  <li *ngFor="let assignment of assignments ">
+    {{assignment.id.first}}
+    {{assignment.id.second}}
+    {{assignment.grade}}
+  </li>
+</ol>

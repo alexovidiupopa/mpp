@@ -1,4 +1,10 @@
-apply plugin: 'war'
+plugins {
+    id 'war'
+}
+
+war {
+    zip64 true
+}
 
 dependencies {
     compile project(':core')

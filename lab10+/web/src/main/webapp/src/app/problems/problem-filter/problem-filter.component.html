@@ -1,0 +1,16 @@
+<label>Score filter :
+  <input #score/>
+  <br/>
+</label>
+
+<button (click)="filterProblems(score.value)">
+  Filter
+</button>
+
+<ol class="problems">
+  <li *ngFor="let problem of problems ">
+    {{problem.id}}
+    {{problem.description}}
+    {{problem.score}}
+  </li>
+</ol>

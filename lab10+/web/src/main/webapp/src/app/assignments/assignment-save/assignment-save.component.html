@@ -1,0 +1,13 @@
+<label>Sid:
+  <input #sid/>
+  <br/>
+</label>
+
+<label>Pid:
+  <input #pid/>
+  <br/>
+</label>
+
+<button (click)="saveAssignment(Number(sid.value), Number(pid.value))">
+  Save
+</button>

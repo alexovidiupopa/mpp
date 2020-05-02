@@ -1,0 +1,18 @@
+<label>Sid:
+  <input #sid/>
+  <br/>
+</label>
+
+<label>Pid:
+  <input #pid/>
+  <br/>
+</label>
+
+<label>Grade:
+  <input #grade/>
+  <br/>
+</label>
+
+<button (click)="updateAssignment(Number(sid.value), Number(pid.value), Number(grade.value))">
+  Update
+</button>

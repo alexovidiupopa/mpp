@@ -13,6 +13,8 @@ import ro.ubb.web.converter.StudentConverter;
 import ro.ubb.web.dto.StudentDto;
 import ro.ubb.web.dto.StudentsDto;
 
+import java.util.List;
+
 @RestController
 public class StudentController {
     public static final Logger log= LoggerFactory.getLogger(StudentController.class);
@@ -24,31 +26,32 @@ public class StudentController {
     private StudentConverter studentConverter;
 
     @RequestMapping(value = "/students", method = RequestMethod.GET)
-    StudentsDto getStudents() {
+    List<StudentDto> getStudents() {
         log.trace("begin get students");
-        StudentsDto cpy = new StudentsDto(studentConverter
-                .convertModelsToDtos(studentService.getAllStudents()));
+        List<StudentDto> cpy = new StudentsDto(studentConverter
+                .convertModelsToDtos(studentService.getAllStudents())).getStudents();
         log.trace("end get students={}",cpy);
         return cpy;
     }
 
     @RequestMapping(value = "/students/sort", method = RequestMethod.GET)
-    StudentsDto getStudentsSorted() {
+    List<StudentDto> getStudentsSorted() {
         log.trace("begin sort students");
-        StudentsDto cpy = new StudentsDto(studentConverter
-                .convertModelsToDtos(studentService.sortStudentsAscendingByName()));
+        List<StudentDto> cpy = new StudentsDto(studentConverter
+                .convertModelsToDtos(studentService.sortStudentsAscendingByName())).getStudents();
         log.trace("end sort students={}",cpy);
         return cpy;
     }
     @RequestMapping(value = "/students/filter/{name}", method = RequestMethod.GET)
-    StudentsDto getStudentsFiltered(@PathVariable String name) {
+    List<StudentDto> getStudentsFiltered(@PathVariable String name) {
         log.trace("begin filter students name={}",name);
-        StudentsDto cpy = new StudentsDto(studentConverter
-                .convertModelsToDtos(studentService.filterStudentsByName(name)));
+        List<StudentDto> cpy = new StudentsDto(studentConverter
+                .convertModelsToDtos(studentService.filterStudentsByName(name))).getStudents();
         log.trace("end filter students={}",cpy);
         return cpy;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/students", method = RequestMethod.POST)
     ResponseEntity<?> saveStudent(@RequestBody StudentDto studentDto) {
         log.trace("begin add student={}", studentDto);
@@ -64,9 +67,9 @@ public class StudentController {
 
     }
 
-
-    @RequestMapping(value = "/students", method = RequestMethod.PUT)
-    ResponseEntity<?> updateStudent(@RequestBody StudentDto studentDto) {
+    @CrossOrigin
+    @RequestMapping(value = "/students/{id}", method = RequestMethod.PUT)
+    ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody StudentDto studentDto) {
         log.trace("begin update student={}", studentDto);
         try {
             studentService.updateStudent(studentConverter.convertDtoToModel(studentDto));
@@ -91,12 +94,12 @@ public class StudentController {
     }
 
     @RequestMapping(value="/students/passed",method = RequestMethod.GET)
-    StudentsDto getStudentsWhoPassed(){
+    List<StudentDto> getStudentsWhoPassed(){
         log.trace("getStudentsWhoPassed - method entered");
         return new StudentsDto(studentConverter.convertModelsToDtos(
                 studentService.getStudentsWhoPassed()
         )
-        );
+        ).getStudents();
     }
 
     @SneakyThrows
