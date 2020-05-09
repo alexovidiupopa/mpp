@@ -1,9 +1,11 @@
 <h2>Assignments</h2>
-<ol>
+<ol class="assignments">
   <li *ngFor="let assignment of assignments">
     {{assignment.id.first}}
     {{assignment.id.second}}
     {{assignment.grade}}
   </li>
-
+  <button (click)="increasePageNo()">next</button>
+  <br>
+  <button (click)="decreasePageNo()">prev</button>
 </ol>

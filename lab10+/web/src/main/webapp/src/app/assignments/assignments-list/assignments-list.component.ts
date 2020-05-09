@@ -9,11 +9,39 @@ import {AssignmentService} from "../shared/assignment.service";
 })
 export class AssignmentsListComponent implements OnInit {
   assignments: Assignment[];
+  errorMessage: string;
+  currentPage: number;
+  totalSize:number;
+  acceptableSize:number;
   constructor(private assignmentService: AssignmentService) { }
 
   ngOnInit(): void {
+    this.currentPage=0;
     this.assignmentService.getAssignments()
-      .subscribe(assignments=>this.assignments=assignments);
+      .subscribe(
+        assg=>this.totalSize=assg.length,
+        error=>this.errorMessage=<any>error);
+    this.getAssignmentsPaginated();
   }
 
+  increasePageNo() {
+    this.acceptableSize=Math.ceil(this.totalSize/this.assignmentService.getPageSize().valueOf());
+    if (this.currentPage<this.acceptableSize-1){
+      this.currentPage++;
+      this.getAssignmentsPaginated();
+    }
+  }
+
+  decreasePageNo() {
+    if(this.currentPage>0) {
+      this.currentPage--;
+      this.getAssignmentsPaginated();
+    }
+  }
+
+  private getAssignmentsPaginated() {
+    this.assignmentService.getAssignmentsPaginated(this.currentPage)
+      .subscribe(assig=>this.assignments = assig,
+        error=>this.errorMessage=<any>error);
+  }
 }

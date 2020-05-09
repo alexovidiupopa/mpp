@@ -15,13 +15,29 @@ export class StudentListComponent implements OnInit {
   errorMessage: string;
   students: Array<Student>;
   selectedStudent: Student;
+  currentPage: number;
+  totalSize:number;
+  acceptableSize:number;
 
   constructor(private studentService: StudentService,
               private router: Router) {
+
   }
 
   ngOnInit(): void {
-    this.getStudents();
+    this.currentPage=0;
+    this.studentService.getStudents()
+      .subscribe(
+        students=>this.totalSize=students.length,
+        error=>this.errorMessage=<any>error);
+    this.getStudentsPaginated();
+  }
+
+
+  getStudentsPaginated(){
+    this.studentService.getStudentsOnPage(this.currentPage)
+      .subscribe(students=>this.students = students,
+                error=>this.errorMessage=<any>error);
   }
 
   getStudents() {
@@ -50,5 +66,20 @@ export class StudentListComponent implements OnInit {
         this.students = this.students
           .filter(s => s.id !== student.id);
       });
+  }
+
+  increasePageNo() {
+    this.acceptableSize=Math.ceil(this.totalSize/this.studentService.getPageSize().valueOf());
+    if (this.currentPage<this.acceptableSize-1){
+      this.currentPage++;
+      this.getStudentsPaginated();
+    }
+  }
+
+  decreasePageNo() {
+    if(this.currentPage>0) {
+      this.currentPage--;
+      this.getStudentsPaginated();
+    }
   }
 }

@@ -3,6 +3,7 @@ package ro.ubb.core.service;
 import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.model.LabProblem;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ILabProblemService {
@@ -21,4 +22,6 @@ public interface ILabProblemService {
     List<LabProblem> sortProblemsDescendingByScore();
 
     LabProblem getProblemAssignedMostTimes() throws MyException;
+
+    List<LabProblem> getProblemsOnPage(Integer pageNo, Integer size);
 }

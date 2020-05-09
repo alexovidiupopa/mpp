@@ -12,6 +12,7 @@ import ro.ubb.core.service.ILabProblemService;
 import ro.ubb.web.converter.LabProblemConverter;
 import ro.ubb.web.dto.LabProblemDto;
 import ro.ubb.web.dto.LabProblemsDto;
+import ro.ubb.web.dto.StudentDto;
 
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class LabProblemController {
 
     @Autowired
     private LabProblemConverter converter;
+
+    @RequestMapping(value="/problems/get-page/pageno={pageNo},size={size}",method=RequestMethod.GET)
+    List<LabProblemDto> getStudentsOnPage(@PathVariable Integer pageNo, @PathVariable Integer size){
+        log.trace("begin get page={}",pageNo);
+        return converter.convertModelsToDtos(labProblemService.getProblemsOnPage(pageNo,size));
+    }
 
     @RequestMapping(value = "/problems", method = RequestMethod.GET)
     List<LabProblemDto> getProblems() {

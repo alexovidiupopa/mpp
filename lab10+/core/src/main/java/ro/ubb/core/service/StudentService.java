@@ -3,6 +3,9 @@ package ro.ubb.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,5 +131,17 @@ public class StudentService implements IStudentService{
                         Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Optional<Map.Entry<Long, Long>> student = sortedByValue.entrySet().stream().findFirst();
         return this.getStudentById(student.get().getKey());
+    }
+
+    @Override
+    public List<Student> getStudentsOnPage(int pageNo, int pageSize) {
+        Pageable page = PageRequest.of(pageNo, pageSize);
+        Page<Student> pagedResult = studentRepository.findAll(page);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

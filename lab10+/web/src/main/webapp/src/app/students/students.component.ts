@@ -10,7 +10,6 @@ import {Router} from "@angular/router";
 })
 export class StudentsComponent {
   constructor(private router: Router) {
-    //window.location.reload();
   }
 
   addNewStudent() {

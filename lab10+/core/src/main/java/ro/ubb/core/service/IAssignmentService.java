@@ -4,6 +4,7 @@ import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.utils.Pair;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface IAssignmentService {
@@ -18,4 +19,6 @@ public interface IAssignmentService {
     List<Assignment> filterAssignmentsByGrade(double g);
 
     List<Assignment> sortAssignmentsAscendingById();
+
+    List<Assignment> getAssignmentsOnPage(Integer pageNo, Integer size);
 }

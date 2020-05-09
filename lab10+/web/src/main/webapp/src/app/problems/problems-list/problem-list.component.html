@@ -1,10 +1,11 @@
 <h2>Problems</h2>
 
-<ol>
+<ol class="problems">
   <li *ngFor="let problem of problems">
     {{problem.id}}
     {{problem.description}}
     {{problem.score}}
   </li>
-
+  <button (click)="increasePageNo()">next</button>
+  <button (click)="decreasePageNo()">prev</button>
 </ol>

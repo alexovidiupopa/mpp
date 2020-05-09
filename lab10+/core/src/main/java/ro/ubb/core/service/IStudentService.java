@@ -3,6 +3,7 @@ package ro.ubb.core.service;
 import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.model.Student;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -24,4 +25,6 @@ public interface IStudentService {
     Set<Student> getStudentsWhoPassed();
 
     Student getStudentsWithMostProblems() throws MyException;
+
+    List<Student> getStudentsOnPage(int pageNo, int pageSize);
 }

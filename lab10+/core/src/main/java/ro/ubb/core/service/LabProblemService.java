@@ -3,6 +3,9 @@ package ro.ubb.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,13 +13,11 @@ import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.model.Exceptions.RepositoryException;
 import ro.ubb.core.model.LabProblem;
+import ro.ubb.core.model.Student;
 import ro.ubb.core.model.Validators.LabProblemValidator;
 import ro.ubb.core.repository.LabProblemRepository;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -113,5 +114,17 @@ public class LabProblemService implements ILabProblemService {
                         Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Optional<Map.Entry<Long, Long>> problem = sortedByValue.entrySet().stream().findFirst();
         return this.getProblemById(problem.get().getKey());
+    }
+
+    @Override
+    public List<LabProblem> getProblemsOnPage(Integer pageNo, Integer size) {
+        Pageable page = PageRequest.of(pageNo, size);
+        Page<LabProblem> pagedResult = labProblemRepository.findAll(page);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

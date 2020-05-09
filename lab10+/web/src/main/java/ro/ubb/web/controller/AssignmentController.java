@@ -12,6 +12,7 @@ import ro.ubb.core.utils.Pair;
 import ro.ubb.web.converter.AssignmentConverter;
 import ro.ubb.web.dto.AssignmentDto;
 import ro.ubb.web.dto.AssignmentsDto;
+import ro.ubb.web.dto.StudentDto;
 
 import java.util.List;
 
@@ -23,6 +24,12 @@ public class AssignmentController {
 
     @Autowired
     private AssignmentConverter converter;
+
+    @RequestMapping(value="/assignments/get-page/pageno={pageNo},size={size}",method=RequestMethod.GET)
+    List<AssignmentDto> getStudentsOnPage(@PathVariable Integer pageNo, @PathVariable Integer size){
+        log.trace("begin get page={}",pageNo);
+        return converter.convertModelsToDtos(assignmentService.getAssignmentsOnPage(pageNo,size));
+    }
 
     @RequestMapping(value = "/assignments", method = RequestMethod.GET)
     List<AssignmentDto> getAssignments(){

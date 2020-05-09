@@ -3,16 +3,21 @@ package ro.ubb.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.ubb.core.model.Assignment;
 import ro.ubb.core.model.Exceptions.MyException;
 import ro.ubb.core.model.Exceptions.RepositoryException;
+import ro.ubb.core.model.LabProblem;
 import ro.ubb.core.model.Validators.AssignmentValidator;
 import ro.ubb.core.repository.AssignmentRepository;
 import ro.ubb.core.utils.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -61,7 +66,7 @@ public class AssignmentService implements IAssignmentService {
                     assig.setGrade(assignment.getGrade());
                     log.debug("updateAssignment - updated: assig={}",assig);
                 });
-        log.trace("updateAssignment - method finished",assignment);
+        log.trace("updateAssignment - method finished={}",assignment);
     }
 
     @Override
@@ -85,5 +90,17 @@ public class AssignmentService implements IAssignmentService {
         Iterable<Assignment> assignments = assignmentRepository.findAll(Sort.by("id").ascending());
         return StreamSupport.stream(assignments.spliterator(),false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Assignment> getAssignmentsOnPage(Integer pageNo, Integer size) {
+        Pageable page = PageRequest.of(pageNo, size);
+        Page<Assignment> pagedResult = assignmentRepository.findAll(page);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

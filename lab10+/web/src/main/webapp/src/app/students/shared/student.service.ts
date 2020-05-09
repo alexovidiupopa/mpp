@@ -11,8 +11,14 @@ import {map} from "rxjs/operators";
 @Injectable()
 export class StudentService {
   private studentsUrl = 'http://localhost:8080/api/students';
+  private pageSize = 3;
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  getStudentsOnPage(pageNo: number):Observable<Student[]>{
+    const url = `${this.studentsUrl}/get-page/pageno=${pageNo},size=${this.pageSize}`;
+    return this.httpClient.get<Array<Student>>(url);
   }
 
   getStudents(): Observable<Student[]> {
@@ -55,5 +61,9 @@ export class StudentService {
     const url=`${this.studentsUrl}/sort`;
     return this.httpClient.get<Array<Student>>(url);
 
+  }
+
+  getPageSize() {
+    return this.pageSize;
   }
 }

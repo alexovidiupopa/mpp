@@ -7,7 +7,13 @@ import {Assignment} from "./assignment.model";
 @Injectable()
 export class AssignmentService {
   private assignmentsUrl = 'http://localhost:8080/api/assignments';
+  private pageSize=2;
   constructor(private httpClient: HttpClient) {
+  }
+
+  getAssignmentsPaginated(pageNo:number):Observable<Assignment[]>{
+    const url=`${this.assignmentsUrl}/get-page/pageno=${pageNo},size=${this.pageSize}`
+    return this.httpClient.get<Array<Assignment>>(url);
   }
 
   getAssignments(): Observable<Assignment[]> {
@@ -43,5 +49,9 @@ export class AssignmentService {
   filterAssignments(grade: string) {
     const url=`${this.assignmentsUrl}/filter/${grade}`;
     return this.httpClient.get<Array<Assignment>>(url);
+  }
+
+  getPageSize() {
+    return this.pageSize;
   }
 }

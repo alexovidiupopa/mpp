@@ -25,6 +25,13 @@ public class StudentController {
     @Autowired
     private StudentConverter studentConverter;
 
+
+    @RequestMapping(value="/students/get-page/pageno={pageNo},size={size}",method=RequestMethod.GET)
+    List<StudentDto> getStudentsOnPage(@PathVariable Integer pageNo, @PathVariable Integer size){
+        log.trace("begin get page={}",pageNo);
+        return studentConverter.convertModelsToDtos(studentService.getStudentsOnPage(pageNo,size));
+    }
+
     @RequestMapping(value = "/students", method = RequestMethod.GET)
     List<StudentDto> getStudents() {
         log.trace("begin get students");
@@ -64,7 +71,6 @@ public class StudentController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @CrossOrigin
