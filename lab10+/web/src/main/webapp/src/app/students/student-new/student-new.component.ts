@@ -18,6 +18,15 @@ export class StudentNewComponent implements OnInit {
   }
 
   saveStudent(id:string, serialNumber: string, name: string, groupNumber: string) {
+    if (id=="" || serialNumber=="" || name=="" || groupNumber==""){
+      console.log("null credentials");
+      return;
+    }
+    var regex = /[a-z]/g;
+    if (!regex.test(name)){
+      console.log("name doesn't match the regex");
+      return;
+    }
     console.log("saving student", serialNumber, name, groupNumber);
 
     this.studentService.saveStudent({

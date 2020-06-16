@@ -14,3 +14,16 @@
     {{student.groupNumber}}
   </li>
 </ol>
+
+
+<button (click)="filterStudentsAngular(name.value)">
+  Filter front
+</button>
+
+<ol class="students">
+  <li *ngFor="let student of studentsWithAngular">
+      {{student.serialNumber}}
+      {{student.name}}
+      {{student.groupNumber}}
+  </li>
+</ol>

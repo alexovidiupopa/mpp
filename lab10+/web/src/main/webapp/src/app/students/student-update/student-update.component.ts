@@ -17,6 +17,10 @@ export class StudentUpdateComponent implements OnInit {
   }
 
   updateStudent(id:number,serialNumber: string, name: string, groupNumber: number) {
+    if (id==0 || serialNumber=="" || name=="" || groupNumber==0){
+      console.log("null credentials");
+      return;
+    }
     console.log("updating student", serialNumber, name, groupNumber);
 
     this.studentService.update({

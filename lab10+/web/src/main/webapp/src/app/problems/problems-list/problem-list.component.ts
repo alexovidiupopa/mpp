@@ -27,7 +27,16 @@ export class ProblemListComponent implements OnInit {
     this.getProblemsPaginated();
   }
 
+  buttonsInteraction(){
+    this.acceptableSize=Math.ceil(this.totalSize/this.labProblemsService.getPageSize().valueOf());
+    if (this.currentPage==0)
+      document.getElementById("decrease-btn").hidden=true;
+    else if (this.currentPage==this.acceptableSize-1)
+      document.getElementById("increase-btn").hidden=true;
+  }
+
   getProblemsPaginated(){
+    this.buttonsInteraction();
     this.labProblemsService.getProblemsOnPage(this.currentPage)
       .subscribe(problems=>this.problems = problems,
         error=>this.errorMessage=<any>error);
@@ -37,6 +46,7 @@ export class ProblemListComponent implements OnInit {
     this.acceptableSize=Math.ceil(this.totalSize/this.labProblemsService.getPageSize().valueOf());
     if (this.currentPage<this.acceptableSize-1){
       this.currentPage++;
+      document.getElementById("decrease-btn").hidden=false;
       this.getProblemsPaginated();
     }
 
@@ -45,6 +55,7 @@ export class ProblemListComponent implements OnInit {
   decreasePageNo() {
     if(this.currentPage>0) {
       this.currentPage--;
+      document.getElementById("increase-btn").hidden=false;
       this.getProblemsPaginated();
     }
   }

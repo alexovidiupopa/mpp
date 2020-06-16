@@ -18,6 +18,10 @@ export class ProblemUpdateComponent implements OnInit {
   }
 
   updateProblem(id : number, desc: string, score: number) {
+    if(id==0 || desc=="" || score==0){
+      console.log("null credentials");
+      return;
+    }
     this.problemService.updateProblem({
       id:id,
       description:desc,

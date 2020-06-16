@@ -18,6 +18,10 @@ export class ProblemSaveComponent implements OnInit {
   }
 
   saveProblem(id: number, desc: string, score: number) {
+    if(id==0 || desc=="" || score==0){
+      console.log("null credentials");
+      return;
+    }
     console.log("saving problem ", id, desc, score);
 
     this.problemService.saveProblem({

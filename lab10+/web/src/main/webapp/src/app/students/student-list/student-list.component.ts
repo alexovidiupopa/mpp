@@ -34,7 +34,17 @@ export class StudentListComponent implements OnInit {
   }
 
 
+  buttonsInteraction(){
+    this.acceptableSize=Math.ceil(this.totalSize/this.studentService.getPageSize().valueOf());
+    if (this.currentPage==0)
+      document.getElementById("decrease-btn").hidden=true;
+    else if (this.currentPage==this.acceptableSize-1)
+      document.getElementById("increase-btn").hidden=true;
+  }
+
+
   getStudentsPaginated(){
+    this.buttonsInteraction();
     this.studentService.getStudentsOnPage(this.currentPage)
       .subscribe(students=>this.students = students,
                 error=>this.errorMessage=<any>error);
@@ -72,6 +82,7 @@ export class StudentListComponent implements OnInit {
     this.acceptableSize=Math.ceil(this.totalSize/this.studentService.getPageSize().valueOf());
     if (this.currentPage<this.acceptableSize-1){
       this.currentPage++;
+      document.getElementById("decrease-btn").hidden=false;
       this.getStudentsPaginated();
     }
   }
@@ -79,6 +90,7 @@ export class StudentListComponent implements OnInit {
   decreasePageNo() {
     if(this.currentPage>0) {
       this.currentPage--;
+      document.getElementById("increase-btn").hidden=false;
       this.getStudentsPaginated();
     }
   }

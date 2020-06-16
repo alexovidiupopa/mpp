@@ -12,6 +12,7 @@ export class ProblemFilterComponent implements OnInit {
 
   errorMessage: string;
   problems: Array<LabProblem>;
+  problemsWithAngular: Array<LabProblem> = [];
   constructor(private problemService: LabProblemsService,
               private location: Location
   ) {
@@ -30,4 +31,8 @@ export class ProblemFilterComponent implements OnInit {
   }
 
 
+  filterProblemsWithAngular(value: string) {
+    this.problemService.getProblems()
+      .subscribe(problems=>this.problemsWithAngular=problems.filter(problem=>problem.score>=Number(value)));
+  }
 }

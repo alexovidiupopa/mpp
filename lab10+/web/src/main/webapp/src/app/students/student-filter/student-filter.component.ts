@@ -11,7 +11,7 @@ import {Student} from "../shared/student.model";
 export class StudentFilterComponent implements OnInit {
   errorMessage: string;
   students: Array<Student>;
-
+  studentsWithAngular: Array<Student> = [];
   constructor(private studentService: StudentService,
               private router: Router) {
   }
@@ -25,5 +25,10 @@ export class StudentFilterComponent implements OnInit {
         students => this.students = students,
         error => this.errorMessage = <any>error
       );
+  }
+
+  filterStudentsAngular(value: string) {
+    this.studentService.getStudents()
+      .subscribe(students=>this.studentsWithAngular=students.filter(student=>student.name.includes(value)));
   }
 }

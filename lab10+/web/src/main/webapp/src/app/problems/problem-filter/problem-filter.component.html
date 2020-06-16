@@ -14,3 +14,16 @@
     {{problem.score}}
   </li>
 </ol>
+
+
+<button (click)="filterProblemsWithAngular(score.value)">
+  Filter special
+</button>
+
+<ol class="problems">
+  <li *ngFor="let problem of problemsWithAngular">
+    {{problem.id}}
+    {{problem.description}}
+    {{problem.score}}
+  </li>
+</ol>
