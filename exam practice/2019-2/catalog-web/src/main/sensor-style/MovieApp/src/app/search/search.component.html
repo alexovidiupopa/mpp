@@ -1,0 +1,36 @@
+<div *ngIf="NoSearch===false">
+<label>Title:
+  <input [(ngModel)]="title" placeholder="title"/>
+  <br>
+  <button *ngIf="NoSearch===false" id="filter" (click)="filterMovies(title)">filter Movies by title</button>
+</label>
+</div>
+
+<div *ngIf="selectedMovie">
+  <h2>
+    {{selectedMovie.id}} was selected
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>
+
+<!--<button id="filterBack" (click)="goBack()">Back</button>-->
+
+<div>
+  <h2>Movies</h2>
+  <ol class="clients">
+    <li *ngFor="let movie of movies "
+        [class.selected]="movie === selectedMovie"
+        (click)="onSelect(movie)">
+      {{movie.title}}
+
+<!--      <button-->
+<!--        [class.delete]="true"-->
+<!--        (click)="deleteClient(client);$event.stopPropagation()">delete-->
+<!--      </button>-->
+    </li>
+  </ol>
+</div>
+
+
+
+

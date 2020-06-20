@@ -1,0 +1,43 @@
+<!--<label>Year:-->
+<!--  <input #year/>-->
+<!--  <br/>-->
+<!--</label>-->
+
+<!--<p>Please select After or Before:</p>-->
+<!--<label> Before-->
+<!--  <input #before type="radio" name="period" value="before">-->
+<!--</label>-->
+<!--<br>-->
+<!--<label>After-->
+<!--  <input #after type="radio" id="after" name="period" value="after">-->
+<!--</label>-->
+<!--<br>-->
+
+<!--<button id="filter" (click)="filterMovies(year.value,before.checked,after.checked)">filter Movies by Year</button>-->
+<!--<div>-->
+  <h2>Sensors</h2>
+  <ol class="movies">
+    <li *ngFor="let sensor of sensors ">
+      {{sensor.name}}
+      {{sensor.measurement}}
+      {{sensor.time}}
+<!--      <div [hidden]="showActors===false" class="movies" >-->
+<!--        <div *ngFor="let actor of movie.actors ">-->
+<!--          {{actor.name}}-->
+<!--          {{actor.rating}}-->
+<!--          <button-->
+<!--            [class.delete]="true"-->
+<!--            (click)="deleteActor(movie,actor);$event.stopPropagation()">delete-->
+<!--          </button>-->
+<!--        </div>-->
+        <br>
+      </li>
+
+
+
+    </ol>
+    <br>
+<!--  </div>-->
+<!--</div>-->
+
+<!--<button id="cast" (click)="filterMoviesCast(year.value,before.checked,after.checked)">Show Movies Cast</button>-->

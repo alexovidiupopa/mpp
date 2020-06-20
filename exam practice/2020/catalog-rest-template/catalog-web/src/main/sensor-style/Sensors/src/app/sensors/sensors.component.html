@@ -1,0 +1,23 @@
+<h2>Sensors</h2>
+<div class="movies">
+  <div *ngFor="let sensor of sensorsName ">
+    {{sensor}}
+          <div *ngIf="sensorsWithEverything.has(sensor)" class="movies" >
+            <div *ngFor="let sensor_measurement of sensorsWithEverything.get(sensor) ">
+              {{sensor_measurement.id}}
+              {{sensor_measurement.name}}
+              {{sensor_measurement.measurement}}
+              {{sensor_measurement.time}}
+            </div>
+            <button
+              [class.stop]="true"
+              (click)="stop(sensor);$event.stopPropagation()">Stop
+            </button>
+          </div>
+    <br>
+  </div>
+
+  <button id="cast" (click)="Show()">Show </button>
+
+</div>
+<br>

@@ -1,0 +1,26 @@
+<div *ngIf="movie">
+<!--  //<h2>Movie {{movie.id}} details</h2>-->
+  <div>
+    <label>Movie title: </label>
+    <input [(ngModel)]="movie.title" placeholder="title">
+  </div>
+  <div>
+    <label>Movie year: </label>
+    <input [(ngModel)]="movie.year" placeholder="lastName">
+  </div>
+  <div class="clients">
+    <div *ngFor="let actor of movie.actors ">
+      {{actor.name}} -- {{actor.rating}}
+
+
+    </div>
+  </div>
+  <button (click)="addActors()">Add actors to cast</button>
+
+</div>
+<div *ngIf="addPosibility===true">
+  <select [(ngModel)]="selectedActor" (change)="something(selectedActor)" >
+    <option *ngFor="let actor of availableActors" [ngValue]="actor" >{{actor.name}}</option>
+  </select>
+  <button (click)="addActor()"> Add </button>
+</div>
